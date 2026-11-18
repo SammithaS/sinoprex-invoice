@@ -28,7 +28,9 @@ cp .env.example .env            # paste Neon's direct connection string into DAT
 uv sync
 uv run alembic upgrade head     # creates tables + enables pgvector
 uv run python -m scripts.seed   # loads data/seed/*.json
-uv run uvicorn app.main:app --reload --port 8000
+uv run python -m scripts.ingest_knowledge   # indexes data/knowledge/ into PGVector
+# --loop: psycopg (LangGraph's Postgres checkpointer) needs a selector event loop on Windows
+uv run uvicorn app.main:app --reload --port 8000 --loop app.loop:selector_loop_factory
 ```
 
 ```bash

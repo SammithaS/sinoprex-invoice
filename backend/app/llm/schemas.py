@@ -159,3 +159,14 @@ class AnswerJudgement(BaseModel):
         description="True if the answer states something that contradicts an expected fact."
     )
     reason: str = Field(description="One sentence.")
+
+
+# --- case explanation (graph `explain` node, Phase 6) -------------------------------------------
+
+
+class ExplanationRead(BaseModel):
+    summary: str = Field(
+        description="3-5 plain-English sentences for an AP reviewer: what the invoice is, the "
+        "decision and why, citing sources in square brackets exactly as given."
+    )
+    next_action: str = Field(description="One sentence: the suggested next action.")

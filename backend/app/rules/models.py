@@ -118,7 +118,7 @@ class InvoiceRecord(BaseModel):
 
 
 # Statuses that no longer count as a live invoice (for duplicates and PO consumption).
-DEAD_STATUSES = frozenset({"REJECTED", "CANCELLED"})
+DEAD_STATUSES = frozenset({"REJECTED", "CANCELLED", "SUPERSEDED"})
 
 
 class ContractRate(BaseModel):

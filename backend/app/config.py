@@ -34,6 +34,7 @@ class Settings(BaseSettings):
     langsmith_tracing: bool = False
 
     storage_backend: Literal["local", "r2"] = "local"
+    storage_dir: str = ""  # local uploads; default backend/var/uploads
     r2_account_id: str = ""
     r2_access_key_id: str = ""
     r2_secret_access_key: str = ""

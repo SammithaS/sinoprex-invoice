@@ -1,7 +1,8 @@
 """Response models for the reference-data API."""
 
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict
 
@@ -108,3 +109,70 @@ class ReindexOut(BaseModel):
     removed: int
     unchanged: int
     by_source: dict[str, int]
+
+
+# --- runs (Phase 6) ------------------------------------------------------------------------------
+
+
+class RunOut(_Orm):
+    id: str
+    status: str
+    file_name: str
+    file_hash: str
+    source: str
+    sample_key: str | None
+    rerun_of: str | None
+    decision: str | None
+    final_decision: str | None
+    confidence: float | None
+    vendor_id: str | None
+    vendor_name: str | None
+    invoice_number: str | None
+    total: Decimal | None
+    procedure_version: str | None
+    error: str | None
+    created_at: datetime
+    started_at: datetime | None
+    finished_at: datetime | None
+    duration_ms: int | None
+
+
+class RunStepOut(_Orm):
+    seq: int
+    type: str
+    node: str | None
+    status: str | None
+    message: str | None
+    duration_ms: int | None
+    data: dict[str, Any] | None
+    created_at: datetime
+
+
+class ReviewOut(_Orm):
+    action: str
+    comment: str | None
+    reviewer: str | None
+    created_at: datetime
+
+
+class RunDetailOut(RunOut):
+    explanation: str | None
+    state: dict[str, Any] | None
+    review_request: dict[str, Any] | None
+    steps: list[RunStepOut]
+    reviews: list[ReviewOut]
+
+
+class ReviewIn(BaseModel):
+    action: Literal["APPROVE", "REJECT", "REQUEST_INFO"]
+    comment: str | None = None
+    reviewer: str | None = None
+
+
+class SampleOut(BaseModel):
+    key: str
+    title: str
+    edge_case: str
+    is_scanned: bool
+    expected_decision: str
+    depends_on: list[str]

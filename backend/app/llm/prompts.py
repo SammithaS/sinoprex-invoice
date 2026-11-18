@@ -72,3 +72,25 @@ Contract excerpts:
 
 {excerpts}
 """
+
+
+EXPLAIN_SYSTEM = """\
+You write the case summary an accounts payable reviewer at Acme Retail Pvt Ltd reads first.
+The decision has ALREADY been made by deterministic rules; you explain it, you never change it,
+question it or suggest a different outcome.
+- Use only the facts given (invoice fields, rule results, exceptions, cited clauses).
+- Cite sources in square brackets exactly as listed, e.g. [ap-policy §3.2]. Cite nothing else.
+- Amounts in ₹ with Indian digit grouping. Be specific and short; no headings, no bullet lists.
+"""
+
+EXPLAIN_INSTRUCTION = """\
+Invoice: {invoice}
+Decision: {decision}{final}
+Failed or warning checks:
+{checks}
+Exceptions and the question for each owner:
+{exceptions}
+Approvals required: {approvals}
+Sources you may cite:
+{sources}
+"""

@@ -1,8 +1,8 @@
 """SQLAlchemy models.
 
-Phase 1 covers reference data (vendors, purchase orders, goods receipts) and prior
-invoices for duplicate detection. Run, case, exception, approval and ERP tables arrive
-in later phases with their own migrations.
+Phase 1: reference data (vendors, purchase orders, goods receipts) and prior invoices.
+Phase 6: runs (one per case), run steps (the live timeline), reviews, and invoice history rows
+written by runs. Exception, approval and ERP tables arrive in Phase 8.
 """
 
 from datetime import date, datetime
@@ -132,3 +132,78 @@ class Invoice(Base):
     source: Mapped[str] = mapped_column(String(10), default="SEED")  # SEED | RUN
     extracted: Mapped[dict[str, Any] | None] = mapped_column(JsonType)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    # Phase 6: rows registered by a run (duplicates / PO consumption for later cases).
+    run_id: Mapped[str | None] = mapped_column(ForeignKey("runs.id"), unique=True)
+    service_period: Mapped[str | None] = mapped_column(String(100))
+    po_lines: Mapped[list[dict[str, Any]] | None] = mapped_column(JsonType)  # [{po_line_no, qty}]
+
+
+class Run(Base):
+    """One case: an invoice file going through the graph (LangGraph thread = run id)."""
+
+    __tablename__ = "runs"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    status: Mapped[str] = mapped_column(String(20), index=True)
+    # QUEUED | RUNNING | WAITING_REVIEW | COMPLETED | FAILED
+    file_name: Mapped[str] = mapped_column(String(255))
+    file_path: Mapped[str] = mapped_column(String(500))
+    file_hash: Mapped[str] = mapped_column(String(64), index=True)
+    sample_key: Mapped[str | None] = mapped_column(String(60))
+    source: Mapped[str] = mapped_column(String(10), default="UPLOAD")  # UPLOAD | SAMPLE | EMAIL
+    rerun_of: Mapped[str | None] = mapped_column(String(36))
+    decision: Mapped[str | None] = mapped_column(String(20))  # rules' decision (pre-human)
+    final_decision: Mapped[str | None] = mapped_column(String(20))
+    confidence: Mapped[float | None]
+    vendor_id: Mapped[str | None] = mapped_column(String(16))
+    vendor_name: Mapped[str | None] = mapped_column(String(200))
+    invoice_number: Mapped[str | None] = mapped_column(String(40))
+    total: Mapped[Decimal | None] = mapped_column(Money)
+    procedure_version: Mapped[str | None] = mapped_column(String(20))
+    explanation: Mapped[str | None]
+    state: Mapped[dict[str, Any] | None] = mapped_column(JsonType)  # latest graph state snapshot
+    review_request: Mapped[dict[str, Any] | None] = mapped_column(JsonType)  # interrupt payload
+    error: Mapped[str | None]
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    started_at: Mapped[datetime | None]
+    finished_at: Mapped[datetime | None]
+    duration_ms: Mapped[int | None]
+
+    steps: Mapped[list["RunStep"]] = relationship(
+        back_populates="run", order_by="RunStep.seq", cascade="all, delete-orphan"
+    )
+    reviews: Mapped[list["Review"]] = relationship(
+        back_populates="run", order_by="Review.id", cascade="all, delete-orphan"
+    )
+
+
+class RunStep(Base):
+    """One timeline event of a run (node started/finished, rule result, pause, error)."""
+
+    __tablename__ = "run_steps"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"), index=True)
+    seq: Mapped[int]
+    type: Mapped[str] = mapped_column(String(30))
+    node: Mapped[str | None] = mapped_column(String(40))
+    status: Mapped[str | None] = mapped_column(String(20))
+    message: Mapped[str | None]
+    duration_ms: Mapped[int | None]
+    data: Mapped[dict[str, Any] | None] = mapped_column(JsonType)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+    run: Mapped[Run] = relationship(back_populates="steps")
+
+
+class Review(Base):
+    __tablename__ = "reviews"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"), index=True)
+    action: Mapped[str] = mapped_column(String(20))  # APPROVE | REJECT | REQUEST_INFO
+    comment: Mapped[str | None]
+    reviewer: Mapped[str | None] = mapped_column(String(100))
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+    run: Mapped[Run] = relationship(back_populates="reviews")
