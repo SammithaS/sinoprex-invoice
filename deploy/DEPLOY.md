@@ -62,7 +62,7 @@ prepared statements disabled, and the pooled endpoint adds nothing here.
 
 ```bash
 git clone <your repo> invoiceiq && cd invoiceiq/deploy
-cp .env.example .env          # domains, ACME email, N8N_VERSION (pin a stable release), N8N_ENCRYPTION_KEY
+cp .env.example .env          # domains, N8N_VERSION (pin a stable release), N8N_ENCRYPTION_KEY
 cp api.env.example api.env    # DATABASE_URL, LLM keys, API_KEY, FRONTEND_ORIGIN/APP_URL, N8N_*
 docker compose up -d --build
 docker compose logs -f api    # "Application startup complete" after migrations

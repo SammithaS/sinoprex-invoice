@@ -1,7 +1,3 @@
-{
-	email {$ACME_EMAIL}
-}
-
 # FastAPI. flush_interval -1 streams Server-Sent Events (live run view, Ask AP) unbuffered.
 {$API_DOMAIN} {
 	encode zstd gzip
