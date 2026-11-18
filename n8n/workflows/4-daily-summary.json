@@ -1,0 +1,186 @@
+{
+  "name": "InvoiceIQ · 4 · Daily AP summary",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1-5"
+            }
+          ]
+        }
+      },
+      "id": "7bf28a95-9cb1-55c8-81eb-7453c1ca5201",
+      "name": "Weekdays 09:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7dded104-c8dc-5bca-8334-4c8a44daa45a",
+              "name": "backend_url",
+              "value": "https://REPLACE-ME.trycloudflare.com",
+              "type": "string"
+            },
+            {
+              "id": "24e1d074-025e-5088-859e-4344d0e63fbf",
+              "name": "api_key",
+              "value": "REPLACE-WITH-API_KEY",
+              "type": "string"
+            },
+            {
+              "id": "a7ed8573-683c-51cc-9a41-5df0bb6c11c2",
+              "name": "summary_to",
+              "value": "ap-team@example.com",
+              "type": "string"
+            },
+            {
+              "id": "e9b0da37-49c3-5e58-91e1-2824732cf098",
+              "name": "app_url",
+              "value": "http://localhost:3000",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "7b7b59f6-e60a-5b28-b548-1d05ac7fe050",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        300
+      ],
+      "notes": "Edit these values once after importing (see n8n/README.md).",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.backend_url }}/stats",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "={{ $json.api_key }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "dbbd4fe0-3587-5ae2-83ca-2e9182785ed7",
+      "name": "Get stats",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Daily AP summary from GET /stats.\nconst s = $input.first().json;\nconst cfg = $('Config').first().json;\nconst inr = (v) => '₹' + Number(v ?? 0).toLocaleString('en-IN');\nconst d = s.decisions ?? {};\nconst causes = Object.entries(s.exception_causes ?? {}).sort((a, b) => b[1] - a[1]).slice(0, 3);\nconst rate = s.straight_through_rate == null ? '—' : Math.round(s.straight_through_rate * 100) + '%';\nconst lines = [\n  'Good morning. Accounts payable, last 30 days:',\n  '',\n  `- Cases: ${s.runs} (${s.completed} closed)`,\n  `- Approved: ${d.APPROVED ?? 0} · Rejected: ${d.REJECTED ?? 0} · On hold: ${d.ON_HOLD ?? 0}`,\n  `- Straight-through (no human touch): ${rate}`,\n  `- Waiting for review: ${s.waiting_review} · for approval: ${s.waiting_approval} (value ${inr(s.pending_value)})`,\n  `- Posted to ERP: ${s.erp_posted} (${s.erp_verified} verified, ${s.erp_mismatches} mismatches)`,\n  causes.length ? `- Top issues: ${causes.map(([k, v]) => `${k} (${v})`).join(', ')}` : '- Top issues: none',\n  '',\n  `Dashboard: ${cfg.app_url}/dashboard`,\n  `Review queue: ${cfg.app_url}/review`,\n];\nreturn [{ json: { to: cfg.summary_to, subject: `InvoiceIQ daily AP summary · ${s.waiting_review} waiting for review`, text: lines.join('\\n') } }];\n"
+      },
+      "id": "75b1aceb-a39b-5935-8c1c-768e740c066e",
+      "name": "Compose",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "36dbcaa1-a944-50a6-ae0b-76b2de05cf55",
+      "name": "Email summary",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        300
+      ],
+      "webhookId": "f4fa4939-0c8c-5e72-91a3-80d69ec85326"
+    }
+  ],
+  "connections": {
+    "Weekdays 09:00": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Get stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get stats": {
+      "main": [
+        [
+          {
+            "node": "Compose",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose": {
+      "main": [
+        [
+          {
+            "node": "Email summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Weekdays 09:00 IST → GET /stats → summary email."
+  },
+  "tags": []
+}

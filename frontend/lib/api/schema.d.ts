@@ -594,6 +594,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/integrations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Integrations */
+        get: operations["integrations_integrations_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/intake/email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Intake Email */
+        post: operations["intake_email_intake_email_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -921,6 +955,41 @@ export interface components {
                 [key: string]: unknown;
             };
         };
+        /** IntakeOut */
+        IntakeOut: {
+            /** Message Id */
+            message_id: string;
+            /** Runs */
+            runs: components["schemas"]["IntakeRun"][];
+            /** Rejected */
+            rejected: components["schemas"]["Rejected"][];
+        };
+        /** IntakeRun */
+        IntakeRun: {
+            /** Run Id */
+            run_id: string;
+            /** File Name */
+            file_name: string;
+            /** Link */
+            link: string;
+            /** Duplicate */
+            duplicate: boolean;
+        };
+        /** IntegrationsOut */
+        IntegrationsOut: {
+            /** N8N Configured */
+            n8n_configured: boolean;
+            /** Intake Enabled */
+            intake_enabled: boolean;
+            /** Api Key Set */
+            api_key_set: boolean;
+            /** Webhooks */
+            webhooks: {
+                [key: string]: string;
+            };
+            /** Recent */
+            recent: components["schemas"]["NotificationOut"][];
+        };
         /** KnowledgeDocOut */
         KnowledgeDocOut: {
             /** Source */
@@ -979,6 +1048,26 @@ export interface components {
             verified: boolean | null;
             /** Mismatches */
             mismatches: string[] | null;
+        };
+        /** NotificationOut */
+        NotificationOut: {
+            /** Id */
+            id: number;
+            /** Run Id */
+            run_id: string;
+            /** Event */
+            event: string;
+            /** Status */
+            status: string;
+            /** Attempts */
+            attempts: number;
+            /** Error */
+            error: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
         };
         /** OwnerLoad */
         OwnerLoad: {
@@ -1276,6 +1365,13 @@ export interface components {
             by_source: {
                 [key: string]: number;
             };
+        };
+        /** Rejected */
+        Rejected: {
+            /** Filename */
+            filename: string;
+            /** Reason */
+            reason: string;
         };
         /** ResetOut */
         ResetOut: {
@@ -2720,6 +2816,57 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    integrations_integrations_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IntegrationsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    intake_email_intake_email_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IntakeOut"];
                 };
             };
         };

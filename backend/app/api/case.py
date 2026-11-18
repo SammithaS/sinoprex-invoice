@@ -18,6 +18,7 @@ from app.db.models import (
     Correction,
     ErpDocument,
     ErpPosting,
+    Notification,
     Review,
     Run,
     RunStep,
@@ -352,7 +353,16 @@ async def reset_demo(request: Request, session: SessionDep) -> ResetOut:
     erp_count = len(list(await session.scalars(select(ErpDocument.id))))
     await session.execute(delete(ErpDocument))
     await seed_reference_data(session)  # also clears invoice history (incl. run rows)
-    for model in (RunStep, Review, CaseException, Approval, ErpPosting, Correction, Run):
+    for model in (
+        RunStep,
+        Review,
+        CaseException,
+        Approval,
+        ErpPosting,
+        Correction,
+        Notification,
+        Run,
+    ):
         await session.execute(delete(model))  # children first (SQLite has no FK cascade)
     await session.commit()
     clear_reference_cache()

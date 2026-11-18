@@ -2065,6 +2065,76 @@
           }
         }
       }
+    },
+    "/integrations": {
+      "get": {
+        "tags": [
+          "intake"
+        ],
+        "summary": "Integrations",
+        "operationId": "integrations_integrations_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationsOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/intake/email": {
+      "post": {
+        "tags": [
+          "intake"
+        ],
+        "summary": "Intake Email",
+        "operationId": "intake_email_intake_email_post",
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntakeOut"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3081,6 +3151,102 @@
         ],
         "title": "InboxItem"
       },
+      "IntakeOut": {
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "title": "Message Id"
+          },
+          "runs": {
+            "items": {
+              "$ref": "#/components/schemas/IntakeRun"
+            },
+            "type": "array",
+            "title": "Runs"
+          },
+          "rejected": {
+            "items": {
+              "$ref": "#/components/schemas/Rejected"
+            },
+            "type": "array",
+            "title": "Rejected"
+          }
+        },
+        "type": "object",
+        "required": [
+          "message_id",
+          "runs",
+          "rejected"
+        ],
+        "title": "IntakeOut"
+      },
+      "IntakeRun": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "file_name": {
+            "type": "string",
+            "title": "File Name"
+          },
+          "link": {
+            "type": "string",
+            "title": "Link"
+          },
+          "duplicate": {
+            "type": "boolean",
+            "title": "Duplicate"
+          }
+        },
+        "type": "object",
+        "required": [
+          "run_id",
+          "file_name",
+          "link",
+          "duplicate"
+        ],
+        "title": "IntakeRun"
+      },
+      "IntegrationsOut": {
+        "properties": {
+          "n8n_configured": {
+            "type": "boolean",
+            "title": "N8N Configured"
+          },
+          "intake_enabled": {
+            "type": "boolean",
+            "title": "Intake Enabled"
+          },
+          "api_key_set": {
+            "type": "boolean",
+            "title": "Api Key Set"
+          },
+          "webhooks": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Webhooks"
+          },
+          "recent": {
+            "items": {
+              "$ref": "#/components/schemas/NotificationOut"
+            },
+            "type": "array",
+            "title": "Recent"
+          }
+        },
+        "type": "object",
+        "required": [
+          "n8n_configured",
+          "intake_enabled",
+          "api_key_set",
+          "webhooks",
+          "recent"
+        ],
+        "title": "IntegrationsOut"
+      },
       "KnowledgeDocOut": {
         "properties": {
           "source": {
@@ -3270,6 +3436,57 @@
           "mismatches"
         ],
         "title": "LedgerRow"
+      },
+      "NotificationOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "event": {
+            "type": "string",
+            "title": "Event"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "attempts": {
+            "type": "integer",
+            "title": "Attempts"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "run_id",
+          "event",
+          "status",
+          "attempts",
+          "error",
+          "created_at"
+        ],
+        "title": "NotificationOut"
       },
       "OwnerLoad": {
         "properties": {
@@ -3880,6 +4097,24 @@
           "by_source"
         ],
         "title": "ReindexOut"
+      },
+      "Rejected": {
+        "properties": {
+          "filename": {
+            "type": "string",
+            "title": "Filename"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "filename",
+          "reason"
+        ],
+        "title": "Rejected"
       },
       "ResetOut": {
         "properties": {

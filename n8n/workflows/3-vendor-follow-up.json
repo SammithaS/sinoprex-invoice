@@ -1,0 +1,237 @@
+{
+  "name": "InvoiceIQ · 3 · Vendor follow-up",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "invoiceiq-vendor-followup",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "51190b52-20af-5d20-b590-659433327c7f",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "65eb80c3-45f7-5fe3-8df4-b4719bb01418"
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f0fd0d07-d3a7-5547-8143-277a5389e1de",
+              "name": "webhook_secret",
+              "value": "REPLACE-WITH-N8N_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "b0d3160d-7a41-538a-846d-44bf61e53ec5",
+              "name": "demo_inbox",
+              "value": "ap-demo@example.com",
+              "type": "string"
+            },
+            {
+              "id": "f09e2e89-0236-5ee0-b5e8-823ada6bb082",
+              "name": "send_to_vendor",
+              "value": "false",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "370732a0-a7f0-58aa-b2e3-5414f418b653",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        300
+      ],
+      "notes": "Edit these values once after importing (see n8n/README.md).",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Rebuild exactly what InvoiceIQ signed: \"<timestamp>.<compact JSON body>\".\n// The backend sends compact JSON without floats, so JSON.stringify(body) gives the same bytes.\nreturn $input.all().map((item) => {\n  const j = item.json;\n  const ts = String(j.headers['x-iiq-timestamp'] ?? '');\n  const age = Math.abs(Date.now() / 1000 - Number(ts));\n  return {\n    json: {\n      ...j,\n      signed: ts + '.' + JSON.stringify(j.body),\n      given: String(j.headers['x-iiq-signature'] ?? '').toLowerCase(),\n      fresh: ts !== '' && Number.isFinite(age) && age <= 300,\n    },\n  };\n});\n"
+      },
+      "id": "59018264-beb7-5c62-b610-924df083860f",
+      "name": "Prepare check",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "action": "hmac",
+        "type": "SHA256",
+        "value": "={{ $json.signed }}",
+        "dataPropertyName": "expected",
+        "secret": "={{ $json.webhook_secret }}",
+        "encoding": "hex"
+      },
+      "id": "7e50e2fa-69b0-5cae-aa9f-06202420e378",
+      "name": "Sign",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "10822eb3-68de-5fcb-bf22-596750599c27",
+              "leftValue": "={{ $json.fresh && ('sha256=' + $json.expected) === $json.given }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "eff8e40f-af7d-5819-980c-9a9bd5f59798",
+      "name": "Signed by InvoiceIQ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// The seed vendors' addresses are fictional (.example), so by default the email goes to a demo\n// inbox with the real recipient noted. Set send_to_vendor to \"true\" to write to the vendor.\nreturn $input.all().map((item) => {\n  const b = item.json.body;\n  const live = String(item.json.send_to_vendor).toLowerCase() === 'true';\n  const note = live ? '' : `[Demo: this email would go to ${b.vendor_email}]\\n\\n`;\n  const ref = b.citation ? ` · template ${b.citation}` : '';\n  return {\n    json: {\n      to: live ? b.vendor_email : item.json.demo_inbox,\n      subject: b.subject,\n      text: `${note}${b.message}\\n\\nAccounts Payable, Acme Retail Pvt Ltd\\n(Ref: ${b.invoice_number || b.run_id}${ref})`,\n    },\n  };\n});\n"
+      },
+      "id": "a899a5f0-415f-5ac3-978c-c6b395c14ee4",
+      "name": "Compose",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "7c56a9bd-d831-5d4a-bb43-137fa3b83583",
+      "name": "Email vendor",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1320,
+        200
+      ],
+      "webhookId": "70cd0ccf-0f2b-5096-bffc-6cc34e12fe58"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Prepare check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare check": {
+      "main": [
+        [
+          {
+            "node": "Sign",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sign": {
+      "main": [
+        [
+          {
+            "node": "Signed by InvoiceIQ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Signed by InvoiceIQ?": {
+      "main": [
+        [
+          {
+            "node": "Compose",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose": {
+      "main": [
+        [
+          {
+            "node": "Email vendor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Signed webhook on REQUEST_INFO → the vendor-faq template email to the contact on file."
+  },
+  "tags": []
+}

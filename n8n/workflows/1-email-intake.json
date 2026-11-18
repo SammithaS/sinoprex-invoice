@@ -1,0 +1,349 @@
+{
+  "name": "InvoiceIQ · 1 · Email intake",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "has:attachment filename:pdf is:unread"
+        },
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "id": "a59de211-efa5-56a1-9372-828e19681834",
+      "name": "Gmail Trigger",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// One item per email: its PDF attachments (base64) and the exact JSON body to sign and send.\nconst out = [];\nconst items = $input.all();\nfor (let i = 0; i < items.length; i++) {\n  const item = items[i];\n  const attachments = [];\n  for (const [key, bin] of Object.entries(item.binary ?? {})) {\n    let name = bin.fileName ?? key;\n    const isPdf = bin.mimeType === 'application/pdf' || name.toLowerCase().endsWith('.pdf');\n    if (!isPdf) continue;\n    if (!name.toLowerCase().endsWith('.pdf')) name += '.pdf';\n    const buf = await this.helpers.getBinaryDataBuffer(i, key);\n    attachments.push({ filename: name, content_base64: buf.toString('base64') });\n  }\n  const m = item.json;\n  const sender = m.from?.value?.[0]?.address ?? m.from?.text ?? '';\n  const body = JSON.stringify({\n    message_id: m.id,\n    from: sender,\n    subject: m.subject ?? '',\n    received_at: m.date ?? null,\n    attachments,\n  });\n  out.push({\n    json: {\n      message_id: m.id,\n      sender,\n      subject: m.subject ?? '',\n      attachment_count: attachments.length,\n      ts: String(Math.floor(Date.now() / 1000)),\n      body,\n    },\n  });\n}\nreturn out;\n"
+      },
+      "id": "842d2259-5f1d-57d6-99b2-522837265c4c",
+      "name": "Build request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "579d187e-2c61-5508-8f4d-c24b45c61ac2",
+              "name": "backend_url",
+              "value": "https://REPLACE-ME.trycloudflare.com",
+              "type": "string"
+            },
+            {
+              "id": "1836c279-dd9f-5996-97dd-622a766f48ad",
+              "name": "webhook_secret",
+              "value": "REPLACE-WITH-N8N_WEBHOOK_SECRET",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "ee46f468-0d82-5a04-8a24-9ad8a8c72592",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        440,
+        300
+      ],
+      "notes": "Edit these values once after importing (see n8n/README.md).",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "d097c4df-e435-5948-8fcf-78517d422276",
+              "leftValue": "={{ $json.attachment_count > 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d5d1d860-a64d-5e45-99af-807cfc62688d",
+      "name": "Has a PDF?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "action": "hmac",
+        "type": "SHA256",
+        "value": "={{ $json.ts }}.{{ $json.body }}",
+        "dataPropertyName": "signature",
+        "secret": "={{ $json.webhook_secret }}",
+        "encoding": "hex"
+      },
+      "id": "31e0dff6-8fce-56c6-8c37-8c799b18f53e",
+      "name": "Sign",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        880,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.backend_url }}/intake/email",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-IIQ-Timestamp",
+              "value": "={{ $json.ts }}"
+            },
+            {
+              "name": "X-IIQ-Signature",
+              "value": "=sha256={{ $json.signature }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.body }}"
+      },
+      "id": "0eb983b0-b932-5cea-b0e4-6a8af0655933",
+      "name": "Send to InvoiceIQ",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Acknowledge the sender. No internal links: the sender may be a vendor.\nreturn $input.all().map((item) => {\n  const r = item.json;\n  const lines = ['Thank you, we have received your email.', ''];\n  for (const run of r.runs ?? []) {\n    const what = run.duplicate ? 'already received earlier' : 'received';\n    lines.push(`- ${run.file_name}: ${what} (reference ${run.run_id.slice(0, 8)})`);\n  }\n  for (const x of r.rejected ?? []) lines.push(`- ${x.filename}: not accepted (${x.reason})`);\n  lines.push('', 'Accounts Payable, Acme Retail Pvt Ltd');\n  return { json: { message_id: r.message_id, reply: lines.join('\\n') } };\n});\n"
+      },
+      "id": "4811fac7-b0df-56b8-bd4e-131161858f4d",
+      "name": "Compose reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $json.message_id }}",
+        "emailType": "text",
+        "message": "={{ $json.reply }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "ab2b3091-3aa1-5a01-94e6-dbd6210e3e83",
+      "name": "Reply to sender",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1540,
+        200
+      ],
+      "webhookId": "6dd1a0fc-d001-5bb2-b575-f2d96e054835"
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $json.message_id }}",
+        "emailType": "text",
+        "message": "Thank you for your email. We could not find a PDF invoice attached; please send the invoice as a PDF file.\n\nAccounts Payable, Acme Retail Pvt Ltd",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "1bba9e01-45d4-578b-8793-d267f9614ad9",
+      "name": "Reply: no PDF",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        420
+      ],
+      "webhookId": "ad4745f6-a9f4-5b9d-b1fe-f2ad33ba66ff"
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $('Build request').item.json.message_id }}"
+      },
+      "id": "b04b9494-b34e-5c95-9463-3703680f2755",
+      "name": "Mark as read",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1760,
+        300
+      ],
+      "webhookId": "bf992b88-b92e-5193-929f-5a1c92dc295a"
+    }
+  ],
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Build request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build request": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Has a PDF?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has a PDF?": {
+      "main": [
+        [
+          {
+            "node": "Sign",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reply: no PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sign": {
+      "main": [
+        [
+          {
+            "node": "Send to InvoiceIQ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to InvoiceIQ": {
+      "main": [
+        [
+          {
+            "node": "Compose reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose reply": {
+      "main": [
+        [
+          {
+            "node": "Reply to sender",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply to sender": {
+      "main": [
+        [
+          {
+            "node": "Mark as read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply: no PDF": {
+      "main": [
+        [
+          {
+            "node": "Mark as read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Unread Gmail with a PDF → signed POST /intake/email → reply with the case reference."
+  },
+  "tags": []
+}

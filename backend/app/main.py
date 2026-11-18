@@ -7,11 +7,12 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
-from app.api import case, chat, knowledge, procedures, reference, runs, stats
+from app.api import case, chat, intake, knowledge, procedures, reference, runs, stats
 from app.api.schemas import HealthOut
 from app.config import Settings, get_settings
 from app.deps import SessionDep, require_api_key
@@ -36,6 +37,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     from app.graph.builder import build_graph
     from app.graph.deps import GraphDeps
     from app.graph.runner import RunService, open_checkpointer
+    from app.integrations.notify import Notifier
 
     async with open_checkpointer(settings) as saver:
         sessionmaker = get_sessionmaker()
@@ -44,7 +46,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
             evidence_dir=storage_dir(settings).parent / "evidence",
         )
         graph = build_graph(deps, saver)
-        service = RunService(graph, sessionmaker, storage_dir(settings))
+        notifier = Notifier(sessionmaker, settings)
+        app.state.notifier = notifier
+        service = RunService(graph, sessionmaker, storage_dir(settings), notifier=notifier)
         app.state.run_service = service
         app.state.assistant = build_assistant_service(sessionmaker, saver)  # None → 503
         from app.rag.embeddings import get_embeddings
@@ -90,6 +94,26 @@ def create_app() -> FastAPI:
         allow_headers=["Content-Type", "X-API-Key"],
     )
 
+    # Paths that stay reachable through a tunnel without the API key: the signed intake
+    # webhook and the health check.
+    open_paths = {"/health", "/intake/email"}
+
+    @app.middleware("http")
+    async def tunnel_guard(request: Request, call_next: Any) -> Response:
+        """With no API_KEY the API is open (fine on localhost). A request that came through a
+        Cloudflare tunnel (it carries `cf-ray`) is refused then, except the open paths."""
+        if (
+            not settings.api_key
+            and request.headers.get("cf-ray")
+            and request.url.path not in open_paths
+        ):
+            return JSONResponse(
+                {"detail": "set API_KEY before exposing the API through a tunnel"},
+                status_code=403,
+            )
+        response: Response = await call_next(request)
+        return response
+
     @app.get("/health", response_model=HealthOut, tags=["meta"])
     async def health(session: SessionDep) -> HealthOut:
         try:
@@ -107,6 +131,8 @@ def create_app() -> FastAPI:
     app.include_router(procedures.router, dependencies=protected)
     app.include_router(case.router, dependencies=protected)
     app.include_router(chat.router, dependencies=protected)
+    app.include_router(intake.router, dependencies=protected)
+    app.include_router(intake.intake_router)  # HMAC-signed by n8n, no API key
     return app
 
 

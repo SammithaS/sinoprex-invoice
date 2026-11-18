@@ -128,7 +128,10 @@ async def _read(state: CaseState) -> bytes:
 
 
 def _policy(state: CaseState) -> Policy:
-    return Policy.model_validate(state["policy"])
+    # Cases paused before procedure versions existed (Phase 8) have no policy in their state;
+    # they ran under the code defaults, which is what v1 is (ASSUMPTIONS #74).
+    raw = state.get("policy")
+    return Policy.model_validate(raw) if raw else Policy()
 
 
 def needs_review(state: CaseState) -> bool:

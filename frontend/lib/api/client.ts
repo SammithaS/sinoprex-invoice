@@ -20,6 +20,7 @@ export type LedgerRow = Schemas["LedgerRow"];
 export type ChatTurn = Schemas["ChatTurn"];
 export type ChatSource = Schemas["ChatSource"];
 export type ChatHistory = Schemas["ChatHistoryOut"];
+export type Integrations = Schemas["IntegrationsOut"];
 
 export class ApiError extends Error {
   constructor(

@@ -1,0 +1,382 @@
+{
+  "name": "InvoiceIQ · 2 · Review notification",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "invoiceiq-review",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "907e521f-0e4d-5f35-8900-6b91bc89d05e",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "1d3973f9-685c-576f-9316-37465f1c84c4"
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b1b625d7-cbef-585d-abdd-787a04f8a6bc",
+              "name": "webhook_secret",
+              "value": "REPLACE-WITH-N8N_WEBHOOK_SECRET",
+              "type": "string"
+            },
+            {
+              "id": "0dff8e92-ec83-5b4e-80e5-4465deb60935",
+              "name": "reviewer_email",
+              "value": "reviewer@example.com",
+              "type": "string"
+            },
+            {
+              "id": "1bb2dd83-f146-5985-bc77-035f8d37d1f1",
+              "name": "backend_url",
+              "value": "https://REPLACE-ME.trycloudflare.com",
+              "type": "string"
+            },
+            {
+              "id": "883171a9-c4c5-5cc6-ac39-fd45d7f72717",
+              "name": "api_key",
+              "value": "REPLACE-WITH-API_KEY",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "c2c3385a-7e8e-5318-aeb9-bfd3e2257594",
+      "name": "Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        300
+      ],
+      "notes": "Edit these values once after importing (see n8n/README.md).",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Rebuild exactly what InvoiceIQ signed: \"<timestamp>.<compact JSON body>\".\n// The backend sends compact JSON without floats, so JSON.stringify(body) gives the same bytes.\nreturn $input.all().map((item) => {\n  const j = item.json;\n  const ts = String(j.headers['x-iiq-timestamp'] ?? '');\n  const age = Math.abs(Date.now() / 1000 - Number(ts));\n  return {\n    json: {\n      ...j,\n      signed: ts + '.' + JSON.stringify(j.body),\n      given: String(j.headers['x-iiq-signature'] ?? '').toLowerCase(),\n      fresh: ts !== '' && Number.isFinite(age) && age <= 300,\n    },\n  };\n});\n"
+      },
+      "id": "233d5b75-3198-508d-aa80-bd32d7357b35",
+      "name": "Prepare check",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "action": "hmac",
+        "type": "SHA256",
+        "value": "={{ $json.signed }}",
+        "dataPropertyName": "expected",
+        "secret": "={{ $json.webhook_secret }}",
+        "encoding": "hex"
+      },
+      "id": "3e99f552-222c-5014-a260-531898c49cd8",
+      "name": "Sign",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "b07cc277-54fa-5897-8d8e-41b116114aba",
+              "leftValue": "={{ $json.fresh && ('sha256=' + $json.expected) === $json.given }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "05ba5603-2e2f-5204-bb1c-09b2ea58b771",
+      "name": "Signed by InvoiceIQ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// The email to the reviewer (or approver), with a deep link to the case.\nreturn $input.all().map((item) => {\n  const b = item.json.body;\n  const what = b.kind === 'approval' ? 'Approval needed' : b.kind === 'erp' ? 'ERP recheck needed' : 'Review needed';\n  const who = b.vendor || 'Unknown supplier';\n  const inr = b.total_inr ? ` for ₹${Number(b.total_inr).toLocaleString('en-IN')}` : '';\n  const lines = [\n    `${what}: ${who} invoice ${b.invoice_number || '(no number)'}${inr}.`,\n    '',\n    b.question ? `Question: ${b.question}` : '',\n    ...(b.exceptions ?? []).map((e) => `- ${e.category}: ${e.summary} (owner: ${e.owner})`),\n    b.approver_role ? `Approver: ${b.approver_role}${b.approver_name ? ' (' + b.approver_name + ')' : ''}` : '',\n    '',\n    `Open the case: ${b.link}`,\n    b.kind === 'approval' ? `Approvals inbox: ${b.approvals_inbox}` : `Review queue: ${b.review_queue}`,\n  ].filter((l, i, a) => l !== '' || a[i - 1] !== '');\n  return {\n    json: {\n      to: item.json.reviewer_email,\n      subject: `InvoiceIQ · ${what}: ${who} ${b.invoice_number || ''}`.trim(),\n      text: lines.join('\\n'),\n      run_id: b.run_id,\n      backend_url: item.json.backend_url,\n      api_key: item.json.api_key,\n    },\n  };\n});\n"
+      },
+      "id": "94704184-5448-5de8-9be2-be4e2060370d",
+      "name": "Compose",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "73b3e891-1dc1-5f3a-8211-ab5af517bd36",
+      "name": "Email reviewer",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1320,
+        200
+      ],
+      "webhookId": "a64a9035-359f-5de1-bd2f-5756c1d3030c"
+    },
+    {
+      "parameters": {
+        "resume": "timeInterval",
+        "amount": 24,
+        "unit": "hours"
+      },
+      "id": "2fd103e5-4778-53b8-b608-c3ca20d5b907",
+      "name": "Wait 24 h",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1540,
+        200
+      ],
+      "webhookId": "ba32e8e0-da99-5d65-93b1-c660f5393fa8"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $('Compose').item.json.backend_url }}/runs/{{ $('Compose').item.json.run_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "={{ $('Compose').item.json.api_key }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "7c6793d9-d7c8-5f09-9e22-4bfb78cdef7f",
+      "name": "Check case",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "3273c77e-1910-5396-97fd-c8f972e30476",
+              "leftValue": "={{ ['WAITING_REVIEW', 'WAITING_APPROVAL'].includes($json.status) }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0ee15c9a-e4df-5624-8617-c4dd28378804",
+      "name": "Still waiting?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Compose').item.json.to }}",
+        "subject": "=Reminder: {{ $('Compose').item.json.subject }}",
+        "emailType": "text",
+        "message": "=Still waiting after 24 hours.\n\n{{ $('Compose').item.json.text }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "98099c0c-4b7e-5711-b64b-2cd85197e034",
+      "name": "Reminder",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2200,
+        200
+      ],
+      "webhookId": "86033dac-5660-568b-881e-d77d81db1a49"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Prepare check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare check": {
+      "main": [
+        [
+          {
+            "node": "Sign",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sign": {
+      "main": [
+        [
+          {
+            "node": "Signed by InvoiceIQ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Signed by InvoiceIQ?": {
+      "main": [
+        [
+          {
+            "node": "Compose",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compose": {
+      "main": [
+        [
+          {
+            "node": "Email reviewer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email reviewer": {
+      "main": [
+        [
+          {
+            "node": "Wait 24 h",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 24 h": {
+      "main": [
+        [
+          {
+            "node": "Check case",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check case": {
+      "main": [
+        [
+          {
+            "node": "Still waiting?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Still waiting?": {
+      "main": [
+        [
+          {
+            "node": "Reminder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Signed webhook when a case waits for a person → email with a deep link; reminder after 24 h."
+  },
+  "tags": []
+}

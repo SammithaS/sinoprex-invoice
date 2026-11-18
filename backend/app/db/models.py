@@ -151,6 +151,9 @@ class Run(Base):
     file_hash: Mapped[str] = mapped_column(String(64), index=True)
     sample_key: Mapped[str | None] = mapped_column(String(60))
     source: Mapped[str] = mapped_column(String(10), default="UPLOAD")  # UPLOAD | SAMPLE | EMAIL
+    # Email intake: "<message id>#<attachment name>", so a redelivered email makes no second run.
+    intake_ref: Mapped[str | None] = mapped_column(String(300), unique=True)
+    intake_from: Mapped[str | None] = mapped_column(String(200))
     rerun_of: Mapped[str | None] = mapped_column(String(36))
     decision: Mapped[str | None] = mapped_column(String(20))  # rules' decision (pre-human)
     final_decision: Mapped[str | None] = mapped_column(String(20))
@@ -326,4 +329,19 @@ class Correction(Base):
     old_value: Mapped[str | None]
     new_value: Mapped[str]
     reviewer: Mapped[str | None] = mapped_column(String(100))
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+
+class Notification(Base):
+    """An outbound n8n webhook call (review needed, vendor follow-up) and how it went."""
+
+    __tablename__ = "notifications"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"), index=True)
+    event: Mapped[str] = mapped_column(String(40))  # review_needed | vendor_followup
+    status: Mapped[str] = mapped_column(String(20))  # SENT | FAILED | SKIPPED
+    attempts: Mapped[int] = mapped_column(default=0)
+    error: Mapped[str | None]
+    payload: Mapped[dict[str, Any] | None] = mapped_column(JsonType)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())

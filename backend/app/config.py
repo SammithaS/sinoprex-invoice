@@ -42,8 +42,15 @@ class Settings(BaseSettings):
     r2_secret_access_key: str = ""
     r2_bucket: str = ""
 
+    # n8n (Phase 10). Base URL of the n8n instance, e.g. https://<name>.app.n8n.cloud; webhooks
+    # both ways are HMAC-SHA256 signed with this shared secret (empty = intake and notices off).
     n8n_base_url: str = ""
     n8n_webhook_secret: str = ""
+    n8n_review_path: str = "invoiceiq-review"
+    n8n_vendor_path: str = "invoiceiq-vendor-followup"
+    intake_max_attachments: int = 5
+    signature_tolerance_seconds: int = 300
+    app_url: str = ""  # where deep links in notifications point; default: frontend_origin
 
     frontend_origin: str = "http://localhost:3000"
     api_key: str = ""

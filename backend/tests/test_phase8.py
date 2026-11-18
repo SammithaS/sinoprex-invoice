@@ -343,3 +343,12 @@ async def test_erp_ledger_and_reset(service: RunService, api: AsyncClient) -> No
     reset = (await api.post("/admin/reset-demo")).json()
     assert reset == {"runs_deleted": 1, "erp_documents_deleted": 1}
     assert (await api.get("/runs")).json() == []
+
+
+def test_cases_paused_before_procedure_versions_use_the_defaults() -> None:
+    """A case paused before Phase 8 has no `policy` in its state; resuming it must not fail."""
+    from app.graph.nodes import _policy
+    from app.rules.policy import Policy
+
+    assert _policy({}) == Policy()
+    assert _policy({"policy": Policy(price_tolerance_pct=1).model_dump(mode="json")}) != Policy()

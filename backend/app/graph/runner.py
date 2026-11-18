@@ -18,7 +18,7 @@ from collections import defaultdict
 from collections.abc import AsyncIterator
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.base import BaseCheckpointSaver
@@ -31,6 +31,9 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from app.config import Settings
 from app.db.models import Invoice, Review, Run, RunStep
 from app.graph.state import CaseState, ReviewInput
+
+if TYPE_CHECKING:
+    from app.integrations.notify import Notifier
 
 log = logging.getLogger(__name__)
 
@@ -94,8 +97,10 @@ class RunService:
         sessionmaker: async_sessionmaker[AsyncSession],
         storage_dir: Path,
         broker: EventBroker | None = None,
+        notifier: "Notifier | None" = None,
     ) -> None:
         self.graph = graph
+        self.notifier = notifier
         self.sessionmaker = sessionmaker
         self.storage_dir = storage_dir
         self.broker = broker or EventBroker()
@@ -111,6 +116,8 @@ class RunService:
         source: str = "UPLOAD",
         sample_key: str | None = None,
         rerun_of: str | None = None,
+        intake_ref: str | None = None,
+        intake_from: str | None = None,
     ) -> Run:
         digest = hashlib.sha256(data).hexdigest()
         self.storage_dir.mkdir(parents=True, exist_ok=True)
@@ -126,6 +133,8 @@ class RunService:
             sample_key=sample_key,
             source=source,
             rerun_of=rerun_of,
+            intake_ref=intake_ref,
+            intake_from=intake_from,
         )
         async with self.sessionmaker() as session:
             if rerun_of:
@@ -226,6 +235,10 @@ class RunService:
         if task is not None:
             await task
 
+    async def wait_all(self) -> None:
+        while self._tasks:
+            await asyncio.gather(*list(self._tasks.values()), return_exceptions=True)
+
     async def recover(self) -> int:
         """Resume runs a restart cut off: from their checkpoint, or from scratch if none."""
         async with self.sessionmaker() as session:
@@ -290,6 +303,7 @@ class RunService:
                 if run.started_at:
                     run.duration_ms = int((run.finished_at - run.started_at).total_seconds() * 1000)
             await session.commit()
+            self._notify(run, payload)
             self.broker.publish(
                 run_id,
                 {
@@ -300,6 +314,20 @@ class RunService:
                     "error": run.error,
                 },
             )
+
+    def _notify(self, run: Run, payload: CaseState | Command[Any] | None) -> None:
+        """A case that now waits for a person → n8n tells them; a request for information
+        → n8n writes to the vendor (the case keeps waiting for the answer)."""
+        if self.notifier is None or run.status not in ("WAITING_REVIEW", "WAITING_APPROVAL"):
+            return
+        from app.integrations.notify import REVIEW_NEEDED, VENDOR_FOLLOWUP
+
+        resume = payload.resume if isinstance(payload, Command) else None
+        if isinstance(resume, dict) and resume.get("action") == "REQUEST_INFO":
+            context = {"comment": resume.get("comment"), "reviewer": resume.get("reviewer")}
+            self.notifier.schedule(run.id, VENDOR_FOLLOWUP, context)
+        else:
+            self.notifier.schedule(run.id, REVIEW_NEEDED)
 
     async def _record(
         self, session: AsyncSession, run_id: str, seq: int, event: dict[str, Any]
