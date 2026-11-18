@@ -48,6 +48,20 @@ Four workflows, exported in `workflows/`, for **n8n cloud** with **Gmail**:
 7. Restart the backend so it reads the new `.env`; **Settings → Integrations** in the app shows
    whether n8n is configured and every notification it sent.
 
+## Pre-filled copies, new tunnel URL, new n8n account
+
+`cd backend && python -m uv run python -m scripts.n8n_prefill <tunnel URL> [--email <gmail>]`
+writes `n8n/local/*.json` (git-ignored) with the tunnel URL, secret and API key filled in —
+import those instead of `workflows/`.
+
+- **Tunnel restarted** (the quick-tunnel URL changes): run the script with the new URL, then in
+  n8n update `backend_url` in the Config nodes of workflows 1, 2 and 4 (or re-import).
+- **New n8n account** (e.g. after the 14-day trial): sign up, re-run the script, import the four
+  files, connect Gmail again, activate, and set `N8N_BASE_URL` in `backend/.env` to the new
+  `https://<name>.app.n8n.cloud`, then restart the backend. The secret and API key can stay.
+- **Longer term:** Phase 12 runs n8n self-hosted next to the backend on the free VM, which ends
+  both the trial and the changing tunnel URL.
+
 ## Try it
 
 - Email a PDF from `data/test-invoices/` (e.g. `technova-contract-rate.pdf`) to the Gmail account
