@@ -1,0 +1,184 @@
+[
+  {
+    "id": "V001",
+    "name": "TechNova Solutions",
+    "legal_name": "TechNova Solutions Pvt Ltd",
+    "aliases": [
+      "TechNova",
+      "Technova Soln"
+    ],
+    "gstin": "29AABCT1332L1ZA",
+    "state_code": "29",
+    "state": "Karnataka",
+    "pan": "AABCT1332L",
+    "bank_account_last4": "4417",
+    "bank_ifsc": "HDFC0000123",
+    "payment_terms_days": 30,
+    "category": "IT hardware",
+    "email": "accounts@technova.example",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "V002",
+    "name": "Sharma Office Supplies",
+    "legal_name": "Sharma Office Supplies",
+    "aliases": [
+      "Sharma Stationers"
+    ],
+    "gstin": "27AKZPS6612M1Z4",
+    "state_code": "27",
+    "state": "Maharashtra",
+    "pan": "AKZPS6612M",
+    "bank_account_last4": "0921",
+    "bank_ifsc": "ICIC0001045",
+    "payment_terms_days": 15,
+    "category": "Stationery",
+    "email": "accounts@sharma.example",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "V003",
+    "name": "BlueLeaf Logistics",
+    "legal_name": "BlueLeaf Logistics Pvt Ltd",
+    "aliases": [
+      "Blue Leaf Logistics"
+    ],
+    "gstin": "33AAECB7720Q1ZE",
+    "state_code": "33",
+    "state": "Tamil Nadu",
+    "pan": "AAECB7720Q",
+    "bank_account_last4": "3305",
+    "bank_ifsc": "SBIN0004821",
+    "payment_terms_days": 30,
+    "category": "Freight",
+    "email": "accounts@blueleaf.example",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "V004",
+    "name": "Kaveri Print House",
+    "legal_name": "Kaveri Print House",
+    "aliases": [
+      "Kaveri Printers"
+    ],
+    "gstin": "29BNKPK3389D1ZN",
+    "state_code": "29",
+    "state": "Karnataka",
+    "pan": "BNKPK3389D",
+    "bank_account_last4": "7781",
+    "bank_ifsc": "CNRB0002210",
+    "payment_terms_days": 15,
+    "category": "Printing",
+    "email": "accounts@kaveri.example",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "V005",
+    "name": "CloudNest Software",
+    "legal_name": "CloudNest Software Pvt Ltd",
+    "aliases": [
+      "CloudNest",
+      "Cloud Nest"
+    ],
+    "gstin": "29AAICC9054H1ZA",
+    "state_code": "29",
+    "state": "Karnataka",
+    "pan": "AAICC9054H",
+    "bank_account_last4": "1196",
+    "bank_ifsc": "KKBK0008011",
+    "payment_terms_days": 7,
+    "category": "SaaS",
+    "email": "accounts@cloudnest.example",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "V006",
+    "name": "Deccan Facility Services",
+    "legal_name": "Deccan Facility Services LLP",
+    "aliases": [
+      "Deccan FS"
+    ],
+    "gstin": "36AAQFD2240R1ZX",
+    "state_code": "36",
+    "state": "Telangana",
+    "pan": "AAQFD2240R",
+    "bank_account_last4": "5502",
+    "bank_ifsc": "UTIB0000561",
+    "payment_terms_days": 30,
+    "category": "Facility services",
+    "email": "accounts@deccan.example",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "V007",
+    "name": "Rangoli Packaging",
+    "legal_name": "Rangoli Packaging Industries",
+    "aliases": [
+      "Rangoli Pack"
+    ],
+    "gstin": "24AAPFR8813C1Z5",
+    "state_code": "24",
+    "state": "Gujarat",
+    "pan": "AAPFR8813C",
+    "bank_account_last4": "6634",
+    "bank_ifsc": "BARB0VADODA",
+    "payment_terms_days": 45,
+    "category": "Packaging",
+    "email": "accounts@rangoli.example",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "V008",
+    "name": "Northwind Electricals",
+    "legal_name": "Northwind Electricals Pvt Ltd",
+    "aliases": [
+      "Northwind Elec"
+    ],
+    "gstin": "07AADCN4471G1ZH",
+    "state_code": "07",
+    "state": "Delhi",
+    "pan": "AADCN4471G",
+    "bank_account_last4": "2048",
+    "bank_ifsc": "PUNB0011200",
+    "payment_terms_days": 30,
+    "category": "Electrical",
+    "email": "accounts@northwind.example",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "V009",
+    "name": "Malabar Furniture Works",
+    "legal_name": "Malabar Furniture Works",
+    "aliases": [
+      "Malabar Furniture"
+    ],
+    "gstin": "32ABMFM5567P1ZI",
+    "state_code": "32",
+    "state": "Kerala",
+    "pan": "ABMFM5567P",
+    "bank_account_last4": "8890",
+    "bank_ifsc": "FDRL0001102",
+    "payment_terms_days": 30,
+    "category": "Furniture",
+    "email": "accounts@malabar.example",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "V010",
+    "name": "Zenith Traders",
+    "legal_name": "Zenith Traders",
+    "aliases": [
+      "Zenith Trading Co"
+    ],
+    "gstin": "29AGHPZ1290B1Z7",
+    "state_code": "29",
+    "state": "Karnataka",
+    "pan": "AGHPZ1290B",
+    "bank_account_last4": "3141",
+    "bank_ifsc": "IDIB000B123",
+    "payment_terms_days": 30,
+    "category": "General trading",
+    "email": "accounts@zenith.example",
+    "status": "BLOCKED"
+  }
+]

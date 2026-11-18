@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+/* Dark mode is class-based (next-themes puts `.dark` on <html>). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: var(--font-poppins), "Poppins", system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
+
+  /* brand */
+  --color-brand-500: #10b981; /* charts, icons, highlights */
+  --color-brand-600: #059669; /* logo gradient end */
+  --color-brand-650: #04875f; /* button gradient start */
+  --color-brand-700: #047857; /* buttons, active nav (white text) */
+  --color-brand-800: #065f46; /* text on brand tint */
+  --color-brand-300: #6ee7b7; /* evidence highlight borders, timeline line */
+  --color-brand-100: #d1fae5; /* focus/active ring */
+  --color-brand-50: #ecfdf5; /* soft buttons, tints */
+
+  /* neutrals */
+  --color-navy: #0f1638; /* headings, key numbers */
+  --color-ink: #2b3150; /* body text */
+  --color-muted: #646e87; /* secondary text (AA on white and canvas) */
+  --color-line: #eef0f5; /* dividers, table rows */
+  --color-canvas: #f7f8fb; /* page background, inputs */
+  --color-card: #ffffff;
+
+  /* decision status (text / fill) */
+  --color-approved: #15803d;
+  --color-approved-bg: #dcfce7;
+  --color-review: #b45309;
+  --color-review-bg: #fef3c7;
+  --color-hold: #1d4ed8;
+  --color-hold-bg: #dbeafe;
+  --color-rejected: #b91c1c;
+  --color-rejected-bg: #fee2e2;
+
+  --radius-card: 18px;
+  --radius-control: 12px;
+  --shadow-card: 0 8px 28px rgba(15, 22, 56, 0.06);
+  --shadow-brand: 0 6px 16px rgba(5, 150, 105, 0.28);
+}
+
+/* Dark mode (§13b): bg #0F1426, card #171D33, border #262E48, text #E7EAF3,
+   muted #9AA3B8, accent #34D399; status fills = 15% of the status colour,
+   status text = the 400 shade. */
+.dark {
+  --color-canvas: #0f1426;
+  --color-card: #171d33;
+  --color-line: #262e48;
+  --color-navy: #e7eaf3;
+  --color-ink: #e7eaf3;
+  --color-muted: #9aa3b8;
+
+  --color-brand-500: #34d399;
+  --color-brand-700: #047857;
+  --color-brand-800: #6ee7b7;
+  --color-brand-100: rgba(52, 211, 153, 0.25);
+  --color-brand-50: rgba(52, 211, 153, 0.12);
+
+  --color-approved: #4ade80;
+  --color-approved-bg: rgba(21, 128, 61, 0.15);
+  --color-review: #fbbf24;
+  --color-review-bg: rgba(180, 83, 9, 0.15);
+  --color-hold: #60a5fa;
+  --color-hold-bg: rgba(29, 78, 216, 0.15);
+  --color-rejected: #f87171;
+  --color-rejected-bg: rgba(185, 28, 28, 0.15);
+
+  --shadow-card: 0 8px 28px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 22px;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-brand-100);
+    outline-offset: 2px;
+  }
+}

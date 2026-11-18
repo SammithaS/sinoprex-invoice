@@ -1,0 +1,531 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "InvoiceIQ API",
+    "description": "Agentic AI invoice processing: PDF \u2192 reasoned decision.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reference/vendors": {
+      "get": {
+        "tags": [
+          "reference"
+        ],
+        "summary": "List Vendors",
+        "operationId": "list_vendors_reference_vendors_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VendorOut"
+                  },
+                  "title": "Response List Vendors Reference Vendors Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reference/pos": {
+      "get": {
+        "tags": [
+          "reference"
+        ],
+        "summary": "List Purchase Orders",
+        "operationId": "list_purchase_orders_reference_pos_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PurchaseOrderOut"
+                  },
+                  "title": "Response List Purchase Orders Reference Pos Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reference/grns": {
+      "get": {
+        "tags": [
+          "reference"
+        ],
+        "summary": "List Goods Receipts",
+        "operationId": "list_goods_receipts_reference_grns_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GoodsReceiptOut"
+                  },
+                  "title": "Response List Goods Receipts Reference Grns Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GoodsReceiptOut": {
+        "properties": {
+          "grn_number": {
+            "type": "string",
+            "title": "Grn Number"
+          },
+          "po_number": {
+            "type": "string",
+            "title": "Po Number"
+          },
+          "vendor_name": {
+            "type": "string",
+            "title": "Vendor Name"
+          },
+          "received_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Received Date"
+          },
+          "received_by": {
+            "type": "string",
+            "title": "Received By"
+          },
+          "lines": {
+            "items": {
+              "$ref": "#/components/schemas/GrnLineOut"
+            },
+            "type": "array",
+            "title": "Lines"
+          }
+        },
+        "type": "object",
+        "required": [
+          "grn_number",
+          "po_number",
+          "vendor_name",
+          "received_date",
+          "received_by",
+          "lines"
+        ],
+        "title": "GoodsReceiptOut"
+      },
+      "GrnLineOut": {
+        "properties": {
+          "po_line_no": {
+            "type": "integer",
+            "title": "Po Line No"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "qty_received": {
+            "type": "string",
+            "title": "Qty Received"
+          }
+        },
+        "type": "object",
+        "required": [
+          "po_line_no",
+          "description",
+          "qty_received"
+        ],
+        "title": "GrnLineOut"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthOut": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "env": {
+            "type": "string",
+            "title": "Env"
+          },
+          "database": {
+            "type": "string",
+            "title": "Database"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "env",
+          "database"
+        ],
+        "title": "HealthOut"
+      },
+      "PoLineOut": {
+        "properties": {
+          "line_no": {
+            "type": "integer",
+            "title": "Line No"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "hsn_sac": {
+            "type": "string",
+            "title": "Hsn Sac"
+          },
+          "qty": {
+            "type": "string",
+            "title": "Qty"
+          },
+          "uom": {
+            "type": "string",
+            "title": "Uom"
+          },
+          "unit_price": {
+            "type": "string",
+            "title": "Unit Price"
+          },
+          "tax_rate": {
+            "type": "string",
+            "title": "Tax Rate"
+          }
+        },
+        "type": "object",
+        "required": [
+          "line_no",
+          "description",
+          "hsn_sac",
+          "qty",
+          "uom",
+          "unit_price",
+          "tax_rate"
+        ],
+        "title": "PoLineOut"
+      },
+      "PurchaseOrderOut": {
+        "properties": {
+          "po_number": {
+            "type": "string",
+            "title": "Po Number"
+          },
+          "vendor_id": {
+            "type": "string",
+            "title": "Vendor Id"
+          },
+          "vendor_name": {
+            "type": "string",
+            "title": "Vendor Name"
+          },
+          "po_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Po Date"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "subtotal": {
+            "type": "string",
+            "title": "Subtotal"
+          },
+          "tax_total": {
+            "type": "string",
+            "title": "Tax Total"
+          },
+          "total": {
+            "type": "string",
+            "title": "Total"
+          },
+          "amount_invoiced": {
+            "type": "string",
+            "title": "Amount Invoiced"
+          },
+          "remaining": {
+            "type": "string",
+            "title": "Remaining"
+          },
+          "requires_grn": {
+            "type": "boolean",
+            "title": "Requires Grn"
+          },
+          "cost_centre": {
+            "type": "string",
+            "title": "Cost Centre"
+          },
+          "buyer": {
+            "type": "string",
+            "title": "Buyer"
+          },
+          "lines": {
+            "items": {
+              "$ref": "#/components/schemas/PoLineOut"
+            },
+            "type": "array",
+            "title": "Lines"
+          }
+        },
+        "type": "object",
+        "required": [
+          "po_number",
+          "vendor_id",
+          "vendor_name",
+          "po_date",
+          "status",
+          "subtotal",
+          "tax_total",
+          "total",
+          "amount_invoiced",
+          "remaining",
+          "requires_grn",
+          "cost_centre",
+          "buyer",
+          "lines"
+        ],
+        "title": "PurchaseOrderOut"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VendorOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "legal_name": {
+            "type": "string",
+            "title": "Legal Name"
+          },
+          "aliases": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Aliases"
+          },
+          "gstin": {
+            "type": "string",
+            "title": "Gstin"
+          },
+          "state_code": {
+            "type": "string",
+            "title": "State Code"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "pan": {
+            "type": "string",
+            "title": "Pan"
+          },
+          "bank_account_last4": {
+            "type": "string",
+            "title": "Bank Account Last4"
+          },
+          "payment_terms_days": {
+            "type": "integer",
+            "title": "Payment Terms Days"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "legal_name",
+          "aliases",
+          "gstin",
+          "state_code",
+          "state",
+          "pan",
+          "bank_account_last4",
+          "payment_terms_days",
+          "category",
+          "status"
+        ],
+        "title": "VendorOut"
+      }
+    }
+  }
+}

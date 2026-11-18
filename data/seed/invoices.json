@@ -1,0 +1,110 @@
+[
+  {
+    "vendor_id": "V001",
+    "invoice_number": "TN/2026/0997",
+    "invoice_date": "2026-08-19",
+    "po_number": "PO-2026-0029",
+    "subtotal": "48000",
+    "tax_total": "8640",
+    "total": "56640",
+    "gl_account": null,
+    "cost_centre": null,
+    "status": "PAID"
+  },
+  {
+    "vendor_id": "V002",
+    "invoice_number": "SOS-2026-0412",
+    "invoice_date": "2026-08-30",
+    "po_number": "PO-2026-0031",
+    "subtotal": "18000",
+    "tax_total": "3240",
+    "total": "21240",
+    "gl_account": null,
+    "cost_centre": null,
+    "status": "PAID"
+  },
+  {
+    "vendor_id": "V004",
+    "invoice_number": "KPH/2026/118",
+    "invoice_date": "2026-09-28",
+    "po_number": "PO-2026-0033",
+    "subtotal": "11000",
+    "tax_total": "1980",
+    "total": "12980",
+    "gl_account": null,
+    "cost_centre": null,
+    "status": "POSTED"
+  },
+  {
+    "vendor_id": "V010",
+    "invoice_number": "ZT-0087",
+    "invoice_date": "2026-08-27",
+    "po_number": "PO-2026-0030",
+    "subtotal": "45000",
+    "tax_total": "8100",
+    "total": "53100",
+    "gl_account": null,
+    "cost_centre": null,
+    "status": "PAID"
+  },
+  {
+    "vendor_id": "V005",
+    "invoice_number": "CN-INV-2026-06",
+    "invoice_date": "2026-06-01",
+    "po_number": null,
+    "subtotal": "42000",
+    "tax_total": "7560",
+    "total": "49560",
+    "gl_account": "6420",
+    "cost_centre": "CC-IT-01",
+    "status": "PAID"
+  },
+  {
+    "vendor_id": "V005",
+    "invoice_number": "CN-INV-2026-07",
+    "invoice_date": "2026-07-01",
+    "po_number": null,
+    "subtotal": "42000",
+    "tax_total": "7560",
+    "total": "49560",
+    "gl_account": "6420",
+    "cost_centre": "CC-IT-01",
+    "status": "PAID"
+  },
+  {
+    "vendor_id": "V005",
+    "invoice_number": "CN-INV-2026-08",
+    "invoice_date": "2026-08-01",
+    "po_number": null,
+    "subtotal": "42000",
+    "tax_total": "7560",
+    "total": "49560",
+    "gl_account": "6420",
+    "cost_centre": "CC-IT-01",
+    "status": "PAID"
+  },
+  {
+    "vendor_id": "V005",
+    "invoice_number": "CN-INV-2026-09",
+    "invoice_date": "2026-09-01",
+    "po_number": null,
+    "subtotal": "42000",
+    "tax_total": "7560",
+    "total": "49560",
+    "gl_account": "6420",
+    "cost_centre": "CC-IT-01",
+    "status": "PAID"
+  },
+  {
+    "vendor_id": "V005",
+    "invoice_number": "CN-INV-2026-10",
+    "invoice_date": "2026-10-01",
+    "po_number": null,
+    "subtotal": "42000",
+    "tax_total": "7560",
+    "total": "49560",
+    "gl_account": "6420",
+    "cost_centre": "CC-IT-01",
+    "status": "PAID"
+  }
+]

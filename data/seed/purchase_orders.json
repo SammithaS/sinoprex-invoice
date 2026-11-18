@@ -1,0 +1,488 @@
+[
+  {
+    "po_number": "PO-2026-0042",
+    "vendor_id": "V001",
+    "po_date": "2026-10-20",
+    "status": "OPEN",
+    "requires_grn": true,
+    "cost_centre": "CC-IT-01",
+    "buyer": "Rahul Menon",
+    "subtotal": "140000.00",
+    "tax_total": "25200.00",
+    "total": "165200.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Laptop docking station",
+        "hsn_sac": "8473",
+        "qty": "100",
+        "uom": "NOS",
+        "unit_price": "1100",
+        "tax_rate": "18"
+      },
+      {
+        "line_no": 2,
+        "description": "USB-C charging cable 2m",
+        "hsn_sac": "8544",
+        "qty": "200",
+        "uom": "NOS",
+        "unit_price": "150",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0029",
+    "vendor_id": "V001",
+    "po_date": "2026-08-04",
+    "status": "CLOSED",
+    "requires_grn": true,
+    "cost_centre": "CC-IT-01",
+    "buyer": "Rahul Menon",
+    "subtotal": "48000.00",
+    "tax_total": "8640.00",
+    "total": "56640.00",
+    "amount_invoiced": "56640",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "24-inch LED monitor",
+        "hsn_sac": "8528",
+        "qty": "4",
+        "uom": "NOS",
+        "unit_price": "12000",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0045",
+    "vendor_id": "V001",
+    "po_date": "2026-11-02",
+    "status": "OPEN",
+    "requires_grn": true,
+    "cost_centre": "CC-IT-01",
+    "buyer": "Rahul Menon",
+    "subtotal": "72500.00",
+    "tax_total": "13050.00",
+    "total": "85550.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Wireless keyboard and mouse set",
+        "hsn_sac": "8471",
+        "qty": "50",
+        "uom": "NOS",
+        "unit_price": "1450",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0038",
+    "vendor_id": "V002",
+    "po_date": "2026-10-01",
+    "status": "OPEN",
+    "requires_grn": true,
+    "cost_centre": "CC-ADM-02",
+    "buyer": "Anita Rao",
+    "subtotal": "86000.00",
+    "tax_total": "11160.00",
+    "total": "97160.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "A4 copier paper 75gsm (ream)",
+        "hsn_sac": "4802",
+        "qty": "300",
+        "uom": "REAM",
+        "unit_price": "240",
+        "tax_rate": "12"
+      },
+      {
+        "line_no": 2,
+        "description": "Ball pen, blue (box of 50)",
+        "hsn_sac": "9608",
+        "qty": "40",
+        "uom": "BOX",
+        "unit_price": "350",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0031",
+    "vendor_id": "V002",
+    "po_date": "2026-08-20",
+    "status": "CLOSED",
+    "requires_grn": true,
+    "cost_centre": "CC-ADM-02",
+    "buyer": "Anita Rao",
+    "subtotal": "18000.00",
+    "tax_total": "3240.00",
+    "total": "21240.00",
+    "amount_invoiced": "21240",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Whiteboard marker set",
+        "hsn_sac": "9608",
+        "qty": "100",
+        "uom": "SET",
+        "unit_price": "180",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0035",
+    "vendor_id": "V003",
+    "po_date": "2026-09-25",
+    "status": "OPEN",
+    "requires_grn": true,
+    "cost_centre": "CC-OPS-03",
+    "buyer": "Vikram Iyer",
+    "subtotal": "75000.00",
+    "tax_total": "9000.00",
+    "total": "84000.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Line haul Chennai–Bengaluru, 32ft container",
+        "hsn_sac": "9965",
+        "qty": "6",
+        "uom": "TRIP",
+        "unit_price": "12500",
+        "tax_rate": "12"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0047",
+    "vendor_id": "V003",
+    "po_date": "2026-11-05",
+    "status": "OPEN",
+    "requires_grn": true,
+    "cost_centre": "CC-OPS-03",
+    "buyer": "Vikram Iyer",
+    "subtotal": "54000.00",
+    "tax_total": "6480.00",
+    "total": "60480.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Last-mile delivery, Bengaluru stores",
+        "hsn_sac": "9965",
+        "qty": "120",
+        "uom": "DROP",
+        "unit_price": "450",
+        "tax_rate": "12"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0033",
+    "vendor_id": "V004",
+    "po_date": "2026-09-12",
+    "status": "PARTIALLY_INVOICED",
+    "requires_grn": true,
+    "cost_centre": "CC-MKT-04",
+    "buyer": "Sneha Kulkarni",
+    "subtotal": "68250.00",
+    "tax_total": "12285.00",
+    "total": "80535.00",
+    "amount_invoiced": "12980",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Festive flyers A5, 4-colour",
+        "hsn_sac": "4911",
+        "qty": "20000",
+        "uom": "NOS",
+        "unit_price": "1.10",
+        "tax_rate": "18"
+      },
+      {
+        "line_no": 2,
+        "description": "Standee 6x3 ft with stand",
+        "hsn_sac": "4911",
+        "qty": "25",
+        "uom": "NOS",
+        "unit_price": "1850",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0048",
+    "vendor_id": "V004",
+    "po_date": "2026-11-06",
+    "status": "OPEN",
+    "requires_grn": true,
+    "cost_centre": "CC-MKT-04",
+    "buyer": "Sneha Kulkarni",
+    "subtotal": "22500.00",
+    "tax_total": "4050.00",
+    "total": "26550.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Shelf talkers, laminated",
+        "hsn_sac": "4911",
+        "qty": "5000",
+        "uom": "NOS",
+        "unit_price": "4.50",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0036",
+    "vendor_id": "V006",
+    "po_date": "2026-10-01",
+    "status": "OPEN",
+    "requires_grn": false,
+    "cost_centre": "CC-ADM-02",
+    "buyer": "Anita Rao",
+    "subtotal": "185000.00",
+    "tax_total": "33300.00",
+    "total": "218300.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Housekeeping services, Oct 2026 (HQ)",
+        "hsn_sac": "998533",
+        "qty": "1",
+        "uom": "MONTH",
+        "unit_price": "185000",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0039",
+    "vendor_id": "V006",
+    "po_date": "2026-11-01",
+    "status": "OPEN",
+    "requires_grn": false,
+    "cost_centre": "CC-ADM-02",
+    "buyer": "Anita Rao",
+    "subtotal": "185000.00",
+    "tax_total": "33300.00",
+    "total": "218300.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Housekeeping services, Nov 2026 (HQ)",
+        "hsn_sac": "998533",
+        "qty": "1",
+        "uom": "MONTH",
+        "unit_price": "185000",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0040",
+    "vendor_id": "V007",
+    "po_date": "2026-10-10",
+    "status": "OPEN",
+    "requires_grn": true,
+    "cost_centre": "CC-OPS-03",
+    "buyer": "Vikram Iyer",
+    "subtotal": "189200.00",
+    "tax_total": "34056.00",
+    "total": "223256.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Corrugated box 5-ply 18x12x12",
+        "hsn_sac": "4819",
+        "qty": "4000",
+        "uom": "NOS",
+        "unit_price": "38",
+        "tax_rate": "18"
+      },
+      {
+        "line_no": 2,
+        "description": "Packing tape 48mm x 65m",
+        "hsn_sac": "3919",
+        "qty": "600",
+        "uom": "ROLL",
+        "unit_price": "62",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0041",
+    "vendor_id": "V008",
+    "po_date": "2026-10-15",
+    "status": "OPEN",
+    "requires_grn": true,
+    "cost_centre": "CC-FAC-05",
+    "buyer": "Imran Sheikh",
+    "subtotal": "292500.00",
+    "tax_total": "52650.00",
+    "total": "345150.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "LED panel light 2x2 ft, 36W",
+        "hsn_sac": "9405",
+        "qty": "150",
+        "uom": "NOS",
+        "unit_price": "1650",
+        "tax_rate": "18"
+      },
+      {
+        "line_no": 2,
+        "description": "Electrical installation labour",
+        "hsn_sac": "995461",
+        "qty": "1",
+        "uom": "LOT",
+        "unit_price": "45000",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0044",
+    "vendor_id": "V008",
+    "po_date": "2026-10-28",
+    "status": "OPEN",
+    "requires_grn": true,
+    "cost_centre": "CC-FAC-05",
+    "buyer": "Imran Sheikh",
+    "subtotal": "745000.00",
+    "tax_total": "134100.00",
+    "total": "879100.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Diesel generator 125 kVA with AMF panel",
+        "hsn_sac": "8502",
+        "qty": "1",
+        "uom": "NOS",
+        "unit_price": "745000",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0043",
+    "vendor_id": "V009",
+    "po_date": "2026-10-22",
+    "status": "OPEN",
+    "requires_grn": true,
+    "cost_centre": "CC-FAC-05",
+    "buyer": "Imran Sheikh",
+    "subtotal": "804000.00",
+    "tax_total": "144720.00",
+    "total": "948720.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Ergonomic office chair",
+        "hsn_sac": "9401",
+        "qty": "40",
+        "uom": "NOS",
+        "unit_price": "8900",
+        "tax_rate": "18"
+      },
+      {
+        "line_no": 2,
+        "description": "Workstation desk 1200x600",
+        "hsn_sac": "9403",
+        "qty": "40",
+        "uom": "NOS",
+        "unit_price": "11200",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0046",
+    "vendor_id": "V009",
+    "po_date": "2026-11-03",
+    "status": "OPEN",
+    "requires_grn": true,
+    "cost_centre": "CC-FAC-05",
+    "buyer": "Imran Sheikh",
+    "subtotal": "126000.00",
+    "tax_total": "22680.00",
+    "total": "148680.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Meeting table 8-seater",
+        "hsn_sac": "9403",
+        "qty": "3",
+        "uom": "NOS",
+        "unit_price": "42000",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0030",
+    "vendor_id": "V010",
+    "po_date": "2026-08-12",
+    "status": "CLOSED",
+    "requires_grn": true,
+    "cost_centre": "CC-OPS-03",
+    "buyer": "Vikram Iyer",
+    "subtotal": "45000.00",
+    "tax_total": "8100.00",
+    "total": "53100.00",
+    "amount_invoiced": "53100",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Assorted hangers (bundle of 100)",
+        "hsn_sac": "3926",
+        "qty": "50",
+        "uom": "BDL",
+        "unit_price": "900",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0049",
+    "vendor_id": "V002",
+    "po_date": "2026-11-10",
+    "status": "OPEN",
+    "requires_grn": true,
+    "cost_centre": "CC-ADM-02",
+    "buyer": "Anita Rao",
+    "subtotal": "42000.00",
+    "tax_total": "7560.00",
+    "total": "49560.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Thermal receipt rolls 79mm",
+        "hsn_sac": "4811",
+        "qty": "1000",
+        "uom": "ROLL",
+        "unit_price": "42",
+        "tax_rate": "18"
+      }
+    ]
+  }
+]

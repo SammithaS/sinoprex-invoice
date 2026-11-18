@@ -1,0 +1,50 @@
+[project]
+name = "invoiceiq-backend"
+version = "0.1.0"
+description = "InvoiceIQ — agentic AI invoice processing backend (FastAPI + LangGraph)"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic==1.20.1",
+    "asyncpg==0.32.0",
+    "fastapi[standard]==0.163.2",
+    "pgvector==0.5.1",
+    "psycopg[binary]==3.3.9",
+    "pydantic-settings==2.16.3",
+    "sqlalchemy[asyncio]==2.1.9",
+    "uvicorn==0.54.0",
+]
+
+[dependency-groups]
+dev = [
+    "aiosqlite==0.22.1",
+    "httpx==0.28.1",
+    "mypy==2.4.1",
+    "pytest==9.2.0",
+    "pytest-asyncio==1.5.0",
+    "ruff==0.17.5",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["alembic/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC", "SIM", "RUF"]
+ignore = ["RUF001", "RUF002", "RUF003"]  # allow the ₹ sign and typographic characters in strings
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+exclude = ["alembic/"]
