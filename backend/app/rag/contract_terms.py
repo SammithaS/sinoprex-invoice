@@ -7,6 +7,7 @@ given). Anything else is dropped with a note, so the rules never see an invented
 (plan §7 grounding rules, policy §3.6).
 """
 
+import asyncio
 import re
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
@@ -74,9 +75,14 @@ async def retrieve_contract_clauses(
         f"agreed rate {ln.description or ''} HSN {ln.hsn_sac or ''} {ln.uom or ''}".strip()
         for ln in lines
     ]
+    # Queries run concurrently (each is two round trips to Neon); results merge in query order
+    # so the excerpt set is the same as running them one by one.
+    results = await asyncio.gather(
+        *(retriever.search(q, k=k_per_query, flt=flt) for q in [*queries, *CLAUSE_QUERIES])
+    )
     seen: dict[str, RetrievedChunk] = {}
-    for q in [*queries, *CLAUSE_QUERIES]:
-        for hit in await retriever.search(q, k=k_per_query, flt=flt):
+    for hits in results:
+        for hit in hits:
             seen.setdefault(hit.chunk.id, hit)
     return list(seen.values())
 

@@ -4,6 +4,12 @@ export type Schemas = components["schemas"];
 export type Vendor = Schemas["VendorOut"];
 export type PurchaseOrder = Schemas["PurchaseOrderOut"];
 export type GoodsReceipt = Schemas["GoodsReceiptOut"];
+export type Run = Schemas["RunOut"];
+export type RunDetail = Schemas["RunDetailOut"];
+export type RunStep = Schemas["RunStepOut"];
+export type Sample = Schemas["SampleOut"];
+export type Stats = Schemas["Stats"];
+export type ReviewAction = Schemas["ReviewIn"]["action"];
 
 export class ApiError extends Error {
   constructor(
@@ -14,9 +20,7 @@ export class ApiError extends Error {
   }
 }
 
-/** Calls FastAPI through the Next.js proxy at /api/backend. */
-export async function apiGet<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`/api/backend${path}`, { ...init, headers: { accept: "application/json" } });
+async function handle<T>(res: Response): Promise<T> {
   if (!res.ok) {
     let detail = res.statusText;
     try {
@@ -28,4 +32,31 @@ export async function apiGet<T>(path: string, init?: RequestInit): Promise<T> {
     throw new ApiError(res.status, detail);
   }
   return (await res.json()) as T;
+}
+
+/** Calls FastAPI through the Next.js proxy at /api/backend. */
+export async function apiGet<T>(path: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(`/api/backend${path}`, { ...init, headers: { accept: "application/json" } });
+  return handle<T>(res);
+}
+
+export async function apiPost<T>(path: string, body?: unknown): Promise<T> {
+  const res = await fetch(`/api/backend${path}`, {
+    method: "POST",
+    headers: { accept: "application/json", "content-type": "application/json" },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  return handle<T>(res);
+}
+
+export async function apiUpload<T>(path: string, file: File): Promise<T> {
+  const form = new FormData();
+  form.append("file", file);
+  const res = await fetch(`/api/backend${path}`, { method: "POST", body: form });
+  return handle<T>(res);
+}
+
+/** URL of a backend resource for <img>/<a> (goes through the proxy, so the key stays server-side). */
+export function backendUrl(path: string): string {
+  return `/api/backend${path}`;
 }

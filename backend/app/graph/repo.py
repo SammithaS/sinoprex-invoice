@@ -1,5 +1,6 @@
 """Database access the graph needs: reference data in, case history out."""
 
+import time
 from decimal import Decimal
 
 from sqlalchemy import select, update
@@ -14,8 +15,28 @@ COMPANY_GSTIN = "29AACCA4821K1ZM"
 COMPANY_STATE = "29"
 
 
+# Vendors, POs and GRNs change rarely (seed, Phase 8 master-data edits); invoice history changes
+# with every case. Cache the former briefly, always read the latter (ASSUMPTIONS #71).
+MASTER_TTL_SECONDS = 30.0
+_master: tuple[float, rm.ReferenceData] | None = None
+
+
+def clear_reference_cache() -> None:
+    global _master
+    _master = None
+
+
 async def load_reference(session: AsyncSession) -> rm.ReferenceData:
     """Vendors, POs, GRNs and the live invoice history, as the rules engine sees them."""
+    global _master
+    now = time.monotonic()
+    if _master is None or now - _master[0] > MASTER_TTL_SECONDS:
+        _master = (now, await _load_master(session))
+    invoices = (await session.scalars(select(Invoice))).all()
+    return _master[1].model_copy(update={"invoices": [_record(i) for i in invoices]})
+
+
+async def _load_master(session: AsyncSession) -> rm.ReferenceData:
     vendors = (await session.scalars(select(Vendor))).all()
     pos = (
         await session.scalars(select(PurchaseOrder).options(selectinload(PurchaseOrder.lines)))
@@ -29,7 +50,6 @@ async def load_reference(session: AsyncSession) -> rm.ReferenceData:
         )
     ).all()
     line_no = {line.id: line.line_no for po in pos for line in po.lines}
-    invoices = (await session.scalars(select(Invoice))).all()
     return rm.ReferenceData(
         company_gstin=COMPANY_GSTIN,
         company_state_code=COMPANY_STATE,
@@ -87,25 +107,26 @@ async def load_reference(session: AsyncSession) -> rm.ReferenceData:
             )
             for g in grns
         ],
-        invoices=[
-            rm.InvoiceRecord(
-                ref=i.run_id or i.invoice_number,
-                vendor_id=i.vendor_id,
-                invoice_number=i.invoice_number,
-                invoice_date=i.invoice_date,
-                total=i.total,
-                po_number=i.po_number,
-                status=i.status,
-                file_hash=i.file_hash,
-                service_period=i.service_period,
-                gl_account=i.gl_account,
-                cost_centre=i.cost_centre,
-                lines=[rm.InvoicedLine.model_validate(x) for x in i.po_lines]
-                if i.po_lines is not None
-                else None,
-            )
-            for i in invoices
-        ],
+        invoices=[],
+    )
+
+
+def _record(i: Invoice) -> rm.InvoiceRecord:
+    return rm.InvoiceRecord(
+        ref=i.run_id or i.invoice_number,
+        vendor_id=i.vendor_id,
+        invoice_number=i.invoice_number,
+        invoice_date=i.invoice_date,
+        total=i.total,
+        po_number=i.po_number,
+        status=i.status,
+        file_hash=i.file_hash,
+        service_period=i.service_period,
+        gl_account=i.gl_account,
+        cost_centre=i.cost_centre,
+        lines=[rm.InvoicedLine.model_validate(x) for x in i.po_lines]
+        if i.po_lines is not None
+        else None,
     )
 
 

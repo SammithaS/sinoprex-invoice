@@ -6,8 +6,8 @@ from collections.abc import AsyncIterator
 from pathlib import Path
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
-from fastapi.responses import FileResponse
+from fastapi import APIRouter, Depends, File, Header, HTTPException, Request, UploadFile
+from fastapi.responses import FileResponse, Response
 from fastapi.sse import EventSourceResponse, ServerSentEvent
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -77,13 +77,48 @@ async def get_run_file(session: SessionDep, run_id: str) -> FileResponse:
     return FileResponse(run.file_path, media_type="application/pdf", filename=run.file_name)
 
 
+PAGE_SCALE = 2  # PNG pixels per PDF point: evidence boxes (PDF points) × 2 = pixels
+
+
+def _render_page(path: str, page_no: int) -> bytes | None:
+    import pymupdf
+
+    with pymupdf.open(path) as doc:
+        if not 1 <= page_no <= doc.page_count:
+            return None
+        pix = doc[page_no - 1].get_pixmap(matrix=pymupdf.Matrix(PAGE_SCALE, PAGE_SCALE))
+        data: bytes = pix.tobytes("png")
+        return data
+
+
+@router.get("/runs/{run_id}/pages/{page_no}")
+async def get_run_page(session: SessionDep, run_id: str, page_no: int) -> Response:
+    """Page image for the preview. 1 PDF point = 2 px, so evidence bboxes overlay directly."""
+    run = await session.get(Run, run_id)
+    if run is None:
+        raise HTTPException(status_code=404, detail="run not found")
+    png = await asyncio.to_thread(_render_page, run.file_path, page_no)
+    if png is None:
+        raise HTTPException(status_code=404, detail="page not found")
+    return Response(png, media_type="image/png", headers={"cache-control": "private, max-age=3600"})
+
+
 @router.get("/runs/{run_id}/events", response_class=EventSourceResponse)
 async def run_events(
-    service: ServiceDep, session: SessionDep, run_id: str, after: int = 0
+    service: ServiceDep,
+    session: SessionDep,
+    run_id: str,
+    after: int = 0,
+    last_event_id: Annotated[str | None, Header()] = None,
 ) -> AsyncIterator[ServerSentEvent]:
-    """Persisted timeline first (so a page refresh restores it), then live events."""
+    """Persisted timeline first (so a page refresh restores it), then live events.
+
+    A reconnecting EventSource sends `Last-Event-ID`; it wins over `?after=`.
+    """
     if await session.get(Run, run_id) is None:
         raise HTTPException(status_code=404, detail="run not found")
+    if last_event_id and last_event_id.isdigit():
+        after = int(last_event_id)
     async for event in service.events(run_id, after):
         yield ServerSentEvent(
             event=str(event.get("type", "message")),

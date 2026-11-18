@@ -1,5 +1,6 @@
 """FastAPI application entry point."""
 
+import asyncio
 import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
@@ -9,7 +10,7 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
-from app.api import knowledge, reference, runs
+from app.api import knowledge, reference, runs, stats
 from app.api.schemas import HealthOut
 from app.config import Settings, get_settings
 from app.deps import SessionDep, require_api_key
@@ -40,10 +41,14 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         graph = build_graph(GraphDeps(sessionmaker=sessionmaker), saver)
         service = RunService(graph, sessionmaker, storage_dir(settings))
         app.state.run_service = service
+        from app.rag.embeddings import get_embeddings
+
+        warm = asyncio.create_task(asyncio.to_thread(get_embeddings().warm_up))
         recovered = await service.recover()
         if recovered:
             log.info("resumed %d interrupted run(s)", recovered)
         yield
+        warm.cancel()
 
 
 def create_app() -> FastAPI:
@@ -75,6 +80,7 @@ def create_app() -> FastAPI:
     app.include_router(reference.router, dependencies=protected)
     app.include_router(knowledge.router, dependencies=protected)
     app.include_router(runs.router, dependencies=protected)
+    app.include_router(stats.router, dependencies=protected)
     return app
 
 

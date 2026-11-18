@@ -35,6 +35,9 @@
   --color-rejected: #b91c1c;
   --color-rejected-bg: #fee2e2;
 
+  /* chart marks: brand-600, validated ≥ 3:1 on the card (brand-500 is 2.5:1 on white) */
+  --color-chart: #059669;
+
   --radius-card: 18px;
   --radius-control: 12px;
   --shadow-card: 0 8px 28px rgba(15, 22, 56, 0.06);
@@ -66,6 +69,8 @@
   --color-hold-bg: rgba(29, 78, 216, 0.15);
   --color-rejected: #f87171;
   --color-rejected-bg: rgba(185, 28, 28, 0.15);
+
+  --color-chart: #0ea372; /* validated on #171d33: in the dark lightness band, ≥ 3:1 */
 
   --shadow-card: 0 8px 28px rgba(0, 0, 0, 0.35);
   color-scheme: dark;

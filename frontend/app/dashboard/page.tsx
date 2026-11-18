@@ -1,11 +1,17 @@
-import { PlannedPage } from "@/components/planned-page";
+import type { Metadata } from "next";
+import { PageTitle } from "@/components/ui/card";
+import { Dashboard } from "./dashboard";
 
-export const metadata = { title: "Dashboard" };
+export const metadata: Metadata = { title: "Dashboard" };
 
-export default function Page() {
+export default function DashboardPage() {
   return (
-    <PlannedPage title="Dashboard" phase={7}>
-      Outcome KPIs, the gate funnel, exception causes and the runs table.
-    </PlannedPage>
+    <>
+      <div className="flex flex-col gap-1">
+        <PageTitle>Dashboard</PageTitle>
+        <p className="text-muted">How invoices move through the pipeline: outcomes, the review queue and where cases stop.</p>
+      </div>
+      <Dashboard />
+    </>
   );
 }

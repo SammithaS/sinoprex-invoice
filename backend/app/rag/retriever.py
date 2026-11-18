@@ -5,6 +5,7 @@ cosine similarity ≥ `min_similarity`, or a full-text hit. If nothing passes, t
 and callers say "nothing found" instead of guessing.
 """
 
+import asyncio
 import re
 from collections.abc import Sequence
 from dataclasses import dataclass
@@ -84,6 +85,7 @@ class HybridRetriever:
     ) -> list[RetrievedChunk]:
         f = flt or ChunkFilter()
         expanded = expand_query(query)
-        dense = await self.store.dense(expanded, CANDIDATES, f)
-        sparse = await self.store.sparse(expanded, CANDIDATES, f)
+        dense, sparse = await asyncio.gather(
+            self.store.dense(expanded, CANDIDATES, f), self.store.sparse(expanded, CANDIDATES, f)
+        )
         return rrf_merge(dense, sparse, k=k, min_similarity=self.min_similarity)

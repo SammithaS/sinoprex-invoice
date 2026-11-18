@@ -10,6 +10,7 @@ query terms (`PGVectorStore`'s built-in hybrid uses `plainto_tsquery`, which AND
 each signal's score for the relevance gate.
 """
 
+import asyncio
 import math
 import re
 from collections import Counter
@@ -185,10 +186,17 @@ class PgKnowledgeStore:
         self.table = table
         self.dim = dim
         self._store: Any = None
+        self._init_lock = asyncio.Lock()
 
     async def _vector_store(self) -> Any:
         if self._store is not None:
             return self._store
+        async with self._init_lock:  # concurrent first searches must not both create the table
+            if self._store is None:
+                self._store = await self._create_store()
+        return self._store
+
+    async def _create_store(self) -> Any:
         from langchain_postgres import Column, PGEngine, PGVectorStore
         from langchain_postgres.v2.hybrid_search_config import HybridSearchConfig
 
@@ -213,7 +221,7 @@ class PgKnowledgeStore:
                         f'ON "{self.table}" USING GIN ("{TSV_COLUMN}")'
                     )
                 )
-        self._store = await PGVectorStore.create(
+        return await PGVectorStore.create(
             pg,
             embedding_service=self.embeddings,
             table_name=self.table,
@@ -221,7 +229,6 @@ class PgKnowledgeStore:
             metadata_columns=list(METADATA_COLUMNS),
             hybrid_search_config=hybrid,
         )
-        return self._store
 
     async def ids(self) -> set[str]:
         await self._vector_store()

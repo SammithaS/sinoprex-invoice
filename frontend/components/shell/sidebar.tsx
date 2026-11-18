@@ -1,8 +1,11 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ArrowRight, ChevronRight, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Suspense } from "react";
+import { apiGet, type Run } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
 import { NAV, isActive } from "./nav";
@@ -72,29 +75,60 @@ export function Sidebar({ collapsed, onToggleCollapsed, mobileOpen, onCloseMobil
         </div>
 
         <div className={cn(collapsed && "lg:pt-10")}>
-          {NAV.map((group) => (
-            <NavSection key={group.title} title={group.title} collapsed={collapsed} onNavigate={onCloseMobile}>
-              {group.items}
-            </NavSection>
-          ))}
+          {/* The active item depends on the URL, which is request-time data on dynamic routes
+              (cacheComponents): render the nav without a highlight first, then stream it in. */}
+          <Suspense fallback={<NavSections pathname={null} collapsed={collapsed} onNavigate={onCloseMobile} />}>
+            <CurrentNav collapsed={collapsed} onNavigate={onCloseMobile} />
+          </Suspense>
         </div>
       </nav>
     </>
   );
 }
 
+function CurrentNav(props: { collapsed: boolean; onNavigate: () => void }) {
+  return <NavSections pathname={usePathname()} {...props} />;
+}
+
+function NavSections({
+  pathname,
+  collapsed,
+  onNavigate,
+}: {
+  pathname: string | null;
+  collapsed: boolean;
+  onNavigate: () => void;
+}) {
+  const live = useLiveCounts();
+  return NAV.map((group) => (
+    <NavSection
+      key={group.title}
+      title={group.title}
+      pathname={pathname}
+      live={live}
+      collapsed={collapsed}
+      onNavigate={onNavigate}
+    >
+      {group.items}
+    </NavSection>
+  ));
+}
+
 function NavSection({
   title,
   children,
+  pathname,
+  live,
   collapsed,
   onNavigate,
 }: {
   title: string;
   children: (typeof NAV)[number]["items"];
+  pathname: string | null;
+  live: Record<string, number | undefined>;
   collapsed: boolean;
   onNavigate: () => void;
 }) {
-  const pathname = usePathname();
   return (
     <div className="mb-1 flex flex-col gap-0.5 border-b border-line pb-3 last:border-b-0">
       <span
@@ -106,8 +140,9 @@ function NavSection({
       >
         {title}
       </span>
-      {children.map(({ href, label, icon: Icon, count }) => {
-        const active = isActive(pathname, href);
+      {children.map(({ href, label, icon: Icon, count: fixed }) => {
+        const active = pathname !== null && isActive(pathname, href);
+        const count = live[href] ?? fixed;
         return (
           <Link
             key={href}
@@ -148,4 +183,15 @@ function NavSection({
       })}
     </div>
   );
+}
+
+/** Live count pills: cases waiting in the review queue. */
+function useLiveCounts(): Record<string, number | undefined> {
+  const waiting = useQuery({
+    queryKey: ["runs", "WAITING_REVIEW"],
+    queryFn: () => apiGet<Run[]>("/runs?status=WAITING_REVIEW"),
+    refetchInterval: 15_000,
+    retry: false,
+  });
+  return { "/review": waiting.data?.length || undefined };
 }

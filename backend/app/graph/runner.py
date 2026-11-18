@@ -36,6 +36,10 @@ log = logging.getLogger(__name__)
 
 TERMINAL = ("COMPLETED", "FAILED")
 STREAM_MODES: list[StreamMode] = ["updates", "custom"]
+# Nodes whose output changes what the run page shows: refresh the run row after these only.
+SNAPSHOT_NODES = frozenset(
+    {"extract", "vendor_match", "retrieve_policy", "rules", "human_review", "explain", "close_case"}
+)
 ACTIVE = ("QUEUED", "RUNNING")
 
 
@@ -203,8 +207,8 @@ class RunService:
                         await self._record(session, run_id, seq, chunk)
                     elif "__interrupt__" in chunk:
                         interrupt_value = chunk["__interrupt__"][0].value
-                    else:
-                        await self._snapshot(session, run)
+                    elif SNAPSHOT_NODES & chunk.keys():
+                        await self._snapshot(session, run)  # also commits pending step rows
             except Exception as exc:  # the graph itself broke (nodes catch their own errors)
                 log.exception("run %s crashed", run_id)
                 error = f"{type(exc).__name__}: {exc}"[:500]
@@ -253,8 +257,11 @@ class RunService:
             or None,
         )
         session.add(step)
-        await session.commit()
+        # Live clients get the event now; the row is committed at the next step boundary
+        # (one Neon round trip per stage instead of one per event — ASSUMPTIONS #64).
         self.broker.publish(run_id, {"seq": seq, **event})
+        if step.type == "step_finished" and step.node not in SNAPSHOT_NODES:
+            await session.commit()
 
     async def _snapshot(self, session: AsyncSession, run: Run) -> None:
         values = (await self.graph.aget_state(self._config(run.id))).values

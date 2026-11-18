@@ -52,8 +52,14 @@ def date_variants(value: date) -> list[str]:
 
 
 def _union(rects: Sequence[pymupdf.Rect]) -> tuple[float, float, float, float]:
+    """Box of the FIRST occurrence. `search_for` returns one rect per line of a match that wraps
+    and one per occurrence; a vendor name printed in the header and the footer must not become
+    one box covering the page. Rects that continue on the next line belong to the same match."""
     r = pymupdf.Rect(rects[0])
     for other in rects[1:]:
+        gap = other.y0 - r.y1
+        if gap > max(4.0, other.height):  # not the next line: another occurrence
+            break
         r |= other
     return (round(r.x0, 1), round(r.y0, 1), round(r.x1, 1), round(r.y1, 1))
 

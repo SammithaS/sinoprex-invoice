@@ -27,6 +27,7 @@ from app.extraction.models import InvoiceData, LineItem
 from app.graph.builder import build_graph
 from app.graph.deps import GraphDeps
 from app.graph.explain import Explanation, explain_case, strip_unknown_citations
+from app.graph.repo import clear_reference_cache
 from app.graph.runner import RunService
 from app.llm.schemas import ExplanationRead
 from app.main import create_app
@@ -85,6 +86,7 @@ async def db(tmp_path: Path) -> AsyncIterator[async_sessionmaker[AsyncSession]]:
     maker = async_sessionmaker(engine, expire_on_commit=False)
     async with maker() as session:
         await seed_reference_data(session)
+    clear_reference_cache()
     yield maker
     await engine.dispose()
 
@@ -382,6 +384,9 @@ async def test_run_review_and_events_over_http(api: AsyncClient, service: RunSer
     assert (await api.get("/runs", params={"status": "WAITING_REVIEW"})).json()[0]["id"] == run_id
     pdf = await api.get(f"/runs/{run_id}/file")
     assert pdf.status_code == 200 and pdf.content.startswith(b"%PDF")
+    page = await api.get(f"/runs/{run_id}/pages/1")
+    assert page.status_code == 200 and page.content[1:4] == b"PNG"
+    assert (await api.get(f"/runs/{run_id}/pages/9")).status_code == 404
 
     res = await api.post(f"/runs/{run_id}/review", json={"action": "APPROVE", "reviewer": "QA"})
     assert res.status_code == 202
@@ -395,6 +400,10 @@ async def test_run_review_and_events_over_http(api: AsyncClient, service: RunSer
     last = [line for line in body.splitlines() if line.startswith("data: ")][-1]
     assert json.loads(last[6:])["final_decision"] == "APPROVED"
 
+    resumed = await api.get(f"/runs/{run_id}/events", headers={"Last-Event-ID": "2"})
+    first_id = next(ln for ln in resumed.text.splitlines() if ln.startswith("id: "))
+    assert first_id == "id: 3"
+
     rerun = await api.post(f"/runs/{run_id}/rerun")
     assert rerun.status_code == 202 and rerun.json()["rerun_of"] == run_id
     await service.wait(rerun.json()["id"])
@@ -404,3 +413,18 @@ async def test_upload_validation(api: AsyncClient) -> None:
     res = await api.post("/runs", files={"file": ("x.pdf", b"not a pdf", "application/pdf")})
     assert res.status_code == 415
     assert (await api.get("/runs/missing")).status_code == 404
+
+
+async def test_stats(api: AsyncClient, service: RunService) -> None:
+    for key in ("northwind-clean", "deccan-scanned-poor", "northwind-quote"):
+        res = await api.post(f"/samples/{key}/run")
+        await service.wait(res.json()["id"])
+    s = (await api.get("/stats")).json()
+    assert s["runs"] == 3 and s["completed"] == 2 and s["waiting_review"] == 1
+    assert s["decisions"] == {"APPROVED": 1, "NEEDS_REVIEW": 1, "REJECTED": 1}
+    assert s["straight_through"] == 1 and s["straight_through_rate"] == 0.5
+    assert s["exception_causes"] == {"LOW_CONFIDENCE": 1}
+    assert float(s["pending_value"]) == 218300.0
+    counts = [f["count"] for f in s["funnel"]]
+    assert counts == [3, 3, 3, 2, 1] and counts == sorted(counts, reverse=True)
+    assert len(s["recent"]) == 3 and sum(d["total"] for d in s["volume"]) == 3

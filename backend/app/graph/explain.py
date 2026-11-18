@@ -61,6 +61,12 @@ def template_explanation(
     return Explanation(summary=text, next_action=NEXT_ACTION.get(decision, ""), fallback=True)
 
 
+def _excerpt(text: str, limit: int = 300) -> str:
+    """Section text without its heading line, collapsed to one line."""
+    body = text.split("\n", 1)[-1]
+    return " ".join(body.replace("**", "").split())[:limit]
+
+
 def strip_unknown_citations(text: str, allowed: set[str]) -> str:
     """Keep only offered citations. Handles "[a §1, b §2]" and "[a §1; b §2]" as well."""
 
@@ -83,9 +89,11 @@ async def explain_case(
     model_factory: ExplainModelFactory = default_explain_model,
 ) -> Explanation:
     failing = [r for r in assessment.rule_results if r.status in (RuleStatus.WARN, RuleStatus.FAIL)]
-    sources: dict[str, str] = {c["citation"]: c["text"] for c in clauses}
-    sources.update(policy_text)
-    allowed = set(assessment.citations) | set(sources)
+    texts: dict[str, str] = {c["citation"]: c["text"] for c in clauses}
+    texts.update(policy_text)
+    # Only what the rules cited is offered (and allowed back): a short prompt is a fast call,
+    # and the summary can't wander to clauses the decision didn't rest on.
+    allowed = list(dict.fromkeys(assessment.citations))
     final = f" (after review: {final_decision})" if final_decision else ""
     prompt = EXPLAIN_INSTRUCTION.format(
         invoice=_invoice_line(data),
@@ -98,7 +106,7 @@ async def explain_case(
         )
         or "- none",
         approvals=", ".join(a.role for a in assessment.approvals) or "none",
-        sources="\n".join(f"[{c}] {sources.get(c, '')[:300]}" for c in sorted(allowed)) or "none",
+        sources="\n".join(f"[{c}] {_excerpt(texts.get(c, ''))}" for c in allowed) or "none",
     )
     try:
         out = await model_factory().ainvoke([SystemMessage(EXPLAIN_SYSTEM), HumanMessage(prompt)])
@@ -107,7 +115,7 @@ async def explain_case(
             raise ValueError(out.get("parsing_error"))
         meta = getattr(out.get("raw"), "response_metadata", {}) or {}
         return Explanation(
-            summary=strip_unknown_citations(parsed.summary, allowed),
+            summary=strip_unknown_citations(parsed.summary, set(allowed)),
             next_action=parsed.next_action,
             model=meta.get("model_name") or meta.get("model"),
         )
