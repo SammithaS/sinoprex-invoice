@@ -1,0 +1,52 @@
+{
+  "key": "blueleaf-no-grn",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 908,
+    "output_tokens": 413
+  },
+  "retrieved": [
+    "contracts/blueleaf §2.1",
+    "contracts/blueleaf §2",
+    "contracts/blueleaf §2.2",
+    "contracts/blueleaf §2.4",
+    "contracts/blueleaf §5.1",
+    "contracts/blueleaf §3.1",
+    "contracts/blueleaf §3.2"
+  ],
+  "read": {
+    "rates": [
+      {
+        "item": "Line haul Chennai–Bengaluru, 32ft container",
+        "hsn_sac": "9965",
+        "uom": "TRIP",
+        "rate": "₹11,800",
+        "valid_from": "2026-04-01",
+        "valid_to": "2026-08-31",
+        "section": "contracts/blueleaf §2.1"
+      },
+      {
+        "item": "Line haul Chennai–Bengaluru, 32ft container — revised",
+        "hsn_sac": "9965",
+        "uom": "TRIP",
+        "rate": "₹12,500",
+        "valid_from": "2026-09-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/blueleaf §2.2"
+      },
+      {
+        "item": "Last-mile delivery, Bengaluru stores",
+        "hsn_sac": "9965",
+        "uom": "DROP",
+        "rate": "₹450",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/blueleaf §2"
+      }
+    ],
+    "rate_revision_section": "contracts/blueleaf §2.4",
+    "no_po_section": null,
+    "payment_terms_days": 30,
+    "payment_terms_section": "contracts/blueleaf §3.1"
+  }
+}

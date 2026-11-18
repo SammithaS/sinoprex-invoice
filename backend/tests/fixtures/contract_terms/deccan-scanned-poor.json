@@ -1,0 +1,35 @@
+{
+  "key": "deccan-scanned-poor",
+  "model": "openai/gpt-oss-120b",
+  "usage": {
+    "input_tokens": 1118,
+    "output_tokens": 676
+  },
+  "retrieved": [
+    "contracts/deccan §2.1",
+    "contracts/deccan §2",
+    "contracts/deccan",
+    "contracts/deccan §2.2",
+    "contracts/deccan §2.3",
+    "contracts/deccan §5.1",
+    "contracts/deccan §3.1",
+    "contracts/deccan §3.2"
+  ],
+  "read": {
+    "rates": [
+      {
+        "item": "Housekeeping services, HQ (team of 14, 6 days a week)",
+        "hsn_sac": "998533",
+        "uom": "MONTH",
+        "rate": "₹1,85,000 per MONTH",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/deccan §2.1"
+      }
+    ],
+    "rate_revision_section": null,
+    "no_po_section": "[contracts/deccan §2.2]",
+    "payment_terms_days": 30,
+    "payment_terms_section": "[contracts/deccan §3.1]"
+  }
+}

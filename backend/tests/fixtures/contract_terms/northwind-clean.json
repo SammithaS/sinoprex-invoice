@@ -1,0 +1,45 @@
+{
+  "key": "northwind-clean",
+  "model": "gemini-3.6-flash",
+  "usage": {
+    "input_tokens": 1035,
+    "output_tokens": 304
+  },
+  "retrieved": [
+    "contracts/northwind §2.1",
+    "contracts/northwind §2",
+    "contracts/northwind §2.3",
+    "contracts/northwind §2.2",
+    "contracts/northwind §2.5",
+    "contracts/northwind §5.2",
+    "contracts/northwind §3.1",
+    "contracts/northwind §3.2",
+    "contracts/northwind §4.1"
+  ],
+  "read": {
+    "rates": [
+      {
+        "item": "LED panel light 2x2 ft, 36W",
+        "hsn_sac": "9405",
+        "uom": "NOS",
+        "rate": "₹1,650",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/northwind §2.1"
+      },
+      {
+        "item": "Diesel generator 125 kVA with AMF panel (incl. delivery and commissioning)",
+        "hsn_sac": "8502",
+        "uom": "NOS",
+        "rate": "₹7,45,000",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/northwind §2.3"
+      }
+    ],
+    "rate_revision_section": null,
+    "no_po_section": null,
+    "payment_terms_days": 30,
+    "payment_terms_section": "contracts/northwind §3.1"
+  }
+}

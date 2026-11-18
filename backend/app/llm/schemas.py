@@ -93,3 +93,69 @@ class InvoiceRead(BaseModel):
     )
     total: ReadValue = Field(description="Grand total payable (or credited), as printed.")
     lines: list[ReadLine]
+
+
+# --- contract terms (RAG, Phase 5) ---------------------------------------------------------------
+
+
+class ContractRateRead(BaseModel):
+    """One agreed rate, copied from a contract excerpt."""
+
+    item: str = Field(description="The item or service name as written in the contract.")
+    hsn_sac: str | None = Field(default=None, description="HSN/SAC code as written, if any.")
+    uom: str | None = Field(default=None, description="Unit, e.g. NOS, REAM, MONTH.")
+    rate: str = Field(description='The agreed rate exactly as written, e.g. "₹1,100".')
+    valid_from: str | None = Field(
+        default=None, description="Start of validity as written (YYYY-MM-DD), if stated."
+    )
+    valid_to: str | None = Field(
+        default=None, description="End of validity as written (YYYY-MM-DD), if stated."
+    )
+    section: str = Field(
+        description="The id of the excerpt this rate is in, copied exactly, e.g. "
+        '"contracts/technova §2.1".'
+    )
+
+
+class ContractTermsRead(BaseModel):
+    """What the contract excerpts say. Leave anything out that the excerpts don't state."""
+
+    rates: list[ContractRateRead] = Field(
+        default_factory=list,
+        description="Every agreed numeric rate in the excerpts (skip rates like 'as quoted on "
+        "the PO'). Superseded and revised rates are separate entries with their own validity.",
+    )
+    rate_revision_section: str | None = Field(
+        default=None,
+        description="Id of the excerpt that says how or whether rates may be revised.",
+    )
+    no_po_section: str | None = Field(
+        default=None,
+        description="Id of the excerpt that says no purchase order is raised, if any.",
+    )
+    payment_terms_days: int | None = Field(
+        default=None, description="Days from invoice to payment due, if stated."
+    )
+    payment_terms_section: str | None = Field(
+        default=None, description="Id of the excerpt with the payment terms."
+    )
+
+
+# --- RAG evaluation (scripts/eval_rag.py) ------------------------------------------------------
+
+
+class GroundedAnswer(BaseModel):
+    answer: str = Field(description="Short answer using only the excerpts.")
+    citations: list[str] = Field(
+        default_factory=list, description="Ids of the excerpts the answer relies on, exactly."
+    )
+
+
+class AnswerJudgement(BaseModel):
+    facts_covered: list[bool] = Field(
+        description="For each expected fact, in order: does the answer state it correctly?"
+    )
+    contradicts_facts: bool = Field(
+        description="True if the answer states something that contradicts an expected fact."
+    )
+    reason: str = Field(description="One sentence.")

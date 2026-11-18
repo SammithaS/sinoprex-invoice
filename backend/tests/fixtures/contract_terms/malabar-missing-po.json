@@ -1,0 +1,61 @@
+{
+  "key": "malabar-missing-po",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 918,
+    "output_tokens": 416
+  },
+  "retrieved": [
+    "contracts/malabar §2.1",
+    "contracts/malabar §2",
+    "contracts/malabar §2.2",
+    "contracts/malabar §2.3",
+    "contracts/malabar §5.1",
+    "contracts/malabar §3.1",
+    "contracts/malabar §3.2"
+  ],
+  "read": {
+    "rates": [
+      {
+        "item": "Ergonomic office chair (mesh back, adjustable arms)",
+        "hsn_sac": "9401",
+        "uom": "NOS",
+        "rate": "₹8,900",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/malabar §2.1"
+      },
+      {
+        "item": "Workstation desk 1200x600 mm",
+        "hsn_sac": "9403",
+        "uom": "NOS",
+        "rate": "₹11,200",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/malabar §2.2"
+      },
+      {
+        "item": "Meeting table 8-seater",
+        "hsn_sac": "9403",
+        "uom": "NOS",
+        "rate": "₹42,000",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/malabar §2.3"
+      },
+      {
+        "item": "Steel storage cabinet, 4-shelf",
+        "hsn_sac": "9403",
+        "uom": "NOS",
+        "rate": "₹9,500",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/malabar §2"
+      }
+    ],
+    "rate_revision_section": null,
+    "no_po_section": null,
+    "payment_terms_days": 30,
+    "payment_terms_section": "contracts/malabar §3.1"
+  }
+}

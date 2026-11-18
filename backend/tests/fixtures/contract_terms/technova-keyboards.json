@@ -1,0 +1,62 @@
+{
+  "key": "technova-keyboards",
+  "model": "gemini-3.6-flash",
+  "usage": {
+    "input_tokens": 971,
+    "output_tokens": 348
+  },
+  "retrieved": [
+    "contracts/technova §2.4",
+    "contracts/technova §2",
+    "contracts/technova §2.3",
+    "contracts/technova §2.5",
+    "contracts/technova §4.1",
+    "contracts/technova §5.2",
+    "contracts/technova §3.1",
+    "contracts/technova §3.2"
+  ],
+  "read": {
+    "rates": [
+      {
+        "item": "Laptop docking station (USB-C, dual display)",
+        "hsn_sac": "8473",
+        "uom": "NOS",
+        "rate": "₹1,100",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/technova §2"
+      },
+      {
+        "item": "USB-C charging cable 2m",
+        "hsn_sac": "8544",
+        "uom": "NOS",
+        "rate": "₹150",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/technova §2"
+      },
+      {
+        "item": "24-inch LED monitor",
+        "hsn_sac": "8528",
+        "uom": "NOS",
+        "rate": "₹12,000",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/technova §2.3"
+      },
+      {
+        "item": "Wireless keyboard and mouse set",
+        "hsn_sac": "8471",
+        "uom": "NOS",
+        "rate": "₹1,450",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/technova §2.4"
+      }
+    ],
+    "rate_revision_section": "contracts/technova §2.5",
+    "no_po_section": null,
+    "payment_terms_days": 30,
+    "payment_terms_section": "contracts/technova §3.1"
+  }
+}

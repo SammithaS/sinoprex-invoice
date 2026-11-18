@@ -1,0 +1,54 @@
+{
+  "key": "rangoli-bank-change",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 1119,
+    "output_tokens": 418
+  },
+  "retrieved": [
+    "contracts/rangoli §2.1",
+    "contracts/rangoli §2.2",
+    "contracts/rangoli §2",
+    "contracts/rangoli §2.3",
+    "contracts/rangoli §2.4",
+    "contracts/rangoli §5.2",
+    "contracts/rangoli §3.1",
+    "contracts/rangoli §5.1",
+    "contracts/rangoli §3.2"
+  ],
+  "read": {
+    "rates": [
+      {
+        "item": "Corrugated box 5-ply 18x12x12 in",
+        "hsn_sac": "4819",
+        "uom": "NOS",
+        "rate": "₹36",
+        "valid_from": "2026-04-01",
+        "valid_to": "2026-09-30",
+        "section": "contracts/rangoli §2.1"
+      },
+      {
+        "item": "Corrugated box 5-ply 18x12x12 in — revised",
+        "hsn_sac": "4819",
+        "uom": "NOS",
+        "rate": "₹38",
+        "valid_from": "2026-10-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/rangoli §2.2"
+      },
+      {
+        "item": "Packing tape 48mm x 65m",
+        "hsn_sac": "3919",
+        "uom": "ROLL",
+        "rate": "₹62",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/rangoli §2.3"
+      }
+    ],
+    "rate_revision_section": "contracts/rangoli §2.4",
+    "no_po_section": null,
+    "payment_terms_days": 45,
+    "payment_terms_section": "contracts/rangoli §3.1"
+  }
+}

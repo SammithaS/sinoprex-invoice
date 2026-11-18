@@ -1,0 +1,128 @@
+[
+  {
+    "id": "q01",
+    "question": "What is the price tolerance on an invoice line, and the cap per invoice?",
+    "vendor_id": null,
+    "relevant": ["ap-policy §3.2"],
+    "answer_facts": ["2% per line", "₹5,000 per invoice"]
+  },
+  {
+    "id": "q02",
+    "question": "What is TechNova's agreed rate for the laptop docking station?",
+    "vendor_id": "V001",
+    "relevant": ["contracts/technova §2.1", "contracts/technova §2"],
+    "answer_facts": ["₹1,100 per unit"]
+  },
+  {
+    "id": "q03",
+    "question": "Has TechNova's docking station rate been revised?",
+    "vendor_id": "V001",
+    "relevant": ["contracts/technova §2.5"],
+    "answer_facts": ["rates are firm for the term", "no amendment has been signed"]
+  },
+  {
+    "id": "q04",
+    "question": "What rate applies to Sharma's A4 copier paper from October 2026?",
+    "vendor_id": "V002",
+    "relevant": ["contracts/sharma §2.2", "contracts/sharma §2.6"],
+    "answer_facts": ["₹240 per ream", "Amendment 1 from 2026-10-01"]
+  },
+  {
+    "id": "q05",
+    "question": "Who must approve a PO-backed invoice of ₹30 lakh?",
+    "vendor_id": null,
+    "relevant": ["ap-policy §7.1"],
+    "answer_facts": ["Finance Manager and CFO"]
+  },
+  {
+    "id": "q06",
+    "question": "What must AP do when the bank account on an invoice differs from the vendor master?",
+    "vendor_id": null,
+    "relevant": ["ap-policy §6.2"],
+    "answer_facts": ["put on hold", "verify with the vendor using contact details on file", "AP Manager and Finance Controller approve"]
+  },
+  {
+    "id": "q07",
+    "question": "Can we pay an invoice when the goods have not been received yet?",
+    "vendor_id": null,
+    "relevant": ["ap-policy §3.4"],
+    "answer_facts": ["a GRN is required", "the invoice is put on hold (NO_RECEIPT)"]
+  },
+  {
+    "id": "q08",
+    "question": "A Karnataka supplier charged IGST to Acme. Is that correct?",
+    "vendor_id": null,
+    "relevant": ["gst-rules §2.2", "ap-policy §5.2", "gst-rules §2.4"],
+    "answer_facts": ["no — intra-state supply needs CGST + SGST", "vendor must issue a corrected invoice"]
+  },
+  {
+    "id": "q09",
+    "question": "When is an invoice treated as a suspected duplicate?",
+    "vendor_id": null,
+    "relevant": ["ap-policy §4.2"],
+    "answer_facts": ["same vendor", "same total amount within 30 days", "different invoice number"]
+  },
+  {
+    "id": "q10",
+    "question": "Which GL account and cost centre are CloudNest invoices coded to?",
+    "vendor_id": "V005",
+    "relevant": ["contracts/cloudnest §2.3"],
+    "answer_facts": ["GL 6420", "CC-IT-01"]
+  },
+  {
+    "id": "q11",
+    "question": "Does the Deccan housekeeping contract need a goods receipt?",
+    "vendor_id": "V006",
+    "relevant": ["contracts/deccan §2.2"],
+    "answer_facts": ["no GRN is required", "Admin confirms the service by approving"]
+  },
+  {
+    "id": "q12",
+    "question": "Can Zenith Traders' invoices still be paid?",
+    "vendor_id": "V010",
+    "relevant": ["contracts/zenith §2.2"],
+    "answer_facts": ["contract terminated from 2026-09-30", "invoices dated after 2026-09-30 must be rejected"]
+  },
+  {
+    "id": "q13",
+    "question": "What GST rate applies to goods transport by road?",
+    "vendor_id": null,
+    "relevant": ["gst-rules §4"],
+    "answer_facts": ["12%"]
+  },
+  {
+    "id": "q14",
+    "question": "How should credit notes be handled?",
+    "vendor_id": null,
+    "relevant": ["gst-rules §6", "ap-policy §1.1", "vendor-faq §10"],
+    "answer_facts": ["processed against the original invoice", "not paid"]
+  },
+  {
+    "id": "q15",
+    "question": "On which days are payment runs held?",
+    "vendor_id": null,
+    "relevant": ["ap-policy §10.2"],
+    "answer_facts": ["Tuesdays and Fridays"]
+  },
+  {
+    "id": "q16",
+    "question": "What is Rangoli Packaging's payment term?",
+    "vendor_id": "V007",
+    "relevant": ["contracts/rangoli §3.1"],
+    "answer_facts": ["45 days from a valid invoice"]
+  },
+  {
+    "id": "q17",
+    "question": "What should a vendor send if their invoice had an arithmetic error?",
+    "vendor_id": null,
+    "relevant": ["vendor-faq §4", "ap-policy §5.3"],
+    "answer_facts": ["a corrected invoice"]
+  },
+  {
+    "id": "q18",
+    "question": "When is an exception escalated, and to whom?",
+    "vendor_id": null,
+    "relevant": ["ap-policy §8.2"],
+    "answer_facts": ["after 2 working days to the AP Manager", "after 5 working days to the Finance Manager"]
+  }
+]

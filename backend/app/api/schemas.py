@@ -71,3 +71,40 @@ class HealthOut(BaseModel):
     status: str
     env: str
     database: str
+
+
+# --- knowledge base (Phase 5) ------------------------------------------------------------------
+
+
+class KnowledgeDocOut(BaseModel):
+    source: str
+    title: str
+    doc_type: str
+    vendor_id: str | None
+    chunks: int
+    indexed_chunks: int
+
+
+class KnowledgeHitOut(BaseModel):
+    citation: str
+    heading: str
+    doc_type: str
+    vendor_id: str | None
+    text: str
+    score: float
+    dense_similarity: float | None
+
+
+class KnowledgeSearchIn(BaseModel):
+    query: str
+    vendor_id: str | None = None
+    doc_types: list[str] = []
+    k: int = 5
+
+
+class ReindexOut(BaseModel):
+    chunks: int
+    added: int
+    removed: int
+    unchanged: int
+    by_source: dict[str, int]

@@ -4,7 +4,7 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
-from app.api import reference
+from app.api import knowledge, reference
 from app.api.schemas import HealthOut
 from app.config import get_settings
 from app.deps import SessionDep, require_api_key
@@ -36,6 +36,7 @@ def create_app() -> FastAPI:
 
     protected = [Depends(require_api_key)]
     app.include_router(reference.router, dependencies=protected)
+    app.include_router(knowledge.router, dependencies=protected)
     return app
 
 

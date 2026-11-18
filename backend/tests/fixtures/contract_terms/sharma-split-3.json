@@ -1,0 +1,73 @@
+{
+  "key": "sharma-split-3",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 1252,
+    "output_tokens": 628
+  },
+  "retrieved": [
+    "contracts/sharma §2.1",
+    "contracts/sharma §2.2",
+    "contracts/sharma §2.6",
+    "contracts/sharma §2.3",
+    "contracts/sharma §2",
+    "contracts/sharma §2.5",
+    "contracts/sharma §5.2",
+    "contracts/sharma §5.1",
+    "contracts/sharma §3.1",
+    "contracts/sharma §3.2"
+  ],
+  "read": {
+    "rates": [
+      {
+        "item": "A4 copier paper 75gsm (ream of 500)",
+        "hsn_sac": "4802",
+        "uom": "REAM",
+        "rate": "₹230",
+        "valid_from": "2026-04-01",
+        "valid_to": "2026-09-30",
+        "section": "contracts/sharma §2.1"
+      },
+      {
+        "item": "A4 copier paper 75gsm (ream of 500) — revised",
+        "hsn_sac": "4802",
+        "uom": "REAM",
+        "rate": "₹240",
+        "valid_from": "2026-10-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/sharma §2.2"
+      },
+      {
+        "item": "Ball pen, blue (box of 50)",
+        "hsn_sac": "9608",
+        "uom": "BOX",
+        "rate": "₹350",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/sharma §2.3"
+      },
+      {
+        "item": "Whiteboard marker set (4 colours)",
+        "hsn_sac": "9608",
+        "uom": "SET",
+        "rate": "₹180",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/sharma §2"
+      },
+      {
+        "item": "Thermal receipt roll 79mm",
+        "hsn_sac": "4811",
+        "uom": "ROLL",
+        "rate": "₹42",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/sharma §2.5"
+      }
+    ],
+    "rate_revision_section": "contracts/sharma §2.6",
+    "no_po_section": null,
+    "payment_terms_days": 15,
+    "payment_terms_section": "contracts/sharma §3.1"
+  }
+}

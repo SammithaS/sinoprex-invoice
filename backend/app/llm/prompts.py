@@ -50,3 +50,25 @@ def hints_block(hints: Sequence[str]) -> str:
         "\nReviewers corrected earlier readings of this vendor's documents. Apply these lessons "
         f"only where the document supports them:\n{items}\n"
     )
+
+
+CONTRACT_SYSTEM = """\
+You read excerpts of supplier contracts held by the accounts payable team of Acme Retail Pvt Ltd.
+Each excerpt starts with its id in square brackets, e.g. [contracts/technova §2.1].
+
+Your only job is to READ what the excerpts state and say which excerpt each fact is in.
+Rules:
+- Use only the excerpts below. Never use outside knowledge and never invent or estimate a rate.
+- Copy rates and dates exactly as written. Cite the id of the excerpt the fact appears in,
+  copied exactly (including the § sign). Prefer the numbered sub-section (§2.1) over a summary
+  table (§2) when both state the same rate.
+- If something is not stated in the excerpts, leave it out (empty list or null).
+"""
+
+CONTRACT_INSTRUCTION = """\
+Vendor: {vendor}. Items on the invoice being checked: {items}.
+
+Contract excerpts:
+
+{excerpts}
+"""

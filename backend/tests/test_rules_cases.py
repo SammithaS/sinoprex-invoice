@@ -1,7 +1,8 @@
 """Phase 4 "done when": every test invoice yields its expected decision and exceptions.
 
 Extraction comes from the recorded LLM fixtures (no LLM calls); reference data from the seed;
-contract terms from the Markdown contracts (Phase 5 will retrieve them with RAG). Cases run in
+contract terms from the recorded RAG readings (retrieved clauses + LLM reading, re-grounded
+against the knowledge base on every run). Cases run in
 manifest order and each one enters the invoice history, so split invoicing and duplicates see
 the earlier cases (`depends_on`).
 """
@@ -22,7 +23,7 @@ from app.rules.models import Assessment, CaseContext, Decision, RuleStatus
 from app.rules.reference import load_seed_reference
 from app.rules.vendor import identify_vendor
 from scripts.eval_extraction import replay_factory
-from tests.contract_fixture import contracts_by_vendor
+from scripts.eval_rag import CONTRACT_FIXTURES, replay_contract_terms
 
 INVOICES = Path(__file__).resolve().parents[2] / "data" / "test-invoices"
 KNOWLEDGE = Path(__file__).resolve().parents[2] / "data" / "knowledge"
@@ -30,8 +31,8 @@ MANIFEST = json.loads((INVOICES / "manifest.json").read_text(encoding="utf-8"))
 KEYS = [m["key"] for m in MANIFEST]
 RECEIVED_ON = date(2026, 11, 18)
 
-# Expected citations of contract clauses the rules don't model yet: they come from RAG over
-# the whole contract in Phase 5 (tax, bank, termination clauses) or from the ERP in Phase 8.
+# Expected citations of contract clauses the rules don't use (tax, bank, termination — the
+# explanation step in Phase 6 cites them from the retrieved clauses) or from the ERP (Phase 8).
 DEFERRED_CITATIONS = {
     "contracts/kaveri §2.5",
     "contracts/rangoli §5.1",
@@ -62,7 +63,9 @@ def run_all() -> dict[str, Assessment]:
                 case_ref=key,
                 file_hash=hashlib.sha256(pdf).hexdigest(),
                 received_on=RECEIVED_ON,
-                contract=contracts_by_vendor().get(found.id) if found else None,
+                contract=replay_contract_terms(key).terms
+                if found and (CONTRACT_FIXTURES / f"{key}.json").exists()
+                else None,
             )
             assessment = evaluate(extraction, ref, ctx)
             out[key] = assessment
@@ -148,7 +151,7 @@ def test_contract_rate_variance_is_line_level_and_cited() -> None:
     a = run_all()["technova-contract-rate"]
     (exc,) = a.exceptions
     assert exc.variance["billed_rate"] == "1250.00"
-    assert exc.variance["reference_rate"] == "1100"
+    assert exc.variance["reference_rate"] == "1100.00"
     assert exc.variance["reference_source"] == "contracts/technova §2.1"
     assert exc.variance["over_total"] == "15000.00"
     assert exc.owner_name == "Rahul Menon"

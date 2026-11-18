@@ -23,6 +23,13 @@ class Settings(BaseSettings):
     groq_model: str = "openai/gpt-oss-120b"
     llm_timeout_seconds: float = 90
     llm_max_retries: int = 2
+    # RAG: local FastEmbed model (no API, no rate limits) and the PGVector table it fills.
+    embedding_model: str = "BAAI/bge-small-en-v1.5"
+    embedding_dim: int = 384
+    embedding_cache_dir: str = "~/.cache/fastembed"
+    knowledge_dir: str = ""  # default: <repo>/data/knowledge
+    knowledge_table: str = "knowledge_chunks"
+
     langsmith_api_key: str = ""
     langsmith_tracing: bool = False
 

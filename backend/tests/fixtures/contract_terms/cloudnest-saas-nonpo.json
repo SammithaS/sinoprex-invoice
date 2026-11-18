@@ -1,0 +1,35 @@
+{
+  "key": "cloudnest-saas-nonpo",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 829,
+    "output_tokens": 192
+  },
+  "retrieved": [
+    "contracts/cloudnest §2.1",
+    "contracts/cloudnest §2",
+    "contracts/cloudnest §2.2",
+    "contracts/cloudnest §2.4",
+    "contracts/cloudnest §2.3",
+    "contracts/cloudnest §5.1",
+    "contracts/cloudnest §3.1",
+    "contracts/cloudnest §3.2"
+  ],
+  "read": {
+    "rates": [
+      {
+        "item": "CloudNest Retail POS Suite — 60 user licences, monthly subscription",
+        "hsn_sac": "997331",
+        "uom": "MONTH",
+        "rate": "₹42,000",
+        "valid_from": "2026-04-01",
+        "valid_to": "2027-03-31",
+        "section": "contracts/cloudnest §2.1"
+      }
+    ],
+    "rate_revision_section": null,
+    "no_po_section": "contracts/cloudnest §2.3",
+    "payment_terms_days": 7,
+    "payment_terms_section": "contracts/cloudnest §3.1"
+  }
+}
