@@ -1064,6 +1064,55 @@
         }
       }
     },
+    "/eval/latest": {
+      "get": {
+        "tags": [
+          "stats"
+        ],
+        "summary": "Eval Latest",
+        "operationId": "eval_latest_eval_latest_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvalLatest"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/procedures": {
       "get": {
         "tags": [
@@ -2845,6 +2894,51 @@
           "created_at"
         ],
         "title": "ErpPostingOut"
+      },
+      "EvalLatest": {
+        "properties": {
+          "run_at": {
+            "type": "string",
+            "title": "Run At"
+          },
+          "live": {
+            "type": "boolean",
+            "title": "Live"
+          },
+          "models": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Models"
+          },
+          "summary": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Summary"
+          },
+          "rag": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rag"
+          }
+        },
+        "type": "object",
+        "required": [
+          "run_at",
+          "live",
+          "models",
+          "summary"
+        ],
+        "title": "EvalLatest",
+        "description": "The last `python -m scripts.eval --write` run (data/eval/latest.json)."
       },
       "ExceptionCategory": {
         "type": "string",

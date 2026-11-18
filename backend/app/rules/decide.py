@@ -42,6 +42,27 @@ def _failing(r: RuleResult) -> bool:
     return r.status in (RuleStatus.WARN, RuleStatus.FAIL)
 
 
+_TOPIC_BY_CODE = {"vendor.bank": "bank", "vendor.status": "termination"}
+_TOPIC_BY_CATEGORY = {
+    ExceptionCategory.TAX_MISMATCH: "tax",
+    ExceptionCategory.NO_RECEIPT: "receipt",
+}
+
+
+def _cite_contract_topics(results: list[RuleResult], topics: dict[str, str]) -> None:
+    """A failing bank / tax / receipt / vendor-status check also cites the vendor's own contract
+    clause on that topic, when the contract has one."""
+    for r in results:
+        if not _failing(r):
+            continue
+        topic = _TOPIC_BY_CODE.get(r.code) or (
+            _TOPIC_BY_CATEGORY.get(r.category) if r.category else None
+        )
+        cite = topics.get(topic) if topic else None
+        if cite and cite not in r.citations:
+            r.citations.append(cite)
+
+
 def _worst(results: list[RuleResult]) -> int:
     return max((_RANK[r.severity] for r in results if _failing(r) and r.severity), default=0)
 
@@ -63,6 +84,7 @@ def evaluate(
     duplicate_of: str | None = None
 
     def finish() -> Assessment:
+        _cite_contract_topics(results, ctx.contract_topics)
         return _assemble(
             extraction,
             results,

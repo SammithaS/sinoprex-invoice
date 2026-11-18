@@ -8,9 +8,10 @@ import statistics
 from collections import Counter
 from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
+from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
@@ -204,3 +205,25 @@ def _done_nodes(run: Run) -> set[str]:
     if state.get("assessment"):
         done.add("rules")
     return done
+
+
+# --- evaluation (Phase 11) ---------------------------------------------------------------------
+
+EVAL_LATEST = Path(__file__).resolve().parents[3] / "data" / "eval" / "latest.json"
+
+
+class EvalLatest(BaseModel):
+    """The last `python -m scripts.eval --write` run (data/eval/latest.json)."""
+
+    run_at: str
+    live: bool
+    models: list[str]
+    summary: dict[str, Any]
+    rag: dict[str, Any] | None = None
+
+
+@router.get("/eval/latest", response_model=EvalLatest)
+async def eval_latest() -> EvalLatest:
+    if not EVAL_LATEST.exists():
+        raise HTTPException(status_code=404, detail="no evaluation has been written yet")
+    return EvalLatest.model_validate_json(EVAL_LATEST.read_text(encoding="utf-8"))

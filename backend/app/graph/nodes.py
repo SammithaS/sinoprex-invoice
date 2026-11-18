@@ -34,6 +34,7 @@ from app.extraction.document import inspect_pdf
 from app.graph import case_repo, repo
 from app.graph.deps import GraphDeps
 from app.graph.state import CaseState
+from app.rag.clauses import topic_citations
 from app.rules.decide import evaluate, history_record
 from app.rules.models import (
     ApprovalRequirement,
@@ -287,6 +288,7 @@ def build_nodes(deps: GraphDeps) -> dict[str, NodeFn]:
             contract=ContractTerms.model_validate(state["contract"])
             if state.get("contract")
             else None,
+            contract_topics=topic_citations((state.get("vendor") or {}).get("id")),
         )
         assessment = evaluate(extraction, await reference(), ctx, _policy(state))
         for r in assessment.rule_results:

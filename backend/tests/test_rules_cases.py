@@ -18,6 +18,7 @@ from typing import Any
 import pytest
 
 from app.extraction import extract_invoice
+from app.rag.clauses import topic_citations
 from app.rules.decide import evaluate, history_record
 from app.rules.models import Assessment, CaseContext, Decision, RuleStatus
 from app.rules.reference import load_seed_reference
@@ -31,15 +32,8 @@ MANIFEST = json.loads((INVOICES / "manifest.json").read_text(encoding="utf-8"))
 KEYS = [m["key"] for m in MANIFEST]
 RECEIVED_ON = date(2026, 11, 18)
 
-# Expected citations of contract clauses the rules don't use (tax, bank, termination — the
-# explanation step in Phase 6 cites them from the retrieved clauses) or from the ERP (Phase 8).
-DEFERRED_CITATIONS = {
-    "contracts/kaveri §2.5",
-    "contracts/rangoli §5.1",
-    "contracts/blueleaf §2.5",
-    "contracts/zenith §2.2",
-    "ap-policy §10.1",
-}
+# Expected citations that come from the ERP read-back (Phase 8), not the rules.
+DEFERRED_CITATIONS = {"ap-policy §10.1"}
 
 
 def gt(key: str) -> dict[str, Any]:
@@ -66,6 +60,7 @@ def run_all() -> dict[str, Assessment]:
                 contract=replay_contract_terms(key).terms
                 if found and (CONTRACT_FIXTURES / f"{key}.json").exists()
                 else None,
+                contract_topics=topic_citations(found.id if found else None),
             )
             assessment = evaluate(extraction, ref, ctx)
             out[key] = assessment

@@ -10,11 +10,13 @@ import re
 from collections.abc import Sequence
 from dataclasses import dataclass
 
+from app.rag.clauses import vendor_mentions
 from app.rag.ingest import Chunk
 from app.rag.store import ChunkFilter, KnowledgeStore
 
 RRF_K = 60
 CANDIDATES = 20
+VENDOR_FIRST = 2  # clauses from a vendor named in the query, ahead of general results
 MIN_SIMILARITY = 0.55  # bge-small cosine; unrelated text in this corpus scores ~0.3–0.5
 
 
@@ -84,6 +86,17 @@ class HybridRetriever:
         self, query: str, *, k: int = 5, flt: ChunkFilter | None = None
     ) -> list[RetrievedChunk]:
         f = flt or ChunkFilter()
+        general = await self._search(query, k, f)
+        # A question that names a vendor ("Can Zenith's invoices still be paid?") is about that
+        # vendor's contract: its best clauses go first, general results fill the rest.
+        named = [] if f.vendor_id else vendor_mentions(query)
+        if len(named) != 1:
+            return general
+        own = await self._search(query, VENDOR_FIRST, ChunkFilter(f.doc_types, named[0]))
+        seen = {h.chunk.id for h in own}
+        return [*own, *(h for h in general if h.chunk.id not in seen)][:k]
+
+    async def _search(self, query: str, k: int, f: ChunkFilter) -> list[RetrievedChunk]:
         expanded = expand_query(query)
         dense, sparse = await asyncio.gather(
             self.store.dense(expanded, CANDIDATES, f), self.store.sparse(expanded, CANDIDATES, f)

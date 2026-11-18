@@ -21,6 +21,10 @@ export type ChatTurn = Schemas["ChatTurn"];
 export type ChatSource = Schemas["ChatSource"];
 export type ChatHistory = Schemas["ChatHistoryOut"];
 export type Integrations = Schemas["IntegrationsOut"];
+export type EvalLatest = Schemas["EvalLatest"];
+export type KnowledgeDoc = Schemas["KnowledgeDocOut"];
+export type KnowledgeHit = Schemas["KnowledgeHitOut"];
+export type ReindexOut = Schemas["ReindexOut"];
 
 export class ApiError extends Error {
   constructor(

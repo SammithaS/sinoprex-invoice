@@ -7,6 +7,7 @@ import { useState, type ReactNode } from "react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Pill, StatusBadge, type Decision } from "@/components/ui/badges";
 import { Button } from "@/components/ui/button";
+import { EvalCard } from "./eval-card";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiGet, type Run, type Stats } from "@/lib/api/client";
 import { asDecision } from "@/lib/run-state";
@@ -105,7 +106,7 @@ export function Dashboard() {
         />
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Card>
           <CardHeader>
             <CardTitle>Processing volume</CardTitle>
@@ -218,6 +219,8 @@ export function Dashboard() {
           )}
         </Card>
       </div>
+
+      <EvalCard />
 
       <RecentRuns runs={s.recent} />
     </div>

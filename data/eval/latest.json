@@ -1,0 +1,38 @@
+{
+  "run_at": "2026-11-18T21:39:17",
+  "live": true,
+  "configured_model": "gemini-3.5-flash-lite",
+  "models": [
+    "gemini-3.5-flash-lite (+ Groq / Gemini fallbacks)"
+  ],
+  "summary": {
+    "cases": 25,
+    "failed": 0,
+    "decision_accuracy": 1.0,
+    "exception_accuracy": 1.0,
+    "citation_coverage": 1.0,
+    "field_accuracy": 1.0,
+    "fields_scored": 560,
+    "cases_all_fields_right": 25,
+    "median_seconds": 30.4,
+    "p90_seconds": 52.9,
+    "max_seconds": 110.2,
+    "llm_calls_per_invoice": 4.84,
+    "llm_errors": 65,
+    "tokens_per_invoice": 3886,
+    "input_tokens_per_invoice": 1971,
+    "output_tokens_per_invoice": 1915,
+    "reruns_for_provider_errors": 15
+  },
+  "rag": {
+    "questions": 18,
+    "hit_rate_at_5": 0.9444,
+    "mrr_at_5": 0.7454,
+    "misses": [
+      "q12"
+    ],
+    "answer_correctness": 0.8426,
+    "answers_citing_relevant": 0.8889,
+    "note": "retrieval measured after the vendor-first change (#103); answer scores from the live run before it (hit-rate then 89%)"
+  }
+}

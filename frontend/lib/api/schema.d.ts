@@ -302,6 +302,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/eval/latest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Eval Latest */
+        get: operations["eval_latest_eval_latest_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/procedures": {
         parameters: {
             query?: never;
@@ -854,6 +871,26 @@ export interface components {
              * Format: date-time
              */
             created_at: string;
+        };
+        /**
+         * EvalLatest
+         * @description The last `python -m scripts.eval --write` run (data/eval/latest.json).
+         */
+        EvalLatest: {
+            /** Run At */
+            run_at: string;
+            /** Live */
+            live: boolean;
+            /** Models */
+            models: string[];
+            /** Summary */
+            summary: {
+                [key: string]: unknown;
+            };
+            /** Rag */
+            rag?: {
+                [key: string]: unknown;
+            } | null;
         };
         /**
          * ExceptionCategory
@@ -2238,6 +2275,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Stats"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    eval_latest_eval_latest_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EvalLatest"];
                 };
             };
             /** @description Validation Error */

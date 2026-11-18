@@ -352,3 +352,19 @@ def test_cases_paused_before_procedure_versions_use_the_defaults() -> None:
 
     assert _policy({}) == Policy()
     assert _policy({"policy": Policy(price_tolerance_pct=1).model_dump(mode="json")}) != Policy()
+
+
+async def test_eval_latest_endpoint(
+    api: AsyncClient, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import app.api.stats as stats_api
+
+    monkeypatch.setattr(stats_api, "EVAL_LATEST", tmp_path / "latest.json")
+    assert (await api.get("/eval/latest")).status_code == 404
+    (tmp_path / "latest.json").write_text(
+        '{"run_at": "2026-11-18T20:00:00", "live": true, "models": ["m"],'
+        ' "summary": {"decision_accuracy": 1.0}, "rag": {"hit_rate_at_5": 0.9}}',
+        encoding="utf-8",
+    )
+    body = (await api.get("/eval/latest")).json()
+    assert body["summary"]["decision_accuracy"] == 1.0 and body["rag"]["hit_rate_at_5"] == 0.9

@@ -172,6 +172,9 @@ class CaseContext(BaseModel):
     file_hash: str | None = None
     received_on: date
     contract: ContractTerms | None = None
+    # The vendor's contract sections by topic ('bank', 'tax', 'receipt', 'termination'), so a
+    # failing non-price check also cites the clause that says the same (app/rag/clauses.py).
+    contract_topics: dict[str, str] = Field(default_factory=dict)
 
 
 # --- outputs -----------------------------------------------------------------------------------
