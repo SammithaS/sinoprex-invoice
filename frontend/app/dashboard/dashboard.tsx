@@ -76,18 +76,20 @@ export function Dashboard() {
           icon={<Gauge aria-hidden />}
           label="Straight-through rate"
           value={s.straight_through_rate === null || s.straight_through_rate === undefined ? "—" : `${Math.round(s.straight_through_rate * 100)}%`}
-          note={`${s.straight_through} of ${s.completed} closed cases approved with no human touch`}
+          note={`${s.straight_through} of ${s.completed} closed cases: approved, posted and verified with no human touch`}
         />
         <Kpi
           icon={<Inbox aria-hidden />}
-          label="Waiting for review"
-          value={String(s.waiting_review)}
+          label="Waiting for a person"
+          value={String(s.waiting_review + s.waiting_approval)}
           note={
-            s.waiting_review
-              ? `${formatINR(s.pending_value)} waiting · oldest ${s.oldest_waiting_at ? ago(s.oldest_waiting_at) : "—"}`
-              : "Queue is empty"
+            s.waiting_review + s.waiting_approval
+              ? `${s.waiting_review} review · ${s.waiting_approval} approval · ${formatINR(s.pending_value)} · oldest ${
+                  s.oldest_waiting_at ? ago(s.oldest_waiting_at) : "—"
+                }`
+              : "Nothing waiting"
           }
-          href={s.waiting_review ? "/review" : undefined}
+          href={s.waiting_review ? "/review" : s.waiting_approval ? "/approvals" : undefined}
         />
         <Kpi
           icon={<Clock aria-hidden />}
@@ -140,7 +142,7 @@ export function Dashboard() {
         <Card>
           <CardHeader>
             <CardTitle>Gate funnel</CardTitle>
-            <span className="text-[13px] text-muted">ERP posting joins in phase 8</span>
+            <span className="text-[13px] text-muted">where cases stop</span>
           </CardHeader>
           <Bars rows={s.funnel.map((f) => ({ label: f.stage, value: f.count }))} max={s.runs} showDrop />
         </Card>
@@ -156,6 +158,63 @@ export function Dashboard() {
             />
           ) : (
             <p className="text-muted">No exceptions raised yet.</p>
+          )}
+        </Card>
+      </div>
+
+      <div className="grid gap-5 lg:grid-cols-3">
+        <Card>
+          <CardHeader>
+            <CardTitle>ERP postings</CardTitle>
+            <Link href="/erp" className="text-[13px] font-medium text-brand-700 hover:underline dark:text-brand-500">
+              Ledger
+            </Link>
+          </CardHeader>
+          <dl className="grid grid-cols-3 gap-3 text-center">
+            {[
+              ["Posted", s.erp_posted],
+              ["Verified", s.erp_verified],
+              ["Mismatch", s.erp_mismatches],
+            ].map(([label, n]) => (
+              <div key={label} className="rounded-control bg-canvas py-3">
+                <dd className="text-2xl font-bold text-navy">{n}</dd>
+                <dt className="text-xs text-muted">{label}</dt>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-3 text-xs text-muted">{s.approvals_decided} approval decision(s) recorded.</p>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Exceptions by owner</CardTitle>
+          </CardHeader>
+          {s.exceptions_by_owner.length ? (
+            <ul className="flex flex-col gap-2 text-[13px]">
+              {s.exceptions_by_owner.map((o) => (
+                <li key={o.owner} className="flex items-baseline justify-between gap-2">
+                  <span>{o.owner}</span>
+                  <span className="text-muted">
+                    <b className="text-navy">{o.open}</b> open · {o.resolved} done
+                    {o.median_resolution_ms ? ` · median ${duration(o.median_resolution_ms)}` : ""}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-muted">No exceptions yet.</p>
+          )}
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Corrections by vendor</CardTitle>
+          </CardHeader>
+          {Object.keys(s.corrections_by_vendor).length ? (
+            <Bars
+              rows={Object.entries(s.corrections_by_vendor).map(([label, value]) => ({ label, value, mono: true }))}
+              max={Math.max(...Object.values(s.corrections_by_vendor))}
+            />
+          ) : (
+            <p className="text-muted">No field corrections yet — they feed extraction hints for that vendor.</p>
           )}
         </Card>
       </div>
@@ -367,6 +426,7 @@ const RUN_STATUS_LABEL: Record<string, string> = {
   QUEUED: "Queued",
   RUNNING: "Running",
   WAITING_REVIEW: "Waiting",
+  WAITING_APPROVAL: "Approval",
   FAILED: "Failed",
 };
 

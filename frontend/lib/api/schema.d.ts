@@ -302,14 +302,354 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/procedures": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Procedures */
+        get: operations["list_procedures_procedures_get"];
+        put?: never;
+        /** Create Procedure */
+        post: operations["create_procedure_procedures_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/procedures/active": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Active Procedure */
+        get: operations["active_procedure_procedures_active_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/procedures/{version}/activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Activate Procedure */
+        post: operations["activate_procedure_procedures__version__activate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/runs/{run_id}/records": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Case Records
+         * @description Exceptions, approvals, ERP posting and corrections of one case.
+         */
+        get: operations["case_records_runs__run_id__records_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/approvals/inbox": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Approvals Inbox
+         * @description Approvals a case is waiting for right now (one per paused run), oldest first.
+         */
+        get: operations["approvals_inbox_approvals_inbox_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/approvals/{approval_id}/decide": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Decide */
+        post: operations["decide_approvals__approval_id__decide_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/runs/{run_id}/corrections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add Correction
+         * @description Record a reviewer's correction; recent ones for the vendor become extraction hints.
+         */
+        post: operations["add_correction_runs__run_id__corrections_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/cases/{run_id}/evidence": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Evidence */
+        get: operations["evidence_cases__run_id__evidence_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/cases/{run_id}/evidence.json": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Evidence Json */
+        get: operations["evidence_json_cases__run_id__evidence_json_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/cases/{run_id}/evidence.pdf": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Evidence Pdf */
+        get: operations["evidence_pdf_cases__run_id__evidence_pdf_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/erp/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ledger */
+        get: operations["ledger_erp_documents_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/erp/documents/{doc_number}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Document */
+        get: operations["read_document_erp_documents__doc_number__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/erp/documents/{doc_number}/correct": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Correct Document
+         * @description What an AP clerk does in the ERP after a read-back mismatch; then re-check the case.
+         */
+        post: operations["correct_document_erp_documents__doc_number__correct_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/reset-demo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reset Demo
+         * @description Start the demo over: remove every run (and its records and checkpoints), the mock ERP
+         *     ledger and the invoice history, then reload the seed. Procedure versions are kept.
+         */
+        post: operations["reset_demo_admin_reset_demo_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** ApprovalBand */
+        "ApprovalBand-Input": {
+            /** Up To */
+            up_to: number | string | null;
+            /** Roles */
+            roles: string[];
+        };
+        /** ApprovalBand */
+        "ApprovalBand-Output": {
+            /** Up To */
+            up_to: string | null;
+            /** Roles */
+            roles: string[];
+        };
+        /** ApprovalOut */
+        ApprovalOut: {
+            /** Id */
+            id: number;
+            /** Run Id */
+            run_id: string;
+            /** Level */
+            level: number;
+            /** Kind */
+            kind: string;
+            /** Role */
+            role: string;
+            /** Approver Name */
+            approver_name: string | null;
+            /** Reason */
+            reason: string;
+            /** Citation */
+            citation: string | null;
+            /** Is Second Approver */
+            is_second_approver: boolean;
+            /** Decision */
+            decision: string;
+            /** Decided By */
+            decided_by: string | null;
+            /** Comment */
+            comment: string | null;
+            /** Decided At */
+            decided_at: string | null;
+        };
         /** Body_create_run_runs_post */
         Body_create_run_runs_post: {
             /** File */
             file: string;
+        };
+        /** CaseRecordsOut */
+        CaseRecordsOut: {
+            /** Exceptions */
+            exceptions: components["schemas"]["ExceptionOut"][];
+            /** Approvals */
+            approvals: components["schemas"]["ApprovalOut"][];
+            erp: components["schemas"]["ErpPostingOut"] | null;
+            /** Corrections */
+            corrections: components["schemas"]["CorrectionOut"][];
+        };
+        /** CorrectIn */
+        CorrectIn: {
+            /** Amount */
+            amount: number | string;
+        };
+        /** CorrectionIn */
+        CorrectionIn: {
+            /** Field */
+            field: string;
+            /** New Value */
+            new_value: string;
+            /** Reviewer */
+            reviewer?: string | null;
+        };
+        /** CorrectionOut */
+        CorrectionOut: {
+            /** Id */
+            id: number;
+            /** Field */
+            field: string;
+            /** Old Value */
+            old_value: string | null;
+            /** New Value */
+            new_value: string;
+            /** Reviewer */
+            reviewer: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
         };
         /** DayCount */
         DayCount: {
@@ -328,6 +668,120 @@ export interface components {
             on_hold: number;
             /** Rejected */
             rejected: number;
+        };
+        /** DecideIn */
+        DecideIn: {
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "APPROVE" | "REJECT";
+            /** Approver */
+            approver: string;
+            /** Comment */
+            comment?: string | null;
+        };
+        /** ErpDocumentRow */
+        ErpDocumentRow: {
+            /** Doc Number */
+            doc_number: string;
+            /** Idempotency Key */
+            idempotency_key: string;
+            /** Vendor Id */
+            vendor_id: string;
+            /** Invoice Number */
+            invoice_number: string;
+            /**
+             * Invoice Date
+             * Format: date
+             */
+            invoice_date: string;
+            /** Po Number */
+            po_number: string | null;
+            /** Amount */
+            amount: string;
+            /** Tax Amount */
+            tax_amount: string;
+            /** Gl Account */
+            gl_account: string | null;
+            /** Cost Centre */
+            cost_centre: string | null;
+            /** Attachment Url */
+            attachment_url: string | null;
+            /** Status */
+            status: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Updated At */
+            updated_at: string | null;
+        };
+        /** ErpPostingOut */
+        ErpPostingOut: {
+            /** Doc Number */
+            doc_number: string | null;
+            /** Request */
+            request: {
+                [key: string]: unknown;
+            };
+            /** Readback */
+            readback: {
+                [key: string]: unknown;
+            } | null;
+            /** Verified */
+            verified: boolean | null;
+            /** Mismatches */
+            mismatches: string[] | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /**
+         * ExceptionCategory
+         * @enum {string}
+         */
+        ExceptionCategory: "PRICE_VARIANCE" | "QTY_VARIANCE" | "NO_PO" | "NO_RECEIPT" | "DUPLICATE_SUSPECT" | "BANK_CHANGE" | "TAX_MISMATCH" | "LOW_CONFIDENCE" | "OVER_PO_BALANCE" | "ERP_MISMATCH";
+        /** ExceptionOut */
+        ExceptionOut: {
+            /** Id */
+            id: number;
+            /** Category */
+            category: string;
+            /** Summary */
+            summary: string;
+            /** Variance */
+            variance: {
+                [key: string]: unknown;
+            } | null;
+            /** Citations */
+            citations: string[] | null;
+            /** Owner Role */
+            owner_role: string;
+            /** Owner Name */
+            owner_name: string | null;
+            /** Recommendation */
+            recommendation: string | null;
+            /** Question */
+            question: string;
+            /** Attempted Steps */
+            attempted_steps: string[] | null;
+            /** Status */
+            status: string;
+            /** Resolution */
+            resolution: string | null;
+            /** Resolved By */
+            resolved_by: string | null;
+            /** Resolved At */
+            resolved_at: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
         };
         /** FunnelStage */
         FunnelStage: {
@@ -376,6 +830,15 @@ export interface components {
             env: string;
             /** Database */
             database: string;
+        };
+        /** InboxItem */
+        InboxItem: {
+            approval: components["schemas"]["ApprovalOut"];
+            run: components["schemas"]["RunOut"];
+            /** Request */
+            request: {
+                [key: string]: unknown;
+            };
         };
         /** KnowledgeDocOut */
         KnowledgeDocOut: {
@@ -426,6 +889,27 @@ export interface components {
              */
             k: number;
         };
+        /** LedgerRow */
+        LedgerRow: {
+            document: components["schemas"]["ErpDocumentRow"];
+            /** Run Id */
+            run_id: string | null;
+            /** Verified */
+            verified: boolean | null;
+            /** Mismatches */
+            mismatches: string[] | null;
+        };
+        /** OwnerLoad */
+        OwnerLoad: {
+            /** Owner */
+            owner: string;
+            /** Open */
+            open: number;
+            /** Resolved */
+            resolved: number;
+            /** Median Resolution Ms */
+            median_resolution_ms: number | null;
+        };
         /** PoLineOut */
         PoLineOut: {
             /** Line No */
@@ -442,6 +926,226 @@ export interface components {
             unit_price: string;
             /** Tax Rate */
             tax_rate: string;
+        };
+        /** Policy */
+        "Policy-Input": {
+            /**
+             * Version
+             * @default default
+             */
+            version: string;
+            /**
+             * Price Tolerance Pct
+             * @default 2
+             */
+            price_tolerance_pct: number | string;
+            /**
+             * Price Tolerance Invoice
+             * @default 5000
+             */
+            price_tolerance_invoice: number | string;
+            /**
+             * Qty Tolerance
+             * @default 0
+             */
+            qty_tolerance: number | string;
+            /**
+             * Freight Cap
+             * @default 1000
+             */
+            freight_cap: number | string;
+            /**
+             * Rounding
+             * @default 1
+             */
+            rounding: number | string;
+            /**
+             * Duplicate Window Days
+             * @default 30
+             */
+            duplicate_window_days: number;
+            /**
+             * Confidence Threshold
+             * @default 0.8
+             */
+            confidence_threshold: number;
+            /**
+             * Po Required Above
+             * @default 10000
+             */
+            po_required_above: number | string;
+            /**
+             * Po Inference Threshold
+             * @default 0.75
+             */
+            po_inference_threshold: number;
+            /** Approval Matrix */
+            approval_matrix?: components["schemas"]["ApprovalBand-Input"][];
+            /**
+             * Non Po Finance Above
+             * @default 100000
+             */
+            non_po_finance_above: number | string;
+            /** Non Po Categories */
+            non_po_categories?: string[];
+            /** Bank Change Approvers */
+            bank_change_approvers?: string[];
+            /** Approvers */
+            approvers?: {
+                [key: string]: string;
+            };
+            /** Cost Centre Departments */
+            cost_centre_departments?: {
+                [key: string]: string;
+            };
+            /** Exception Owners */
+            exception_owners?: {
+                [key: string]: string;
+            };
+            /** Override Categories */
+            override_categories?: components["schemas"]["ExceptionCategory"][];
+            /**
+             * Override Second Approver
+             * @default AP Manager
+             */
+            override_second_approver: string;
+            /** Gl By Category */
+            gl_by_category?: {
+                [key: string]: string;
+            };
+            /**
+             * Default Gl
+             * @default 5999
+             */
+            default_gl: string;
+        };
+        /** Policy */
+        "Policy-Output": {
+            /**
+             * Version
+             * @default default
+             */
+            version: string;
+            /**
+             * Price Tolerance Pct
+             * @default 2
+             */
+            price_tolerance_pct: string;
+            /**
+             * Price Tolerance Invoice
+             * @default 5000
+             */
+            price_tolerance_invoice: string;
+            /**
+             * Qty Tolerance
+             * @default 0
+             */
+            qty_tolerance: string;
+            /**
+             * Freight Cap
+             * @default 1000
+             */
+            freight_cap: string;
+            /**
+             * Rounding
+             * @default 1
+             */
+            rounding: string;
+            /**
+             * Duplicate Window Days
+             * @default 30
+             */
+            duplicate_window_days: number;
+            /**
+             * Confidence Threshold
+             * @default 0.8
+             */
+            confidence_threshold: number;
+            /**
+             * Po Required Above
+             * @default 10000
+             */
+            po_required_above: string;
+            /**
+             * Po Inference Threshold
+             * @default 0.75
+             */
+            po_inference_threshold: number;
+            /** Approval Matrix */
+            approval_matrix?: components["schemas"]["ApprovalBand-Output"][];
+            /**
+             * Non Po Finance Above
+             * @default 100000
+             */
+            non_po_finance_above: string;
+            /** Non Po Categories */
+            non_po_categories?: string[];
+            /** Bank Change Approvers */
+            bank_change_approvers?: string[];
+            /** Approvers */
+            approvers?: {
+                [key: string]: string;
+            };
+            /** Cost Centre Departments */
+            cost_centre_departments?: {
+                [key: string]: string;
+            };
+            /** Exception Owners */
+            exception_owners?: {
+                [key: string]: string;
+            };
+            /** Override Categories */
+            override_categories?: components["schemas"]["ExceptionCategory"][];
+            /**
+             * Override Second Approver
+             * @default AP Manager
+             */
+            override_second_approver: string;
+            /** Gl By Category */
+            gl_by_category?: {
+                [key: string]: string;
+            };
+            /**
+             * Default Gl
+             * @default 5999
+             */
+            default_gl: string;
+        };
+        /** ProcedureIn */
+        ProcedureIn: {
+            policy: components["schemas"]["Policy-Input"];
+            /** Note */
+            note?: string | null;
+            /** Created By */
+            created_by?: string | null;
+            /**
+             * Activate
+             * @default true
+             */
+            activate: boolean;
+        };
+        /** ProcedureOut */
+        ProcedureOut: {
+            /** Version */
+            version: number;
+            /** Label */
+            label: string;
+            /** Active */
+            active: boolean;
+            /** Note */
+            note: string | null;
+            /** Created By */
+            created_by: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            policy: components["schemas"]["Policy-Output"];
+            /** Changes */
+            changes: {
+                [key: string]: unknown;
+            }[];
         };
         /** PurchaseOrderOut */
         PurchaseOrderOut: {
@@ -492,13 +1196,20 @@ export interface components {
                 [key: string]: number;
             };
         };
+        /** ResetOut */
+        ResetOut: {
+            /** Runs Deleted */
+            runs_deleted: number;
+            /** Erp Documents Deleted */
+            erp_documents_deleted: number;
+        };
         /** ReviewIn */
         ReviewIn: {
             /**
              * Action
              * @enum {string}
              */
-            action: "APPROVE" | "REJECT" | "REQUEST_INFO";
+            action: "APPROVE" | "REJECT" | "REQUEST_INFO" | "RECHECK";
             /** Comment */
             comment?: string | null;
             /** Reviewer */
@@ -671,6 +1382,8 @@ export interface components {
             completed: number;
             /** Waiting Review */
             waiting_review: number;
+            /** Waiting Approval */
+            waiting_approval: number;
             /** Running */
             running: number;
             /** Failed */
@@ -703,6 +1416,20 @@ export interface components {
             volume: components["schemas"]["DayCount"][];
             /** Recent */
             recent: components["schemas"]["RunOut"][];
+            /** Erp Posted */
+            erp_posted: number;
+            /** Erp Verified */
+            erp_verified: number;
+            /** Erp Mismatches */
+            erp_mismatches: number;
+            /** Exceptions By Owner */
+            exceptions_by_owner: components["schemas"]["OwnerLoad"][];
+            /** Corrections By Vendor */
+            corrections_by_vendor: {
+                [key: string]: number;
+            };
+            /** Approvals Decided */
+            approvals_decided: number;
         };
         /** ValidationError */
         ValidationError: {
@@ -1322,6 +2049,507 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Stats"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_procedures_procedures_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProcedureOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_procedure_procedures_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProcedureIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProcedureOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    active_procedure_procedures_active_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProcedureOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    activate_procedure_procedures__version__activate_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path: {
+                version: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProcedureOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    case_records_runs__run_id__records_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CaseRecordsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    approvals_inbox_approvals_inbox_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InboxItem"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    decide_approvals__approval_id__decide_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path: {
+                approval_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DecideIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_correction_runs__run_id__corrections_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CorrectionIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CorrectionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    evidence_cases__run_id__evidence_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    evidence_json_cases__run_id__evidence_json_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    evidence_pdf_cases__run_id__evidence_pdf_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path: {
+                run_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    ledger_erp_documents_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LedgerRow"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_document_erp_documents__doc_number__get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path: {
+                doc_number: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErpDocumentRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    correct_document_erp_documents__doc_number__correct_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path: {
+                doc_number: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CorrectIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErpDocumentRow"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reset_demo_admin_reset_demo_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResetOut"];
                 };
             };
             /** @description Validation Error */

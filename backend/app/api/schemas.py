@@ -164,7 +164,7 @@ class RunDetailOut(RunOut):
 
 
 class ReviewIn(BaseModel):
-    action: Literal["APPROVE", "REJECT", "REQUEST_INFO"]
+    action: Literal["APPROVE", "REJECT", "REQUEST_INFO", "RECHECK"]
     comment: str | None = None
     reviewer: str | None = None
 

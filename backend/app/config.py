@@ -35,6 +35,8 @@ class Settings(BaseSettings):
 
     storage_backend: Literal["local", "r2"] = "local"
     storage_dir: str = ""  # local uploads; default backend/var/uploads
+    # Mock ERP honours a sample's `erp_fault` (demo of the read-back check, ASSUMPTIONS #16).
+    erp_demo_faults: bool = True
     r2_account_id: str = ""
     r2_access_key_id: str = ""
     r2_secret_access_key: str = ""

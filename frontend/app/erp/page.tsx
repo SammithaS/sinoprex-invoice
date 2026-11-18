@@ -1,11 +1,20 @@
-import { PlannedPage } from "@/components/planned-page";
+import type { Metadata } from "next";
+import { PageTitle } from "@/components/ui/card";
+import { ErpLedger } from "./erp-ledger";
 
-export const metadata = { title: "ERP ledger" };
+export const metadata: Metadata = { title: "ERP ledger" };
 
-export default function Page() {
+export default function ErpPage() {
   return (
-    <PlannedPage title="ERP ledger" phase={8}>
-      Documents posted to the mock ERP and their read-back verification status.
-    </PlannedPage>
+    <>
+      <div className="flex flex-col gap-1">
+        <PageTitle>ERP ledger</PageTitle>
+        <p className="text-muted">
+          The mock ERP. Every approved invoice is posted once (the case id is the idempotency key), then read back
+          and compared with what was approved; a difference keeps the case open until it&apos;s fixed.
+        </p>
+      </div>
+      <ErpLedger />
+    </>
   );
 }

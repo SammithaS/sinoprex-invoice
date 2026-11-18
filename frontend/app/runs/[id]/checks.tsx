@@ -1,7 +1,11 @@
 "use client";
 
-import { Check, CircleAlert, Minus, X } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Check, CircleAlert, Minus, Pencil, X } from "lucide-react";
+import { useState } from "react";
 import { CitationChip, ConfidenceChip } from "@/components/ui/badges";
+import { Button } from "@/components/ui/button";
+import { apiPost } from "@/lib/api/client";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   FIELD_LABELS,
@@ -57,15 +61,15 @@ export function RuleRow({
   );
 }
 
-export function TouchlessCard({ assessment }: { assessment: Assessment }) {
-  const items = Object.entries(assessment.touchless);
+export function TouchlessCard({ assessment, erpVerified }: { assessment: Assessment; erpVerified: boolean | null }) {
+  const items: [string, boolean][] = [...Object.entries(assessment.touchless), ["erp_verified", erpVerified === true]];
   const passed = items.filter(([, ok]) => ok).length;
   return (
     <Card>
       <CardHeader>
         <CardTitle>Touchless checklist</CardTitle>
         <span className="text-[13px] text-muted">
-          {passed} of {items.length + 1} passed
+          {passed} of {items.length} passed
         </span>
       </CardHeader>
       <ul className="flex flex-col gap-2.5">
@@ -87,12 +91,6 @@ export function TouchlessCard({ assessment }: { assessment: Assessment }) {
             <span>{TOUCHLESS_LABELS[key] ?? key}</span>
           </li>
         ))}
-        <li className="flex items-center gap-2.5 text-muted">
-          <span className="flex size-[22px] shrink-0 items-center justify-center rounded-full border border-dashed border-muted/50">
-            <Minus aria-hidden className="size-3" />
-          </span>
-          ERP posting confirmed by read-back <span className="text-xs">(phase 8)</span>
-        </li>
       </ul>
     </Card>
   );
@@ -154,7 +152,58 @@ function money(field: string, value: string | null): string {
   return ["subtotal", "tax_total", "total"].includes(field) ? formatINR(value) : value;
 }
 
-export function FieldsCard({ extraction }: { extraction: Extraction }) {
+function CorrectField({ runId, field, label }: { runId: string; field: string; label: string }) {
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
+  const save = useMutation({
+    mutationFn: () => apiPost(`/runs/${runId}/corrections`, { field, new_value: value, reviewer: "Priya Nair" }),
+    onSuccess: () => {
+      setOpen(false);
+      setValue("");
+      void queryClient.invalidateQueries({ queryKey: ["records", runId] });
+    },
+  });
+  if (!open) {
+    return (
+      <Button variant="icon" size="icon" className="size-8" aria-label={`Correct ${label}`} onClick={() => setOpen(true)}>
+        <Pencil aria-hidden className="size-3.5!" />
+      </Button>
+    );
+  }
+  return (
+    <form
+      className="flex items-center gap-1.5"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (value.trim()) save.mutate();
+      }}
+    >
+      <input
+        autoFocus
+        aria-label={`Correct value for ${label}`}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        className="h-8 w-36 rounded-lg border border-line bg-canvas px-2 font-mono text-xs"
+      />
+      <Button size="sm" type="submit" className="h-8 px-2.5" disabled={save.isPending || !value.trim()}>
+        Save
+      </Button>
+    </form>
+  );
+}
+
+export function FieldsCard({
+  extraction,
+  runId,
+  editable,
+  corrected,
+}: {
+  extraction: Extraction;
+  runId?: string;
+  editable?: boolean;
+  corrected?: Record<string, string>;
+}) {
   return (
     <Card>
       <CardHeader>
@@ -171,7 +220,14 @@ export function FieldsCard({ extraction }: { extraction: Extraction }) {
               <dd className="min-w-0 flex-1 truncate font-mono text-[13px] text-navy" title={ev.snippet ?? undefined}>
                 {money(key, ev.value)}
               </dd>
-              {ev.value !== null && <ConfidenceChip value={ev.confidence} />}
+              {corrected?.[key] ? (
+                <span className="font-mono text-xs text-approved" title="Corrected by a reviewer">
+                  → {corrected[key]}
+                </span>
+              ) : (
+                ev.value !== null && <ConfidenceChip value={ev.confidence} />
+              )}
+              {editable && runId && <CorrectField runId={runId} field={key} label={label} />}
             </div>
           );
         })}

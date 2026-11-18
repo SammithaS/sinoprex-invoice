@@ -1,7 +1,7 @@
 """Dashboard KPIs (plan §2b.9, §11 `GET /stats`).
 
-Computed from the `runs` table in Python — fine at demo scale (hundreds of runs). ERP posting
-and correction metrics join in Phase 8.
+Computed in Python from runs, exceptions, approvals, ERP postings and corrections — fine at
+demo scale (hundreds of runs).
 """
 
 import statistics
@@ -16,7 +16,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from app.api.schemas import RunOut
-from app.db.models import Run
+from app.db.models import Approval, CaseException, Correction, ErpPosting, Run
 from app.deps import SessionDep
 
 router = APIRouter(tags=["stats"])
@@ -36,10 +36,18 @@ class FunnelStage(BaseModel):
     count: int
 
 
+class OwnerLoad(BaseModel):
+    owner: str
+    open: int
+    resolved: int
+    median_resolution_ms: int | None
+
+
 class Stats(BaseModel):
     runs: int
     completed: int
     waiting_review: int
+    waiting_approval: int
     running: int
     failed: int
     decisions: dict[str, int]  # final decision where known, else the rules' decision
@@ -54,6 +62,12 @@ class Stats(BaseModel):
     funnel: list[FunnelStage]
     volume: list[DayCount]
     recent: list[RunOut]
+    erp_posted: int
+    erp_verified: int
+    erp_mismatches: int
+    exceptions_by_owner: list[OwnerLoad]
+    corrections_by_vendor: dict[str, int]
+    approvals_decided: int
 
 
 def _decision(run: Run) -> str | None:
@@ -72,8 +86,22 @@ async def stats(session: SessionDep, days: int = 30) -> Stats:
         )
     )
     completed = [r for r in runs if r.status == "COMPLETED"]
-    waiting = [r for r in runs if r.status == "WAITING_REVIEW"]
-    touchless = [r for r in completed if r.decision == "APPROVED" and not r.reviews]
+    waiting = [r for r in runs if r.status in ("WAITING_REVIEW", "WAITING_APPROVAL")]
+    approvals = list(await session.scalars(select(Approval)))
+    postings = list(await session.scalars(select(ErpPosting)))
+    exceptions = list(await session.scalars(select(CaseException)))
+    corrections = list(await session.scalars(select(Correction)))
+    with_approvals = {a.run_id for a in approvals}
+    verified = {p.run_id for p in postings if p.verified}
+    # Touchless (§2b.3): approved with no reviewer, no approver, and the ERP write confirmed.
+    touchless = [
+        r
+        for r in completed
+        if r.decision == "APPROVED"
+        and not r.reviews
+        and r.id not in with_approvals
+        and r.id in verified
+    ]
 
     causes: Counter[str] = Counter()
     for r in runs:
@@ -115,7 +143,8 @@ async def stats(session: SessionDep, days: int = 30) -> Stats:
     return Stats(
         runs=len(runs),
         completed=len(completed),
-        waiting_review=len(waiting),
+        waiting_review=sum(1 for r in runs if r.status == "WAITING_REVIEW"),
+        waiting_approval=sum(1 for r in runs if r.status == "WAITING_APPROVAL"),
         running=sum(1 for r in runs if r.status in ("QUEUED", "RUNNING")),
         failed=sum(1 for r in runs if r.status == "FAILED"),
         decisions=dict(Counter(dec for r in runs if (dec := _decision(r)))),
@@ -132,7 +161,39 @@ async def stats(session: SessionDep, days: int = 30) -> Stats:
         funnel=funnel,
         volume=volume,
         recent=[RunOut.model_validate(r) for r in runs[:8]],
+        erp_posted=sum(1 for p in postings if p.doc_number),
+        erp_verified=len(verified),
+        erp_mismatches=sum(1 for p in postings if p.verified is False),
+        exceptions_by_owner=_owner_load(exceptions),
+        corrections_by_vendor=dict(
+            Counter(c.vendor_id or "unknown" for c in corrections).most_common()
+        ),
+        approvals_decided=sum(1 for a in approvals if a.decision != "PENDING"),
     )
+
+
+def _owner_load(exceptions: list[CaseException]) -> list[OwnerLoad]:
+    by_owner: dict[str, list[CaseException]] = {}
+    for e in exceptions:
+        by_owner.setdefault(e.owner_role, []).append(e)
+    out = []
+    for owner, items in sorted(by_owner.items(), key=lambda kv: -len(kv[1])):
+        done = [e for e in items if e.resolved_at]
+        out.append(
+            OwnerLoad(
+                owner=owner,
+                open=sum(1 for e in items if e.status == "OPEN"),
+                resolved=len(done),
+                median_resolution_ms=_median(
+                    [
+                        int((e.resolved_at - e.created_at).total_seconds() * 1000)
+                        for e in done
+                        if e.resolved_at
+                    ]
+                ),
+            )
+        )
+    return out
 
 
 def _done_nodes(run: Run) -> set[str]:

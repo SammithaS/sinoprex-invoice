@@ -1,11 +1,14 @@
-import { PlannedPage } from "@/components/planned-page";
+import type { Metadata } from "next";
+import { PageTitle } from "@/components/ui/card";
+import { ResetDemo } from "./reset-demo";
 
-export const metadata = { title: "Settings" };
+export const metadata: Metadata = { title: "Settings" };
 
-export default function Page() {
+export default function SettingsPage() {
   return (
-    <PlannedPage title="Settings" phase={12}>
-      Demo reset and runtime settings.
-    </PlannedPage>
+    <>
+      <PageTitle>Settings</PageTitle>
+      <ResetDemo />
+    </>
   );
 }

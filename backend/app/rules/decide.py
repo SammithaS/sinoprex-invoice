@@ -288,6 +288,7 @@ def _assemble(
         vendor_id=found_vendor.id if found_vendor else None,
         po_match=po_match,
         matched_grn=grn.grn_number if grn else None,
+        po_cost_centre=po.cost_centre if po else None,
         proposed_coding=coding,
         duplicate_of=duplicate_of,
         min_key_confidence=min(scores.values(), default=0.0),

@@ -10,6 +10,13 @@ export type RunStep = Schemas["RunStepOut"];
 export type Sample = Schemas["SampleOut"];
 export type Stats = Schemas["Stats"];
 export type ReviewAction = Schemas["ReviewIn"]["action"];
+export type Procedure = Schemas["ProcedureOut"];
+export type Policy = Schemas["Policy-Output"];
+export type CaseRecords = Schemas["CaseRecordsOut"];
+export type CaseException = Schemas["ExceptionOut"];
+export type Approval = Schemas["ApprovalOut"];
+export type InboxItem = Schemas["InboxItem"];
+export type LedgerRow = Schemas["LedgerRow"];
 
 export class ApiError extends Error {
   constructor(

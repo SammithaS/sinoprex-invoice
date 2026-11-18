@@ -1,25 +1,27 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
-import { AlertTriangle, ChevronLeft, Download, RotateCcw } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { AlertTriangle, ChevronLeft, Download, FileCheck2, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Pill, StatusBadge } from "@/components/ui/badges";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { apiPost, backendUrl, type Run } from "@/lib/api/client";
+import { apiGet, apiPost, backendUrl, type CaseRecords, type Run } from "@/lib/api/client";
 import { asDecision } from "@/lib/run-state";
 import { useRun } from "@/lib/use-run";
 import { formatINR } from "@/lib/utils";
 import { ClausesCard, FieldsCard, RulesCard, TouchlessCard } from "./checks";
 import { DecisionCard } from "./decision-card";
 import { PdfPreview } from "./pdf-preview";
+import { ApprovalsCard, ErpCard, ExceptionsCard } from "./records";
 import { deriveStages, Timeline } from "./timeline";
 
 const RUN_STATUS: Record<string, { label: string; tone: "brand" | "review" | "rejected" | "neutral" }> = {
   QUEUED: { label: "Queued", tone: "neutral" },
   RUNNING: { label: "Running", tone: "brand" },
   WAITING_REVIEW: { label: "Waiting for review", tone: "review" },
+  WAITING_APPROVAL: { label: "Waiting for approval", tone: "review" },
   FAILED: { label: "Failed", tone: "rejected" },
 };
 
@@ -33,6 +35,10 @@ export function RunView() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { run, state, review, events, status, isPending, error } = useRun(id);
+  const records = useQuery({
+    queryKey: ["records", id],
+    queryFn: () => apiGet<CaseRecords>(`/runs/${id}/records`),
+  });
   const rerun = useMutation({
     mutationFn: () => apiPost<Run>(`/runs/${id}/rerun`),
     onSuccess: (r) => router.push(`/runs/${r.id}`),
@@ -94,11 +100,18 @@ export function RunView() {
             ) : runBadge ? (
               <Pill tone={runBadge.tone}>{runBadge.label}</Pill>
             ) : null}
-            {status === "WAITING_REVIEW" && decision && <StatusBadge decision={decision} />}
+            {(status === "WAITING_REVIEW" || status === "WAITING_APPROVAL") && decision && (
+              <StatusBadge decision={decision} />
+            )}
           </div>
           <span className="text-muted">{meta.join(" · ") || run.file_name}</span>
         </div>
         <div className="flex flex-wrap gap-2.5">
+          <Button asChild variant="ghost">
+            <Link href={`/cases/${id}/evidence`}>
+              <FileCheck2 aria-hidden /> Evidence
+            </Link>
+          </Button>
           <Button asChild variant="ghost">
             <a href={backendUrl(`/runs/${id}/file`)} target="_blank" rel="noreferrer">
               <Download aria-hidden /> Original PDF
@@ -120,11 +133,23 @@ export function RunView() {
         <Timeline events={events} runStatus={status} />
         <div className="flex flex-col gap-5 lg:col-span-2 2xl:col-span-1">
           <DecisionCard run={run} state={state} review={review} status={status} currentStage={current} />
-          {state.assessment && <TouchlessCard assessment={state.assessment} />}
+          {records.data && <ExceptionsCard records={records.data} />}
+          {records.data && <ApprovalsCard records={records.data} />}
+          {records.data && <ErpCard records={records.data} />}
+          {state.assessment && (
+            <TouchlessCard assessment={state.assessment} erpVerified={records.data?.erp?.verified ?? null} />
+          )}
           {state.assessment && (
             <ClausesCard clauses={state.clauses ?? []} cited={state.assessment.citations} />
           )}
-          {state.extraction && <FieldsCard extraction={state.extraction} />}
+          {state.extraction && (
+            <FieldsCard
+              extraction={state.extraction}
+              runId={id}
+              editable={status === "WAITING_REVIEW" && review?.kind !== "erp"}
+              corrected={Object.fromEntries((records.data?.corrections ?? []).map((c) => [c.field, c.new_value]))}
+            />
+          )}
           {state.assessment && <RulesCard assessment={state.assessment} />}
         </div>
       </div>

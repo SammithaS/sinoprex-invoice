@@ -78,8 +78,36 @@ class Policy(BaseModel):
             ExceptionCategory.TAX_MISMATCH: "Tax team",
             ExceptionCategory.LOW_CONFIDENCE: "AP Clerk",
             ExceptionCategory.OVER_PO_BALANCE: "Buyer",
+            ExceptionCategory.ERP_MISMATCH: "AP Manager",
         }
     )
+    # §7.3: approving despite these needs a written reason and a second approver.
+    override_categories: list[ExceptionCategory] = Field(
+        default_factory=lambda: [
+            ExceptionCategory.PRICE_VARIANCE,
+            ExceptionCategory.QTY_VARIANCE,
+            ExceptionCategory.OVER_PO_BALANCE,
+            ExceptionCategory.DUPLICATE_SUSPECT,
+            ExceptionCategory.TAX_MISMATCH,
+        ]
+    )
+    override_second_approver: str = "AP Manager"
+    # GL account for PO-backed postings, by vendor category (fictional chart of accounts).
+    gl_by_category: dict[str, str] = Field(
+        default_factory=lambda: {
+            "IT hardware": "5110",
+            "Electrical": "5120",
+            "Furniture": "5130",
+            "Packaging": "5210",
+            "Stationery": "6110",
+            "Freight": "6310",
+            "Printing": "6510",
+            "Facility services": "6610",
+            "SaaS": "6420",
+            "General trading": "5900",
+        }
+    )
+    default_gl: str = "5999"
 
     def department_head(self, cost_centre: str | None) -> str:
         dept = self.cost_centre_departments.get(cost_centre or "")

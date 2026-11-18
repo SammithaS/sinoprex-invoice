@@ -185,7 +185,7 @@ function NavSection({
   );
 }
 
-/** Live count pills: cases waiting in the review queue. */
+/** Live count pills: cases waiting for a reviewer or an approver. */
 function useLiveCounts(): Record<string, number | undefined> {
   const waiting = useQuery({
     queryKey: ["runs", "WAITING_REVIEW"],
@@ -193,5 +193,14 @@ function useLiveCounts(): Record<string, number | undefined> {
     refetchInterval: 15_000,
     retry: false,
   });
-  return { "/review": waiting.data?.length || undefined };
+  const approvals = useQuery({
+    queryKey: ["runs", "WAITING_APPROVAL"],
+    queryFn: () => apiGet<Run[]>("/runs?status=WAITING_APPROVAL"),
+    refetchInterval: 15_000,
+    retry: false,
+  });
+  return {
+    "/review": waiting.data?.length || undefined,
+    "/approvals": approvals.data?.length || undefined,
+  };
 }

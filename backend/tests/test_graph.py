@@ -5,7 +5,7 @@ readings are replayed from the recorded LLM fixtures, so no LLM is called.
 """
 
 import json
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Sequence
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -22,6 +22,7 @@ from app.config import get_settings
 from app.db.models import Base, Invoice, Review, Run, RunStep
 from app.db.seed import seed_reference_data
 from app.db.session import get_session
+from app.erp import MockErp
 from app.extraction import ExtractionResult, extract_invoice
 from app.extraction.models import InvoiceData, LineItem
 from app.graph.builder import build_graph
@@ -40,7 +41,9 @@ INVOICES = Path(__file__).resolve().parents[2] / "data" / "test-invoices"
 TODAY = date(2026, 11, 18)
 
 
-async def replay_extract(pdf: bytes, sample_key: str | None) -> ExtractionResult:
+async def replay_extract(
+    pdf: bytes, sample_key: str | None, hints: Sequence[str] = ()
+) -> ExtractionResult:
     assert sample_key, "tests only run samples"
     return await extract_invoice(pdf, model_factory=replay_factory(sample_key))
 
@@ -145,7 +148,7 @@ async def test_clean_invoice_runs_straight_through(service: RunService) -> None:
     assert run.status == "COMPLETED", run.error
     assert run.decision == run.final_decision == "APPROVED"
     assert run.vendor_id == "V008" and run.invoice_number == "NWE/DL/2026/0763"
-    assert run.duration_ms is not None and run.procedure_version == "default"
+    assert run.duration_ms is not None and run.procedure_version == "v1"
     rows = await steps(service, run.id)
     assert finished_nodes(rows) == [
         "intake",
@@ -155,6 +158,10 @@ async def test_clean_invoice_runs_straight_through(service: RunService) -> None:
         "retrieve_policy",
         "rules",
         "register_case",
+        "route_exception",
+        "approval_routing",
+        "post_erp",
+        "verify_post",
         "explain",
         "close_case",
     ]
@@ -198,7 +205,14 @@ async def test_scanned_invoice_pauses_and_approval_resumes_to_completion(
     assert run.status == "COMPLETED", run.error
     assert run.decision == "NEEDS_REVIEW" and run.final_decision == "APPROVED"
     after = finished_nodes(await steps(service, run.id))
-    assert after[-3:] == ["human_review", "explain", "close_case"]
+    assert after[-6:] == [
+        "human_review",
+        "approval_routing",
+        "post_erp",
+        "verify_post",
+        "explain",
+        "close_case",
+    ]
     async with service.sessionmaker() as session:
         reviews = list(await session.scalars(select(Review).where(Review.run_id == run.id)))
         inv = await session.scalar(select(Invoice).where(Invoice.run_id == run.id))
@@ -268,7 +282,7 @@ async def test_rerun_supersedes_the_earlier_attempt(service: RunService) -> None
 async def test_node_error_fails_the_run_with_a_message(
     db: async_sessionmaker[AsyncSession], tmp_path: Path
 ) -> None:
-    async def broken(pdf: bytes, key: str | None) -> ExtractionResult:
+    async def broken(pdf: bytes, key: str | None, hints: Sequence[str]) -> ExtractionResult:
         raise RuntimeError("model quota exhausted")
 
     service = make_service(db, tmp_path, extract=broken)
@@ -358,6 +372,7 @@ async def api(
 
     app.dependency_overrides[get_session] = _session
     app.state.run_service = service
+    app.state.erp = MockErp(db)
     async with AsyncClient(
         transport=ASGITransport(app=app), base_url="http://test", headers={"X-API-Key": "test-key"}
     ) as c:

@@ -3,7 +3,7 @@
 import operator
 from typing import Annotated, Any, Literal, TypedDict
 
-ReviewAction = Literal["APPROVE", "REJECT", "REQUEST_INFO"]
+ReviewAction = Literal["APPROVE", "REJECT", "REQUEST_INFO", "RECHECK"]
 
 
 class ReviewInput(TypedDict, total=False):
@@ -32,5 +32,10 @@ class CaseState(TypedDict, total=False):
     explanation: str | None
     next_action: str | None
     procedure_version: str
+    policy: dict[str, Any]  # the Operating Procedure version this case runs under
+    approvals_pending: int
+    erp: dict[str, Any] | None  # {doc_number, request}
+    erp_verified: bool
+    evidence_sha256: str | None
     failed: bool
     errors: Annotated[list[str], operator.add]

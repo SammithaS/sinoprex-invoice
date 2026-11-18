@@ -102,6 +102,13 @@ export type CaseState = {
 };
 
 export type ReviewRequest = {
+  kind?: "review" | "approval" | "erp";
+  actions?: string[];
+  approval?: { id: number; level: number; role: string; approver_name?: string | null; reason: string; citation?: string | null };
+  mismatches?: string[];
+  doc_number?: string;
+  already_involved?: string[];
+  override_needs_second_approver?: string[];
   headline: string;
   decision: Decision;
   reasons: string[];
@@ -135,4 +142,5 @@ export const TOUCHLESS_LABELS: Record<string, string> = {
   matching_passed: "PO / receipt match within tolerance",
   no_duplicate_or_tax_exception: "No duplicate or tax exception",
   no_approval_gate: "No approval gate triggered",
+  erp_verified: "ERP posting confirmed by read-back",
 };

@@ -121,7 +121,7 @@ function QueueItem({ run }: { run: Run }) {
             <span className="text-navy">{request.headline}</span>
           </div>
         )}
-        {open && <ReviewForm runId={run.id} />}
+        {open && <ReviewForm runId={run.id} actions={request?.actions} />}
       </Card>
     </li>
   );

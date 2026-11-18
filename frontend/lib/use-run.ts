@@ -25,7 +25,19 @@ export type RunEvent = {
 
 const TERMINAL = new Set(["COMPLETED", "FAILED"]);
 // After these steps the run snapshot has new state worth refetching.
-const REFRESH_AFTER = new Set(["extract", "vendor_match", "retrieve_policy", "rules", "human_review", "explain", "close_case"]);
+const REFRESH_AFTER = new Set([
+  "extract",
+  "vendor_match",
+  "retrieve_policy",
+  "rules",
+  "route_exception",
+  "human_review",
+  "approval_routing",
+  "post_erp",
+  "verify_post",
+  "explain",
+  "close_case",
+]);
 
 export function useRun(id: string) {
   const queryClient = useQueryClient();
@@ -41,7 +53,10 @@ export function useRun(id: string) {
   useEffect(() => {
     const source = new EventSource(backendUrl(`/runs/${id}/events`));
     const seen = new Set<number>();
-    const refresh = () => void queryClient.invalidateQueries({ queryKey: ["run", id] });
+    const refresh = () => {
+      void queryClient.invalidateQueries({ queryKey: ["run", id] });
+      void queryClient.invalidateQueries({ queryKey: ["records", id] });
+    };
 
     const onEvent = (raw: MessageEvent<string>) => {
       let event: RunEvent;

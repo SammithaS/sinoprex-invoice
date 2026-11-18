@@ -10,7 +10,7 @@ from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
-from app.api import knowledge, reference, runs, stats
+from app.api import case, knowledge, procedures, reference, runs, stats
 from app.api.schemas import HealthOut
 from app.config import Settings, get_settings
 from app.deps import SessionDep, require_api_key
@@ -38,7 +38,11 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
     async with open_checkpointer(settings) as saver:
         sessionmaker = get_sessionmaker()
-        graph = build_graph(GraphDeps(sessionmaker=sessionmaker), saver)
+        deps = GraphDeps(
+            sessionmaker=sessionmaker,
+            evidence_dir=storage_dir(settings).parent / "evidence",
+        )
+        graph = build_graph(deps, saver)
         service = RunService(graph, sessionmaker, storage_dir(settings))
         app.state.run_service = service
         from app.rag.embeddings import get_embeddings
@@ -81,6 +85,8 @@ def create_app() -> FastAPI:
     app.include_router(knowledge.router, dependencies=protected)
     app.include_router(runs.router, dependencies=protected)
     app.include_router(stats.router, dependencies=protected)
+    app.include_router(procedures.router, dependencies=protected)
+    app.include_router(case.router, dependencies=protected)
     return app
 
 

@@ -17,7 +17,11 @@ export const STAGES: { node: string; label: string }[] = [
   { node: "retrieve_policy", label: "Retrieve contract & policy" },
   { node: "rules", label: "Validate, match & decide" },
   { node: "register_case", label: "Register in invoice history" },
+  { node: "route_exception", label: "Route exceptions to owners" },
   { node: "human_review", label: "Human review" },
+  { node: "approval_routing", label: "Approval routing" },
+  { node: "post_erp", label: "Post to ERP" },
+  { node: "verify_post", label: "Verify posting (read-back)" },
   { node: "explain", label: "Explain decision" },
   { node: "close_case", label: "Close case" },
 ];
@@ -37,14 +41,17 @@ export function deriveStages(events: RunEvent[], runStatus: string | null): Stag
   return STAGES.map(({ node, label }) => {
     const mine = events.filter((e) => e.node === node);
     const finished = [...mine].reverse().find((e) => e.type === "step_finished");
-    const paused = mine.some((e) => e.type === "paused");
+    // A node that pauses runs again when resumed: it is paused only if that's its latest event.
+    const last = mine.at(-1);
+    const waiting = runStatus === "WAITING_REVIEW" || runStatus === "WAITING_APPROVAL";
+    const paused = last?.type === "paused" && waiting;
     const lastStart = [...mine].reverse().find((e) => e.type === "step_started");
     let state: StageState = "pending";
-    if (finished && (!lastStart || (finished.seq ?? 0) > (lastStart.seq ?? 0))) {
+    if (paused) {
+      state = "paused";
+    } else if (finished && (!lastStart || (finished.seq ?? 0) > (lastStart.seq ?? 0))) {
       const s = finished.status;
       state = s === "warn" ? "warn" : s === "failed" ? "failed" : s === "skipped" ? "skipped" : "done";
-    } else if (paused && runStatus === "WAITING_REVIEW") {
-      state = "paused";
     } else if (lastStart && !terminal) {
       state = "running";
     } else if (terminal) {

@@ -1,11 +1,20 @@
-import { PlannedPage } from "@/components/planned-page";
+import type { Metadata } from "next";
+import { PageTitle } from "@/components/ui/card";
+import { ApprovalsInbox } from "./approvals-inbox";
 
-export const metadata = { title: "Approvals" };
+export const metadata: Metadata = { title: "Approvals" };
 
-export default function Page() {
+export default function ApprovalsPage() {
   return (
-    <PlannedPage title="Approvals" phase={8}>
-      Matrix-routed approver inbox, with four-eyes checks for sensitive overrides.
-    </PlannedPage>
+    <>
+      <div className="flex flex-col gap-1">
+        <PageTitle>Approvals</PageTitle>
+        <p className="text-muted">
+          Cases waiting for a named approver from the operating procedure. Each level is a different person
+          (four-eyes); whoever reviewed or approved a case can&apos;t approve it again.
+        </p>
+      </div>
+      <ApprovalsInbox />
+    </>
   );
 }

@@ -38,8 +38,27 @@ TERMINAL = ("COMPLETED", "FAILED")
 STREAM_MODES: list[StreamMode] = ["updates", "custom"]
 # Nodes whose output changes what the run page shows: refresh the run row after these only.
 SNAPSHOT_NODES = frozenset(
-    {"extract", "vendor_match", "retrieve_policy", "rules", "human_review", "explain", "close_case"}
+    {
+        "extract",
+        "vendor_match",
+        "retrieve_policy",
+        "rules",
+        "human_review",
+        "approval_routing",
+        "post_erp",
+        "verify_post",
+        "explain",
+        "close_case",
+    }
 )
+# What a paused run waits for, by the interrupt payload's `kind`.
+WAITING = {"review": "WAITING_REVIEW", "erp": "WAITING_REVIEW", "approval": "WAITING_APPROVAL"}
+
+
+class FourEyesError(ValueError):
+    """The approver already acted on this case (policy §1.2, §7.3)."""
+
+
 ACTIVE = ("QUEUED", "RUNNING")
 
 
@@ -143,6 +162,11 @@ class RunService:
                 raise KeyError(run_id)
             if run.status != "WAITING_REVIEW":
                 raise ValueError(f"run is {run.status}, not waiting for review")
+            allowed = (run.review_request or {}).get("actions") or ["APPROVE", "REJECT"]
+            if review["action"] not in allowed:
+                raise ValueError(
+                    f"{review['action']} is not allowed here; use {', '.join(allowed)}"
+                )
             session.add(
                 Review(
                     run_id=run_id,
@@ -156,6 +180,45 @@ class RunService:
             await session.commit()
         self.broker.publish(run_id, {"type": "status", "status": "RUNNING"})
         self.start(run_id, Command(resume=dict(review)))
+        return run
+
+    async def decide_approval(
+        self,
+        run_id: str,
+        approval_id: int,
+        decision: str,
+        approver: str,
+        comment: str | None,
+    ) -> Run:
+        """Resume a run paused in approval_routing. Four-eyes: the approver must not already have
+        reviewed or approved this case."""
+        async with self.sessionmaker() as session:
+            run = await session.get(Run, run_id)
+            if run is None:
+                raise KeyError(run_id)
+            request = run.review_request or {}
+            if run.status != "WAITING_APPROVAL" or request.get("approval", {}).get("id") != (
+                approval_id
+            ):
+                raise ValueError("this approval is not the one the case is waiting for")
+            if not approver.strip():
+                raise FourEyesError("an approver name is required")
+            involved = {p.strip().lower() for p in request.get("already_involved") or []}
+            if approver.strip().lower() in involved:
+                raise FourEyesError(
+                    f"{approver} already acted on this case; a different person must approve "
+                    "(four-eyes)"
+                )
+            if decision == "REJECT" and not (comment or "").strip():
+                raise ValueError("a reason is required to reject")
+            run.status = "RUNNING"
+            run.review_request = None
+            await session.commit()
+        self.broker.publish(run_id, {"type": "status", "status": "RUNNING"})
+        self.start(
+            run_id,
+            Command(resume={"decision": decision, "approver": approver, "comment": comment}),
+        )
         return run
 
     async def wait(self, run_id: str) -> None:
@@ -218,7 +281,7 @@ class RunService:
                 run.status = "FAILED"
                 run.error = error or "; ".join(state.get("errors") or [])
             elif interrupt_value is not None:
-                run.status = "WAITING_REVIEW"
+                run.status = WAITING.get(interrupt_value.get("kind", "review"), "WAITING_REVIEW")
                 run.review_request = interrupt_value
             else:
                 run.status = "COMPLETED"

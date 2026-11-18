@@ -1,13 +1,18 @@
 """What the graph nodes call out to. Production wiring here; tests pass replay versions."""
 
+import json
 from collections import OrderedDict
-from collections.abc import Awaitable, Callable
+from collections.abc import Awaitable, Callable, Sequence
 from dataclasses import dataclass, field
 from datetime import date
+from functools import cache
+from pathlib import Path
 from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
+from app.config import get_settings
+from app.erp import ErpProvider, MockErp
 from app.extraction import ExtractionResult, extract_invoice
 from app.extraction.models import InvoiceData, LineItem
 from app.graph.explain import Explanation, explain_case
@@ -20,18 +25,19 @@ from app.rag.index import get_knowledge_store
 from app.rag.ingest import load_knowledge
 from app.rag.retriever import HybridRetriever
 from app.rules.models import Assessment, Vendor
-from app.rules.policy import DEFAULT_POLICY, Policy
+from app.rules.policy import Policy
 
-ExtractFn = Callable[[bytes, str | None], Awaitable[ExtractionResult]]
+ExtractFn = Callable[[bytes, str | None, Sequence[str]], Awaitable[ExtractionResult]]
 ContractFn = Callable[[Vendor, list[LineItem], str | None], Awaitable[ContractTermsResult]]
 ExplainFn = Callable[
     [InvoiceData, Assessment, str | None, list[dict[str, Any]], dict[str, str]],
     Awaitable[Explanation],
 ]
+SAMPLES = Path(__file__).resolve().parents[3] / "data" / "test-invoices"
 
 
-async def _extract(pdf: bytes, _sample_key: str | None) -> ExtractionResult:
-    return await extract_invoice(pdf)
+async def _extract(pdf: bytes, _sample_key: str | None, hints: Sequence[str]) -> ExtractionResult:
+    return await extract_invoice(pdf, hints=hints)
 
 
 # Contract readings keyed by the exact excerpts retrieved: contracts only change on re-index, and
@@ -66,12 +72,32 @@ def policy_sections() -> dict[str, str]:
     return out
 
 
+@cache
+def sample_erp_fault(sample_key: str | None) -> str | None:
+    """Demo mode: the ERP fault a sample's ground truth asks for (ASSUMPTIONS #16)."""
+    if not sample_key or not get_settings().erp_demo_faults:
+        return None
+    path = SAMPLES / "ground-truth" / f"{sample_key}.json"
+    if not path.exists():
+        return None
+    fault: str | None = json.loads(path.read_text(encoding="utf-8")).get("erp_fault")
+    return fault
+
+
 @dataclass
 class GraphDeps:
     sessionmaker: async_sessionmaker[AsyncSession]
     extract: ExtractFn = _extract
     contract_terms: ContractFn = _contract_terms
     explain: ExplainFn = explain_case
-    policy: Policy = field(default_factory=lambda: DEFAULT_POLICY)
+    # None: load the active Operating Procedure version at the start of each case.
+    policy_override: Policy | None = None
     today: Callable[[], date] = date.today
     policy_text: dict[str, str] = field(default_factory=policy_sections)
+    erp: ErpProvider | None = None  # default: MockErp on the same database
+    erp_fault: Callable[[str | None], str | None] = sample_erp_fault
+    evidence_dir: Path | None = None  # where close_case archives the bundle
+
+    def __post_init__(self) -> None:
+        if self.erp is None:
+            self.erp = MockErp(self.sessionmaker)

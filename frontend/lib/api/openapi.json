@@ -1063,10 +1063,1047 @@
           }
         }
       }
+    },
+    "/procedures": {
+      "get": {
+        "tags": [
+          "procedure"
+        ],
+        "summary": "List Procedures",
+        "operationId": "list_procedures_procedures_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProcedureOut"
+                  },
+                  "title": "Response List Procedures Procedures Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "procedure"
+        ],
+        "summary": "Create Procedure",
+        "operationId": "create_procedure_procedures_post",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcedureIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcedureOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procedures/active": {
+      "get": {
+        "tags": [
+          "procedure"
+        ],
+        "summary": "Active Procedure",
+        "operationId": "active_procedure_procedures_active_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcedureOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/procedures/{version}/activate": {
+      "post": {
+        "tags": [
+          "procedure"
+        ],
+        "summary": "Activate Procedure",
+        "operationId": "activate_procedure_procedures__version__activate_post",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Version"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcedureOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/runs/{run_id}/records": {
+      "get": {
+        "tags": [
+          "runs"
+        ],
+        "summary": "Case Records",
+        "description": "Exceptions, approvals, ERP posting and corrections of one case.",
+        "operationId": "case_records_runs__run_id__records_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaseRecordsOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/approvals/inbox": {
+      "get": {
+        "tags": [
+          "approvals"
+        ],
+        "summary": "Approvals Inbox",
+        "description": "Approvals a case is waiting for right now (one per paused run), oldest first.",
+        "operationId": "approvals_inbox_approvals_inbox_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InboxItem"
+                  },
+                  "title": "Response Approvals Inbox Approvals Inbox Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/approvals/{approval_id}/decide": {
+      "post": {
+        "tags": [
+          "approvals"
+        ],
+        "summary": "Decide",
+        "operationId": "decide_approvals__approval_id__decide_post",
+        "parameters": [
+          {
+            "name": "approval_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Approval Id"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DecideIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/runs/{run_id}/corrections": {
+      "post": {
+        "tags": [
+          "runs"
+        ],
+        "summary": "Add Correction",
+        "description": "Record a reviewer's correction; recent ones for the vendor become extraction hints.",
+        "operationId": "add_correction_runs__run_id__corrections_post",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CorrectionIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorrectionOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cases/{run_id}/evidence": {
+      "get": {
+        "tags": [
+          "cases"
+        ],
+        "summary": "Evidence",
+        "operationId": "evidence_cases__run_id__evidence_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Evidence Cases  Run Id  Evidence Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cases/{run_id}/evidence.json": {
+      "get": {
+        "tags": [
+          "cases"
+        ],
+        "summary": "Evidence Json",
+        "operationId": "evidence_json_cases__run_id__evidence_json_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cases/{run_id}/evidence.pdf": {
+      "get": {
+        "tags": [
+          "cases"
+        ],
+        "summary": "Evidence Pdf",
+        "operationId": "evidence_pdf_cases__run_id__evidence_pdf_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/erp/documents": {
+      "get": {
+        "tags": [
+          "erp"
+        ],
+        "summary": "Ledger",
+        "operationId": "ledger_erp_documents_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LedgerRow"
+                  },
+                  "title": "Response Ledger Erp Documents Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/erp/documents/{doc_number}": {
+      "get": {
+        "tags": [
+          "erp"
+        ],
+        "summary": "Read Document",
+        "operationId": "read_document_erp_documents__doc_number__get",
+        "parameters": [
+          {
+            "name": "doc_number",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Doc Number"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErpDocumentRow"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/erp/documents/{doc_number}/correct": {
+      "post": {
+        "tags": [
+          "erp"
+        ],
+        "summary": "Correct Document",
+        "description": "What an AP clerk does in the ERP after a read-back mismatch; then re-check the case.",
+        "operationId": "correct_document_erp_documents__doc_number__correct_post",
+        "parameters": [
+          {
+            "name": "doc_number",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Doc Number"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CorrectIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErpDocumentRow"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/reset-demo": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Reset Demo",
+        "description": "Start the demo over: remove every run (and its records and checkpoints), the mock ERP\nledger and the invoice history, then reload the seed. Procedure versions are kept.",
+        "operationId": "reset_demo_admin_reset_demo_post",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResetOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "ApprovalBand-Input": {
+        "properties": {
+          "up_to": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Up To"
+          },
+          "roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Roles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "up_to",
+          "roles"
+        ],
+        "title": "ApprovalBand"
+      },
+      "ApprovalBand-Output": {
+        "properties": {
+          "up_to": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Up To"
+          },
+          "roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Roles"
+          }
+        },
+        "type": "object",
+        "required": [
+          "up_to",
+          "roles"
+        ],
+        "title": "ApprovalBand"
+      },
+      "ApprovalOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "level": {
+            "type": "integer",
+            "title": "Level"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "approver_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approver Name"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "citation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Citation"
+          },
+          "is_second_approver": {
+            "type": "boolean",
+            "title": "Is Second Approver"
+          },
+          "decision": {
+            "type": "string",
+            "title": "Decision"
+          },
+          "decided_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decided By"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          },
+          "decided_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Decided At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "run_id",
+          "level",
+          "kind",
+          "role",
+          "approver_name",
+          "reason",
+          "citation",
+          "is_second_approver",
+          "decision",
+          "decided_by",
+          "comment",
+          "decided_at"
+        ],
+        "title": "ApprovalOut"
+      },
       "Body_create_run_runs_post": {
         "properties": {
           "file": {
@@ -1080,6 +2117,151 @@
           "file"
         ],
         "title": "Body_create_run_runs_post"
+      },
+      "CaseRecordsOut": {
+        "properties": {
+          "exceptions": {
+            "items": {
+              "$ref": "#/components/schemas/ExceptionOut"
+            },
+            "type": "array",
+            "title": "Exceptions"
+          },
+          "approvals": {
+            "items": {
+              "$ref": "#/components/schemas/ApprovalOut"
+            },
+            "type": "array",
+            "title": "Approvals"
+          },
+          "erp": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ErpPostingOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "corrections": {
+            "items": {
+              "$ref": "#/components/schemas/CorrectionOut"
+            },
+            "type": "array",
+            "title": "Corrections"
+          }
+        },
+        "type": "object",
+        "required": [
+          "exceptions",
+          "approvals",
+          "erp",
+          "corrections"
+        ],
+        "title": "CaseRecordsOut"
+      },
+      "CorrectIn": {
+        "properties": {
+          "amount": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Amount"
+          }
+        },
+        "type": "object",
+        "required": [
+          "amount"
+        ],
+        "title": "CorrectIn"
+      },
+      "CorrectionIn": {
+        "properties": {
+          "field": {
+            "type": "string",
+            "title": "Field"
+          },
+          "new_value": {
+            "type": "string",
+            "title": "New Value"
+          },
+          "reviewer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "field",
+          "new_value"
+        ],
+        "title": "CorrectionIn"
+      },
+      "CorrectionOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "field": {
+            "type": "string",
+            "title": "Field"
+          },
+          "old_value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Old Value"
+          },
+          "new_value": {
+            "type": "string",
+            "title": "New Value"
+          },
+          "reviewer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "field",
+          "old_value",
+          "new_value",
+          "reviewer",
+          "created_at"
+        ],
+        "title": "CorrectionOut"
       },
       "DayCount": {
         "properties": {
@@ -1119,6 +2301,391 @@
           "rejected"
         ],
         "title": "DayCount"
+      },
+      "DecideIn": {
+        "properties": {
+          "decision": {
+            "type": "string",
+            "enum": [
+              "APPROVE",
+              "REJECT"
+            ],
+            "title": "Decision"
+          },
+          "approver": {
+            "type": "string",
+            "title": "Approver"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          }
+        },
+        "type": "object",
+        "required": [
+          "decision",
+          "approver"
+        ],
+        "title": "DecideIn"
+      },
+      "ErpDocumentRow": {
+        "properties": {
+          "doc_number": {
+            "type": "string",
+            "title": "Doc Number"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "title": "Idempotency Key"
+          },
+          "vendor_id": {
+            "type": "string",
+            "title": "Vendor Id"
+          },
+          "invoice_number": {
+            "type": "string",
+            "title": "Invoice Number"
+          },
+          "invoice_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Invoice Date"
+          },
+          "po_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Po Number"
+          },
+          "amount": {
+            "type": "string",
+            "title": "Amount"
+          },
+          "tax_amount": {
+            "type": "string",
+            "title": "Tax Amount"
+          },
+          "gl_account": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gl Account"
+          },
+          "cost_centre": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Centre"
+          },
+          "attachment_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attachment Url"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "doc_number",
+          "idempotency_key",
+          "vendor_id",
+          "invoice_number",
+          "invoice_date",
+          "po_number",
+          "amount",
+          "tax_amount",
+          "gl_account",
+          "cost_centre",
+          "attachment_url",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ErpDocumentRow"
+      },
+      "ErpPostingOut": {
+        "properties": {
+          "doc_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Doc Number"
+          },
+          "request": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Request"
+          },
+          "readback": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Readback"
+          },
+          "verified": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verified"
+          },
+          "mismatches": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mismatches"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "doc_number",
+          "request",
+          "readback",
+          "verified",
+          "mismatches",
+          "created_at"
+        ],
+        "title": "ErpPostingOut"
+      },
+      "ExceptionCategory": {
+        "type": "string",
+        "enum": [
+          "PRICE_VARIANCE",
+          "QTY_VARIANCE",
+          "NO_PO",
+          "NO_RECEIPT",
+          "DUPLICATE_SUSPECT",
+          "BANK_CHANGE",
+          "TAX_MISMATCH",
+          "LOW_CONFIDENCE",
+          "OVER_PO_BALANCE",
+          "ERP_MISMATCH"
+        ],
+        "title": "ExceptionCategory"
+      },
+      "ExceptionOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "variance": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variance"
+          },
+          "citations": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Citations"
+          },
+          "owner_role": {
+            "type": "string",
+            "title": "Owner Role"
+          },
+          "owner_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner Name"
+          },
+          "recommendation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recommendation"
+          },
+          "question": {
+            "type": "string",
+            "title": "Question"
+          },
+          "attempted_steps": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attempted Steps"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "resolution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolution"
+          },
+          "resolved_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolved By"
+          },
+          "resolved_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolved At"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "category",
+          "summary",
+          "variance",
+          "citations",
+          "owner_role",
+          "owner_name",
+          "recommendation",
+          "question",
+          "attempted_steps",
+          "status",
+          "resolution",
+          "resolved_by",
+          "resolved_at",
+          "created_at"
+        ],
+        "title": "ExceptionOut"
       },
       "FunnelStage": {
         "properties": {
@@ -1238,6 +2805,28 @@
           "database"
         ],
         "title": "HealthOut"
+      },
+      "InboxItem": {
+        "properties": {
+          "approval": {
+            "$ref": "#/components/schemas/ApprovalOut"
+          },
+          "run": {
+            "$ref": "#/components/schemas/RunOut"
+          },
+          "request": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Request"
+          }
+        },
+        "type": "object",
+        "required": [
+          "approval",
+          "run",
+          "request"
+        ],
+        "title": "InboxItem"
       },
       "KnowledgeDocOut": {
         "properties": {
@@ -1378,6 +2967,92 @@
         ],
         "title": "KnowledgeSearchIn"
       },
+      "LedgerRow": {
+        "properties": {
+          "document": {
+            "$ref": "#/components/schemas/ErpDocumentRow"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "verified": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verified"
+          },
+          "mismatches": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mismatches"
+          }
+        },
+        "type": "object",
+        "required": [
+          "document",
+          "run_id",
+          "verified",
+          "mismatches"
+        ],
+        "title": "LedgerRow"
+      },
+      "OwnerLoad": {
+        "properties": {
+          "owner": {
+            "type": "string",
+            "title": "Owner"
+          },
+          "open": {
+            "type": "integer",
+            "title": "Open"
+          },
+          "resolved": {
+            "type": "integer",
+            "title": "Resolved"
+          },
+          "median_resolution_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Resolution Ms"
+          }
+        },
+        "type": "object",
+        "required": [
+          "owner",
+          "open",
+          "resolved",
+          "median_resolution_ms"
+        ],
+        "title": "OwnerLoad"
+      },
       "PoLineOut": {
         "properties": {
           "line_no": {
@@ -1420,6 +3095,420 @@
           "tax_rate"
         ],
         "title": "PoLineOut"
+      },
+      "Policy-Input": {
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "default": "default"
+          },
+          "price_tolerance_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Price Tolerance Pct",
+            "default": "2"
+          },
+          "price_tolerance_invoice": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Price Tolerance Invoice",
+            "default": "5000"
+          },
+          "qty_tolerance": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Qty Tolerance",
+            "default": "0"
+          },
+          "freight_cap": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Freight Cap",
+            "default": "1000"
+          },
+          "rounding": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Rounding",
+            "default": "1"
+          },
+          "duplicate_window_days": {
+            "type": "integer",
+            "title": "Duplicate Window Days",
+            "default": 30
+          },
+          "confidence_threshold": {
+            "type": "number",
+            "title": "Confidence Threshold",
+            "default": 0.8
+          },
+          "po_required_above": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Po Required Above",
+            "default": "10000"
+          },
+          "po_inference_threshold": {
+            "type": "number",
+            "title": "Po Inference Threshold",
+            "default": 0.75
+          },
+          "approval_matrix": {
+            "items": {
+              "$ref": "#/components/schemas/ApprovalBand-Input"
+            },
+            "type": "array",
+            "title": "Approval Matrix"
+          },
+          "non_po_finance_above": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Non Po Finance Above",
+            "default": "100000"
+          },
+          "non_po_categories": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Non Po Categories"
+          },
+          "bank_change_approvers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Bank Change Approvers"
+          },
+          "approvers": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Approvers"
+          },
+          "cost_centre_departments": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Cost Centre Departments"
+          },
+          "exception_owners": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/ExceptionCategory"
+            },
+            "type": "object",
+            "title": "Exception Owners"
+          },
+          "override_categories": {
+            "items": {
+              "$ref": "#/components/schemas/ExceptionCategory"
+            },
+            "type": "array",
+            "title": "Override Categories"
+          },
+          "override_second_approver": {
+            "type": "string",
+            "title": "Override Second Approver",
+            "default": "AP Manager"
+          },
+          "gl_by_category": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Gl By Category"
+          },
+          "default_gl": {
+            "type": "string",
+            "title": "Default Gl",
+            "default": "5999"
+          }
+        },
+        "type": "object",
+        "title": "Policy"
+      },
+      "Policy-Output": {
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "default": "default"
+          },
+          "price_tolerance_pct": {
+            "type": "string",
+            "title": "Price Tolerance Pct",
+            "default": "2"
+          },
+          "price_tolerance_invoice": {
+            "type": "string",
+            "title": "Price Tolerance Invoice",
+            "default": "5000"
+          },
+          "qty_tolerance": {
+            "type": "string",
+            "title": "Qty Tolerance",
+            "default": "0"
+          },
+          "freight_cap": {
+            "type": "string",
+            "title": "Freight Cap",
+            "default": "1000"
+          },
+          "rounding": {
+            "type": "string",
+            "title": "Rounding",
+            "default": "1"
+          },
+          "duplicate_window_days": {
+            "type": "integer",
+            "title": "Duplicate Window Days",
+            "default": 30
+          },
+          "confidence_threshold": {
+            "type": "number",
+            "title": "Confidence Threshold",
+            "default": 0.8
+          },
+          "po_required_above": {
+            "type": "string",
+            "title": "Po Required Above",
+            "default": "10000"
+          },
+          "po_inference_threshold": {
+            "type": "number",
+            "title": "Po Inference Threshold",
+            "default": 0.75
+          },
+          "approval_matrix": {
+            "items": {
+              "$ref": "#/components/schemas/ApprovalBand-Output"
+            },
+            "type": "array",
+            "title": "Approval Matrix"
+          },
+          "non_po_finance_above": {
+            "type": "string",
+            "title": "Non Po Finance Above",
+            "default": "100000"
+          },
+          "non_po_categories": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Non Po Categories"
+          },
+          "bank_change_approvers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Bank Change Approvers"
+          },
+          "approvers": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Approvers"
+          },
+          "cost_centre_departments": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Cost Centre Departments"
+          },
+          "exception_owners": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/ExceptionCategory"
+            },
+            "type": "object",
+            "title": "Exception Owners"
+          },
+          "override_categories": {
+            "items": {
+              "$ref": "#/components/schemas/ExceptionCategory"
+            },
+            "type": "array",
+            "title": "Override Categories"
+          },
+          "override_second_approver": {
+            "type": "string",
+            "title": "Override Second Approver",
+            "default": "AP Manager"
+          },
+          "gl_by_category": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Gl By Category"
+          },
+          "default_gl": {
+            "type": "string",
+            "title": "Default Gl",
+            "default": "5999"
+          }
+        },
+        "type": "object",
+        "title": "Policy"
+      },
+      "ProcedureIn": {
+        "properties": {
+          "policy": {
+            "$ref": "#/components/schemas/Policy-Input"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created By"
+          },
+          "activate": {
+            "type": "boolean",
+            "title": "Activate",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "policy"
+        ],
+        "title": "ProcedureIn"
+      },
+      "ProcedureOut": {
+        "properties": {
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created By"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/Policy-Output"
+          },
+          "changes": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Changes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version",
+          "label",
+          "active",
+          "note",
+          "created_by",
+          "created_at",
+          "policy",
+          "changes"
+        ],
+        "title": "ProcedureOut"
       },
       "PurchaseOrderOut": {
         "properties": {
@@ -1539,6 +3628,24 @@
         ],
         "title": "ReindexOut"
       },
+      "ResetOut": {
+        "properties": {
+          "runs_deleted": {
+            "type": "integer",
+            "title": "Runs Deleted"
+          },
+          "erp_documents_deleted": {
+            "type": "integer",
+            "title": "Erp Documents Deleted"
+          }
+        },
+        "type": "object",
+        "required": [
+          "runs_deleted",
+          "erp_documents_deleted"
+        ],
+        "title": "ResetOut"
+      },
       "ReviewIn": {
         "properties": {
           "action": {
@@ -1546,7 +3653,8 @@
             "enum": [
               "APPROVE",
               "REJECT",
-              "REQUEST_INFO"
+              "REQUEST_INFO",
+              "RECHECK"
             ],
             "title": "Action"
           },
@@ -2234,6 +4342,10 @@
             "type": "integer",
             "title": "Waiting Review"
           },
+          "waiting_approval": {
+            "type": "integer",
+            "title": "Waiting Approval"
+          },
           "running": {
             "type": "integer",
             "title": "Running"
@@ -2333,6 +4445,36 @@
             },
             "type": "array",
             "title": "Recent"
+          },
+          "erp_posted": {
+            "type": "integer",
+            "title": "Erp Posted"
+          },
+          "erp_verified": {
+            "type": "integer",
+            "title": "Erp Verified"
+          },
+          "erp_mismatches": {
+            "type": "integer",
+            "title": "Erp Mismatches"
+          },
+          "exceptions_by_owner": {
+            "items": {
+              "$ref": "#/components/schemas/OwnerLoad"
+            },
+            "type": "array",
+            "title": "Exceptions By Owner"
+          },
+          "corrections_by_vendor": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Corrections By Vendor"
+          },
+          "approvals_decided": {
+            "type": "integer",
+            "title": "Approvals Decided"
           }
         },
         "type": "object",
@@ -2340,6 +4482,7 @@
           "runs",
           "completed",
           "waiting_review",
+          "waiting_approval",
           "running",
           "failed",
           "decisions",
@@ -2353,7 +4496,13 @@
           "exception_causes",
           "funnel",
           "volume",
-          "recent"
+          "recent",
+          "erp_posted",
+          "erp_verified",
+          "erp_mismatches",
+          "exceptions_by_owner",
+          "corrections_by_vendor",
+          "approvals_decided"
         ],
         "title": "Stats"
       },

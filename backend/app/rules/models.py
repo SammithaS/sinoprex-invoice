@@ -41,6 +41,7 @@ class ExceptionCategory(StrEnum):
     TAX_MISMATCH = "TAX_MISMATCH"
     LOW_CONFIDENCE = "LOW_CONFIDENCE"
     OVER_PO_BALANCE = "OVER_PO_BALANCE"
+    ERP_MISMATCH = "ERP_MISMATCH"  # read-back differs from the approved values (#16)
 
 
 # --- reference data ----------------------------------------------------------------------------
@@ -237,6 +238,7 @@ class Assessment(BaseModel):
     vendor_id: str | None = None
     po_match: POMatch | None = None
     matched_grn: str | None = None
+    po_cost_centre: str | None = None  # for ERP coding
     proposed_coding: ProposedCoding | None = None
     duplicate_of: str | None = None
     min_key_confidence: float

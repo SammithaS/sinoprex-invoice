@@ -49,6 +49,10 @@ extend-exclude = ["alembic/versions"]
 select = ["E", "F", "I", "UP", "B", "ASYNC", "SIM", "RUF"]
 ignore = ["RUF001", "RUF002", "RUF003"]  # allow the ₹ sign and typographic characters in strings
 
+[tool.ruff.lint.per-file-ignores]
+# pytest fixtures shared between test modules are imported, then taken as parameters
+"tests/*" = ["F811"]
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"

@@ -207,3 +207,123 @@ class Review(Base):
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
     run: Mapped[Run] = relationship(back_populates="reviews")
+
+
+# --- Phase 8: procedure, exceptions, approvals, mock ERP, corrections --------------------------
+
+
+class Procedure(Base):
+    """A version of the Operating Procedure (the `Policy` numbers), edited in /procedure."""
+
+    __tablename__ = "procedures"
+
+    version: Mapped[int] = mapped_column(primary_key=True, autoincrement=False)
+    policy: Mapped[dict[str, Any]] = mapped_column(JsonType)
+    note: Mapped[str | None]
+    created_by: Mapped[str | None] = mapped_column(String(100))
+    active: Mapped[bool] = mapped_column(default=False, index=True)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+
+class CaseException(Base):
+    """An exception handed to an owner with one specific question (plan §2b.4)."""
+
+    __tablename__ = "exceptions"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"), index=True)
+    category: Mapped[str] = mapped_column(String(30), index=True)
+    rule_code: Mapped[str] = mapped_column(String(40))
+    summary: Mapped[str]
+    variance: Mapped[dict[str, Any] | None] = mapped_column(JsonType)
+    citations: Mapped[list[str] | None] = mapped_column(JsonType)
+    owner_role: Mapped[str] = mapped_column(String(80))
+    owner_name: Mapped[str | None] = mapped_column(String(100))
+    recommendation: Mapped[str | None]
+    question: Mapped[str]
+    attempted_steps: Mapped[list[str] | None] = mapped_column(JsonType)
+    # OPEN | OVERRIDDEN (approved despite it) | REJECTED (case rejected) | RESOLVED
+    status: Mapped[str] = mapped_column(String(20), default="OPEN")
+    resolution: Mapped[str | None]
+    resolved_by: Mapped[str | None] = mapped_column(String(100))
+    resolved_at: Mapped[datetime | None]
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+
+class Approval(Base):
+    """One approval a case needs: matrix, non-PO, bank change, or a four-eyes override."""
+
+    __tablename__ = "approvals"
+    __table_args__ = (Index("ix_approvals_run_level", "run_id", "level", unique=True),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"), index=True)
+    level: Mapped[int]
+    kind: Mapped[str] = mapped_column(String(20))  # MATRIX | NON_PO | BANK_CHANGE | OVERRIDE
+    role: Mapped[str] = mapped_column(String(80))
+    approver_name: Mapped[str | None] = mapped_column(String(100))  # who the procedure names
+    reason: Mapped[str]
+    citation: Mapped[str | None] = mapped_column(String(60))
+    is_second_approver: Mapped[bool] = mapped_column(default=False)
+    decision: Mapped[str] = mapped_column(
+        String(10), default="PENDING"
+    )  # PENDING|APPROVED|REJECTED
+    decided_by: Mapped[str | None] = mapped_column(String(100))
+    comment: Mapped[str | None]
+    decided_at: Mapped[datetime | None]
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+
+class ErpDocument(Base):
+    """Mock ERP: a posted AP invoice document."""
+
+    __tablename__ = "erp_documents"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    doc_number: Mapped[str] = mapped_column(String(20), unique=True)
+    idempotency_key: Mapped[str] = mapped_column(String(64), unique=True)
+    vendor_id: Mapped[str] = mapped_column(String(16))
+    invoice_number: Mapped[str] = mapped_column(String(40))
+    invoice_date: Mapped[date]
+    po_number: Mapped[str | None] = mapped_column(String(20))
+    amount: Mapped[Decimal] = mapped_column(Money)
+    tax_amount: Mapped[Decimal] = mapped_column(Money)
+    currency: Mapped[str] = mapped_column(String(3), default="INR")
+    gl_account: Mapped[str | None] = mapped_column(String(10))
+    cost_centre: Mapped[str | None] = mapped_column(String(20))
+    attachment_url: Mapped[str | None] = mapped_column(String(500))
+    status: Mapped[str] = mapped_column(String(20), default="POSTED")
+    payload: Mapped[dict[str, Any] | None] = mapped_column(JsonType)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    updated_at: Mapped[datetime | None]
+
+
+class ErpPosting(Base):
+    """One posting attempt by a run and its read-back verification."""
+
+    __tablename__ = "erp_postings"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"), index=True)
+    doc_number: Mapped[str | None] = mapped_column(String(20))
+    request: Mapped[dict[str, Any]] = mapped_column(JsonType)
+    response: Mapped[dict[str, Any] | None] = mapped_column(JsonType)
+    readback: Mapped[dict[str, Any] | None] = mapped_column(JsonType)
+    verified: Mapped[bool | None]
+    mismatches: Mapped[list[str] | None] = mapped_column(JsonType)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+
+class Correction(Base):
+    """A reviewer's correction of an extracted field or coding proposal (feeds hints)."""
+
+    __tablename__ = "corrections"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"), index=True)
+    vendor_id: Mapped[str | None] = mapped_column(String(16), index=True)
+    field: Mapped[str] = mapped_column(String(40))
+    old_value: Mapped[str | None]
+    new_value: Mapped[str]
+    reviewer: Mapped[str | None] = mapped_column(String(100))
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
