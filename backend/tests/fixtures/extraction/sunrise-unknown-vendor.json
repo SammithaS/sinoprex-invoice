@@ -1,0 +1,167 @@
+{
+  "key": "sunrise-unknown-vendor",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 810,
+    "output_tokens": 1435
+  },
+  "read": {
+    "doc_type": "invoice",
+    "vendor_name": {
+      "value": "Sunrise Electronics",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Sunrise Electronics                               TAX INVOICE",
+      "box_2d": null
+    },
+    "vendor_gstin": {
+      "value": "29ABCFS4410K1Z3",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29ABCFS4410K1Z3  State: Karnataka (29)",
+      "box_2d": null
+    },
+    "vendor_address": {
+      "value": "221, SP Road\nBengaluru, Karnataka 560002",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "221, SP Road                                                                       Invoice No.",
+      "box_2d": null
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": null
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM  State: Karnataka (29)",
+      "box_2d": null
+    },
+    "invoice_number": {
+      "value": "SE/2026/077",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Invoice No.      SE/2026/077",
+      "box_2d": null
+    },
+    "invoice_date": {
+      "value": "11-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Date             11-11-2026",
+      "box_2d": null
+    },
+    "due_date": {
+      "value": "26-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Due Date        26-11-2026",
+      "box_2d": null
+    },
+    "po_number": {
+      "value": "PO-2026-0052",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "PO No.          PO-2026-0052",
+      "box_2d": null
+    },
+    "place_of_supply": {
+      "value": "Karnataka (29)",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Supply          Karnataka (29)",
+      "box_2d": null
+    },
+    "service_period": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "original_invoice_ref": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": "Union Bank of India, SP Road",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Bank: Union Bank of India, SP Road",
+      "box_2d": null
+    },
+    "bank_account_number": {
+      "value": "520101004410077",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "A/c No.: 520101004410077",
+      "box_2d": null
+    },
+    "bank_ifsc": {
+      "value": "UBIN0552101",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "IFSC: UBIN0552101",
+      "box_2d": null
+    },
+    "subtotal": {
+      "value": "32,000.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Taxable Value                          32,000.00",
+      "box_2d": null
+    },
+    "tax_rows": [
+      {
+        "head": "CGST",
+        "rate": "9%",
+        "amount": {
+          "value": "2,880.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "CGST @ 9%                             2,880.00",
+          "box_2d": null
+        }
+      },
+      {
+        "head": "SGST",
+        "rate": "9%",
+        "amount": {
+          "value": "2,880.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "SGST @ 9%                             2,880.00",
+          "box_2d": null
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 37,760.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Grand Total (INR)             Rs. 37,760.00",
+      "box_2d": null
+    },
+    "lines": [
+      {
+        "description": "Handheld barcode scanner, USB",
+        "hsn_sac": "8471",
+        "qty": "10",
+        "uom": "NOS",
+        "unit_price": "3,200.00",
+        "tax_rate": "18%",
+        "amount": "32,000.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,241 @@
+{
+  "key": "blueleaf-scanned-good",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 1450,
+    "output_tokens": 1968
+  },
+  "read": {
+    "doc_type": "invoice",
+    "vendor_name": {
+      "value": "BlueLeaf Logistics Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "BlueLeaf Logistics Pvt Ltd",
+      "box_2d": [
+        58,
+        82,
+        78,
+        385
+      ]
+    },
+    "vendor_gstin": {
+      "value": "33AAECB7720Q1ZE",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN 33AAECB7720Q1ZE (Tamil Nadu)",
+      "box_2d": [
+        95,
+        138,
+        105,
+        277
+      ]
+    },
+    "vendor_address": {
+      "value": "Plot 22, SIDCO Industrial Estate, Ambattur · Chennai, Tamil Nadu 600098",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Plot 22, SIDCO Industrial Estate, Ambattur · Chennai, Tamil Nadu 600098",
+      "box_2d": [
+        81,
+        82,
+        91,
+        557
+      ]
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": [
+        162,
+        82,
+        174,
+        222
+      ]
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM State: Karnataka (29)",
+      "box_2d": [
+        206,
+        143,
+        216,
+        290
+      ]
+    },
+    "invoice_number": {
+      "value": "BLL/TN/26-27/0431",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Invoice No.: BLL/TN/26-27/0431",
+      "box_2d": [
+        145,
+        619,
+        156,
+        777
+      ]
+    },
+    "invoice_date": {
+      "value": "15-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Date: 15-11-2026",
+      "box_2d": [
+        163,
+        601,
+        173,
+        674
+      ]
+    },
+    "due_date": {
+      "value": "15-12-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Due Date: 15-12-2026",
+      "box_2d": [
+        180,
+        601,
+        191,
+        682
+      ]
+    },
+    "po_number": {
+      "value": "PO-2026-0047",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "PO No.: PO-2026-0047",
+      "box_2d": [
+        196,
+        617,
+        206,
+        710
+      ]
+    },
+    "place_of_supply": {
+      "value": "Karnataka (29)",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Place of Supply: Karnataka (29)",
+      "box_2d": [
+        224,
+        617,
+        236,
+        769
+      ]
+    },
+    "service_period": {
+      "value": "1–14 November 2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Service Period: 1–14 November 2026",
+      "box_2d": [
+        210,
+        668,
+        222,
+        806
+      ]
+    },
+    "original_invoice_ref": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": "State Bank of India",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Bank: State Bank of India",
+      "box_2d": [
+        457,
+        138,
+        468,
+        289
+      ]
+    },
+    "bank_account_number": {
+      "value": "38211903305",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "A/c No.: 38211903305",
+      "box_2d": [
+        457,
+        388,
+        467,
+        473
+      ]
+    },
+    "bank_ifsc": {
+      "value": "SBIN0004821",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "IFSC: SBIN0004821",
+      "box_2d": [
+        457,
+        529,
+        467,
+        618
+      ]
+    },
+    "subtotal": {
+      "value": "54,000.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "54,000.00",
+      "box_2d": [
+        350,
+        843,
+        358,
+        902
+      ]
+    },
+    "tax_rows": [
+      {
+        "head": "IGST",
+        "rate": "12%",
+        "amount": {
+          "value": "6,480.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "6,480.00",
+          "box_2d": [
+            368,
+            851,
+            376,
+            902
+          ]
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 60,480.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Rs. 60,480.00",
+      "box_2d": [
+        386,
+        837,
+        397,
+        902
+      ]
+    },
+    "lines": [
+      {
+        "description": "Last-mile delivery, Bengaluru stores",
+        "hsn_sac": "9965",
+        "qty": "120",
+        "uom": "DROP",
+        "unit_price": "450.00",
+        "tax_rate": "12%",
+        "amount": "54,000.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}

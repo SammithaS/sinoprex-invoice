@@ -1,0 +1,241 @@
+{
+  "key": "deccan-scanned-poor",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 1450,
+    "output_tokens": 1992
+  },
+  "read": {
+    "doc_type": "invoice",
+    "vendor_name": {
+      "value": "Deccan Facility Services LLP",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Deccan Facility Services LLP",
+      "box_2d": [
+        51,
+        113,
+        67,
+        378
+      ]
+    },
+    "vendor_gstin": {
+      "value": "36AAQFD2240R1ZX",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN:36AAQFD2240R1ZX",
+      "box_2d": [
+        90,
+        147,
+        99,
+        251
+      ]
+    },
+    "vendor_address": {
+      "value": "8-2-293, Road No. 14, Banjara Hills, Hyderabad, Telangana 500034",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "8-2-293, Road No. 14, Banjara Hills, Hyderabad, Telangana 500034",
+      "box_2d": [
+        78,
+        112,
+        90,
+        501
+      ]
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": [
+        151,
+        103,
+        160,
+        236
+      ]
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM",
+      "box_2d": [
+        194,
+        162,
+        202,
+        283
+      ]
+    },
+    "invoice_number": {
+      "value": "DFS/HYD/2026/1010",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Invoice No.: DFS/HYD/2026/1010",
+      "box_2d": [
+        153,
+        632,
+        160,
+        807
+      ]
+    },
+    "invoice_date": {
+      "value": "03-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Date: 03-11-2026",
+      "box_2d": [
+        167,
+        619,
+        174,
+        697
+      ]
+    },
+    "due_date": {
+      "value": "03-12-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Due Date: 03-12-2026",
+      "box_2d": [
+        183,
+        615,
+        191,
+        724
+      ]
+    },
+    "po_number": {
+      "value": "PO-2026-0036",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "PO No.: PO-2026-0036",
+      "box_2d": [
+        198,
+        608,
+        206,
+        714
+      ]
+    },
+    "place_of_supply": {
+      "value": "Karnataka (29)",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Place of Supply: Karnataka (29)",
+      "box_2d": [
+        230,
+        614,
+        240,
+        787
+      ]
+    },
+    "service_period": {
+      "value": "1-31 October 2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Service Period: 1-31 October 2026",
+      "box_2d": [
+        214,
+        612,
+        223,
+        796
+      ]
+    },
+    "original_invoice_ref": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": "Axis Bank",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Bank: Axis Bank",
+      "box_2d": [
+        446,
+        126,
+        453,
+        197
+      ]
+    },
+    "bank_account_number": {
+      "value": "917020045615502",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "A/c No.: 917020045615502",
+      "box_2d": [
+        445,
+        358,
+        453,
+        483
+      ]
+    },
+    "bank_ifsc": {
+      "value": "UTIB0000561",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "IFSC: UTIB0000561",
+      "box_2d": [
+        445,
+        531,
+        453,
+        620
+      ]
+    },
+    "subtotal": {
+      "value": "1,85,000.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "1,85,000.00",
+      "box_2d": [
+        333,
+        842,
+        341,
+        912
+      ]
+    },
+    "tax_rows": [
+      {
+        "head": "IGST",
+        "rate": "18%",
+        "amount": {
+          "value": "33,300.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "33,300.00",
+          "box_2d": [
+            348,
+            851,
+            356,
+            911
+          ]
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 2,18,300.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Rs. 2,18,300.00",
+      "box_2d": [
+        363,
+        804,
+        372,
+        911
+      ]
+    },
+    "lines": [
+      {
+        "description": "Housekeeping services, Oct 2026 (HQ)",
+        "hsn_sac": "998533",
+        "qty": "1",
+        "uom": "MONTH",
+        "unit_price": "1,85,000.00",
+        "tax_rate": "18%",
+        "amount": "1,85,000.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}

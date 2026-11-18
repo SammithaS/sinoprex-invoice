@@ -1,0 +1,167 @@
+{
+  "key": "technova-keyboards",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 828,
+    "output_tokens": 1454
+  },
+  "read": {
+    "doc_type": "invoice",
+    "vendor_name": {
+      "value": "TechNova Solutions Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "TechNova Solutions Pvt Ltd",
+      "box_2d": null
+    },
+    "vendor_gstin": {
+      "value": "29AABCT1332L1ZA",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AABCT1332L1ZA",
+      "box_2d": null
+    },
+    "vendor_address": {
+      "value": "No. 18, 2nd Cross, Koramangala 5th Block\nBengaluru, Karnataka 560095",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "No. 18, 2nd Cross, Koramangala 5th Block\nBengaluru, Karnataka 560095",
+      "box_2d": null
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": null
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM",
+      "box_2d": null
+    },
+    "invoice_number": {
+      "value": "TN/2026/1038",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Invoice No.      TN/2026/1038",
+      "box_2d": null
+    },
+    "invoice_date": {
+      "value": "11-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Date             11-11-2026",
+      "box_2d": null
+    },
+    "due_date": {
+      "value": "11-12-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Due Date        11-12-2026",
+      "box_2d": null
+    },
+    "po_number": {
+      "value": "PO-2026-0045",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "PO No.          PO-2026-0045",
+      "box_2d": null
+    },
+    "place_of_supply": {
+      "value": "Karnataka (29)",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Supply          Karnataka (29)",
+      "box_2d": null
+    },
+    "service_period": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "original_invoice_ref": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": "HDFC Bank",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Bank: HDFC Bank, Koramangala",
+      "box_2d": null
+    },
+    "bank_account_number": {
+      "value": "50200031284417",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "A/c No.: 50200031284417",
+      "box_2d": null
+    },
+    "bank_ifsc": {
+      "value": "HDFC0000123",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "IFSC: HDFC0000123",
+      "box_2d": null
+    },
+    "subtotal": {
+      "value": "72,500.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Taxable Value                          72,500.00",
+      "box_2d": null
+    },
+    "tax_rows": [
+      {
+        "head": "CGST",
+        "rate": "9%",
+        "amount": {
+          "value": "6,525.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "CGST @ 9%                             6,525.00",
+          "box_2d": null
+        }
+      },
+      {
+        "head": "SGST",
+        "rate": "9%",
+        "amount": {
+          "value": "6,525.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "SGST @ 9%                             6,525.00",
+          "box_2d": null
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 85,550.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Grand Total (INR)             Rs. 85,550.00",
+      "box_2d": null
+    },
+    "lines": [
+      {
+        "description": "Wireless keyboard and mouse set",
+        "hsn_sac": "8471",
+        "qty": "50",
+        "uom": "NOS",
+        "unit_price": "1,450.00",
+        "tax_rate": "18%",
+        "amount": "72,500.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}

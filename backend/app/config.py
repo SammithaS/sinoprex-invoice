@@ -15,6 +15,14 @@ class Settings(BaseSettings):
 
     google_api_key: str = ""
     groq_api_key: str = ""
+    llm_provider: Literal["gemini", "groq"] = "gemini"  # primary for text PDFs; scans use Gemini
+    gemini_model: str = "gemini-3.5-flash"
+    gemini_fallback_model: str = "gemini-3.5-flash-lite"
+    # Reading an invoice needs little reasoning; low thinking keeps latency down.
+    gemini_thinking_level: Literal["minimal", "low", "medium", "high"] | None = "low"
+    groq_model: str = "openai/gpt-oss-120b"
+    llm_timeout_seconds: float = 90
+    llm_max_retries: int = 2
     langsmith_api_key: str = ""
     langsmith_tracing: bool = False
 

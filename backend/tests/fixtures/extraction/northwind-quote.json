@@ -1,0 +1,156 @@
+{
+  "key": "northwind-quote",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 746,
+    "output_tokens": 1223
+  },
+  "read": {
+    "doc_type": "quote",
+    "vendor_name": {
+      "value": "Northwind Electricals Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Northwind Electricals Pvt Ltd",
+      "box_2d": null
+    },
+    "vendor_gstin": {
+      "value": "07AADCN4471G1ZH",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 07AADCN4471G1ZH",
+      "box_2d": null
+    },
+    "vendor_address": {
+      "value": "B-41, Okhla Industrial Area Phase II\nNew Delhi, Delhi 110020",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "B-41, Okhla Industrial Area Phase II\nNew Delhi, Delhi 110020",
+      "box_2d": null
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": null
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM",
+      "box_2d": null
+    },
+    "invoice_number": {
+      "value": "NWE/Q/2026/0145",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Quotation No.    NWE/Q/2026/0145",
+      "box_2d": null
+    },
+    "invoice_date": {
+      "value": "10-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Date             10-11-2026",
+      "box_2d": null
+    },
+    "due_date": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "po_number": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "place_of_supply": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "service_period": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "original_invoice_ref": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_account_number": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_ifsc": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "subtotal": {
+      "value": "3,70,000.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Taxable Value                         3,70,000.00",
+      "box_2d": null
+    },
+    "tax_rows": [
+      {
+        "head": "IGST",
+        "rate": "18%",
+        "amount": {
+          "value": "66,600.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "IGST @ 18%                           66,600.00",
+          "box_2d": null
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 4,36,600.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Grand Total (INR)           Rs. 4,36,600.00",
+      "box_2d": null
+    },
+    "lines": [
+      {
+        "description": "Online UPS 10 kVA with batteries",
+        "hsn_sac": "8504",
+        "qty": "2",
+        "uom": "NOS",
+        "unit_price": "1,85,000.00",
+        "tax_rate": "18%",
+        "amount": "3,70,000.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "key": "technova-contract-rate",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 857,
+    "output_tokens": 1469
+  },
+  "read": {
+    "doc_type": "invoice",
+    "vendor_name": {
+      "value": "TechNova Solutions Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "TechNova Solutions Pvt Ltd",
+      "box_2d": null
+    },
+    "vendor_gstin": {
+      "value": "29AABCT1332L1ZA",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AABCT1332L1ZA",
+      "box_2d": null
+    },
+    "vendor_address": {
+      "value": "No. 18, 2nd Cross, Koramangala 5th Block\nBengaluru, Karnataka 560095",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "No. 18, 2nd Cross, Koramangala 5th Block\nBengaluru, Karnataka 560095",
+      "box_2d": null
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": null
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM",
+      "box_2d": null
+    },
+    "invoice_number": {
+      "value": "TN/2026/1042",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Invoice No.      TN/2026/1042",
+      "box_2d": null
+    },
+    "invoice_date": {
+      "value": "10-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Date             10-11-2026",
+      "box_2d": null
+    },
+    "due_date": {
+      "value": "10-12-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Due Date        10-12-2026",
+      "box_2d": null
+    },
+    "po_number": {
+      "value": "PO-2026-0042",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "PO No.          PO-2026-0042",
+      "box_2d": null
+    },
+    "place_of_supply": {
+      "value": "Karnataka (29)",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Supply          Karnataka (29)",
+      "box_2d": null
+    },
+    "service_period": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "original_invoice_ref": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": "HDFC Bank, Koramangala",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Bank: HDFC Bank, Koramangala",
+      "box_2d": null
+    },
+    "bank_account_number": {
+      "value": "50200031284417",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "A/c No.: 50200031284417",
+      "box_2d": null
+    },
+    "bank_ifsc": {
+      "value": "HDFC0000123",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "IFSC: HDFC0000123",
+      "box_2d": null
+    },
+    "subtotal": {
+      "value": "1,25,000.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Taxable Value                         1,25,000.00",
+      "box_2d": null
+    },
+    "tax_rows": [
+      {
+        "head": "CGST",
+        "rate": "9%",
+        "amount": {
+          "value": "11,250.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "CGST @ 9%                           11,250.00",
+          "box_2d": null
+        }
+      },
+      {
+        "head": "SGST",
+        "rate": "9%",
+        "amount": {
+          "value": "11,250.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "SGST @ 9%                           11,250.00",
+          "box_2d": null
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 1,47,500.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Grand Total (INR)           Rs. 1,47,500.00",
+      "box_2d": null
+    },
+    "lines": [
+      {
+        "description": "Laptop docking station",
+        "hsn_sac": "8473",
+        "qty": "100",
+        "uom": "NOS",
+        "unit_price": "1,250.00",
+        "tax_rate": "18%",
+        "amount": "1,25,000.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}

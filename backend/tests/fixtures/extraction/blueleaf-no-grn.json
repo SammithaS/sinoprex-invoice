@@ -1,0 +1,156 @@
+{
+  "key": "blueleaf-no-grn",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 843,
+    "output_tokens": 1411
+  },
+  "read": {
+    "doc_type": "invoice",
+    "vendor_name": {
+      "value": "BlueLeaf Logistics Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "BlueLeaf Logistics Pvt Ltd",
+      "box_2d": null
+    },
+    "vendor_gstin": {
+      "value": "33AAECB7720Q1ZE",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN 33AAECB7720Q1ZE (Tamil Nadu)",
+      "box_2d": null
+    },
+    "vendor_address": {
+      "value": "Plot 22, SIDCO Industrial Estate, Ambattur · Chennai, Tamil Nadu 600098",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Plot 22, SIDCO Industrial Estate, Ambattur · Chennai, Tamil Nadu 600098",
+      "box_2d": null
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": null
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM",
+      "box_2d": null
+    },
+    "invoice_number": {
+      "value": "BLL/TN/26-27/0412",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Invoice No.: BLL/TN/26-27/0412",
+      "box_2d": null
+    },
+    "invoice_date": {
+      "value": "28-10-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Date: 28-10-2026",
+      "box_2d": null
+    },
+    "due_date": {
+      "value": "27-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Due Date: 27-11-2026",
+      "box_2d": null
+    },
+    "po_number": {
+      "value": "PO-2026-0035",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "PO No.: PO-2026-0035",
+      "box_2d": null
+    },
+    "place_of_supply": {
+      "value": "Karnataka (29)",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Place of Supply: Karnataka (29)",
+      "box_2d": null
+    },
+    "service_period": {
+      "value": "Trips 02-Oct to 24-Oct-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Service Period: Trips 02-Oct to 24-Oct-2026",
+      "box_2d": null
+    },
+    "original_invoice_ref": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": "State Bank of India, Ambattur",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Bank: State Bank of India, Ambattur",
+      "box_2d": null
+    },
+    "bank_account_number": {
+      "value": "38211903305",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "A/c No.: 38211903305",
+      "box_2d": null
+    },
+    "bank_ifsc": {
+      "value": "SBIN0004821",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "IFSC: SBIN0004821",
+      "box_2d": null
+    },
+    "subtotal": {
+      "value": "75,000.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Taxable Value                               75,000.00",
+      "box_2d": null
+    },
+    "tax_rows": [
+      {
+        "head": "IGST",
+        "rate": "12%",
+        "amount": {
+          "value": "9,000.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "IGST @ 12%                                  9,000.00",
+          "box_2d": null
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 84,000.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Grand Total (INR)                Rs. 84,000.00",
+      "box_2d": null
+    },
+    "lines": [
+      {
+        "description": "Line haul Chennai–Bengaluru, 32ft container",
+        "hsn_sac": "9965",
+        "qty": "6",
+        "uom": "TRIP",
+        "unit_price": "12,500.00",
+        "tax_rate": "12%",
+        "amount": "75,000.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}

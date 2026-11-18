@@ -1,0 +1,252 @@
+{
+  "key": "kaveri-scanned-medium",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 1450,
+    "output_tokens": 1984
+  },
+  "read": {
+    "doc_type": "invoice",
+    "vendor_name": {
+      "value": "Kaveri Print House",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Kaveri Print House",
+      "box_2d": [
+        78,
+        99,
+        94,
+        339
+      ]
+    },
+    "vendor_gstin": {
+      "value": "29BNKPK3389D1ZN",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN 29BNKPK3389D1ZN",
+      "box_2d": [
+        92,
+        579,
+        103,
+        721
+      ]
+    },
+    "vendor_address": {
+      "value": "12/3, Industrial Suburb, Rajajinagar, Bengaluru, Karnataka 560010",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "12/3, Industrial Suburb, Rajajinagar, Bengaluru, Karnataka 560010",
+      "box_2d": [
+        105,
+        99,
+        115,
+        521
+      ]
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": [
+        197,
+        74,
+        206,
+        209
+      ]
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM",
+      "box_2d": [
+        237,
+        126,
+        245,
+        266
+      ]
+    },
+    "invoice_number": {
+      "value": "KPH/2026/137",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "KPH/2026/137",
+      "box_2d": [
+        158,
+        598,
+        167,
+        693
+      ]
+    },
+    "invoice_date": {
+      "value": "13-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "13-11-2026",
+      "box_2d": [
+        192,
+        598,
+        201,
+        674
+      ]
+    },
+    "due_date": {
+      "value": "28-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "28-11-2026",
+      "box_2d": [
+        226,
+        599,
+        234,
+        674
+      ]
+    },
+    "po_number": {
+      "value": "PO-2026-0048",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "PO-2026-0048",
+      "box_2d": [
+        261,
+        601,
+        269,
+        696
+      ]
+    },
+    "place_of_supply": {
+      "value": "Karnataka (29)",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Karnataka (29)",
+      "box_2d": [
+        294,
+        600,
+        303,
+        703
+      ]
+    },
+    "service_period": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "original_invoice_ref": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": "Canara Bank",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Canara Bank",
+      "box_2d": [
+        527,
+        155,
+        536,
+        239
+      ]
+    },
+    "bank_account_number": {
+      "value": "2210101007781",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "2210101007781",
+      "box_2d": [
+        523,
+        360,
+        532,
+        468
+      ]
+    },
+    "bank_ifsc": {
+      "value": "CNRB0002210",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "CNRB0002210",
+      "box_2d": [
+        523,
+        534,
+        532,
+        616
+      ]
+    },
+    "subtotal": {
+      "value": "22,500.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "22,500.00",
+      "box_2d": [
+        381,
+        844,
+        388,
+        901
+      ]
+    },
+    "tax_rows": [
+      {
+        "head": "CGST",
+        "rate": "9%",
+        "amount": {
+          "value": "2,025.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "2,025.00",
+          "box_2d": [
+            401,
+            844,
+            410,
+            898
+          ]
+        }
+      },
+      {
+        "head": "SGST",
+        "rate": "9%",
+        "amount": {
+          "value": "2,025.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "2,025.00",
+          "box_2d": [
+            421,
+            842,
+            429,
+            899
+          ]
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 26,550.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Rs. 26,550.00",
+      "box_2d": [
+        438,
+        828,
+        448,
+        900
+      ]
+    },
+    "lines": [
+      {
+        "description": "Shelf talkers, laminated",
+        "hsn_sac": "4911",
+        "qty": "5,000",
+        "uom": "NOS",
+        "unit_price": "4.50",
+        "tax_rate": "18%",
+        "amount": "22,500.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}

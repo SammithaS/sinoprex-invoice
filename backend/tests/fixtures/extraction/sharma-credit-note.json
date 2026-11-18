@@ -1,0 +1,156 @@
+{
+  "key": "sharma-credit-note",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 745,
+    "output_tokens": 1260
+  },
+  "read": {
+    "doc_type": "credit_note",
+    "vendor_name": {
+      "value": "SHARMA OFFICE SUPPLIES",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "SHARMA OFFICE SUPPLIES",
+      "box_2d": null
+    },
+    "vendor_gstin": {
+      "value": "27AKZPS6612M1Z4",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN/UIN: 27AKZPS6612M1Z4",
+      "box_2d": null
+    },
+    "vendor_address": {
+      "value": "Shop 4, Kalbadevi Road, Mumbai, Maharashtra 400002",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Shop 4, Kalbadevi Road, Mumbai, Maharashtra 400002",
+      "box_2d": null
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": null
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM",
+      "box_2d": null
+    },
+    "invoice_number": {
+      "value": "SOS-CN-2026-014",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Credit Note No. : SOS-CN-2026-014",
+      "box_2d": null
+    },
+    "invoice_date": {
+      "value": "05-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Date            : 05-11-2026",
+      "box_2d": null
+    },
+    "due_date": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "po_number": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "place_of_supply": {
+      "value": "Karnataka (29)",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Place of Supply : Karnataka (29)",
+      "box_2d": null
+    },
+    "service_period": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "original_invoice_ref": {
+      "value": "SOS-2026-0412 dated 30-08-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Against Invoice : SOS-2026-0412 dated\n30-08-2026",
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_account_number": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_ifsc": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "subtotal": {
+      "value": "900.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Taxable Value                      900.00",
+      "box_2d": null
+    },
+    "tax_rows": [
+      {
+        "head": "IGST",
+        "rate": "18%",
+        "amount": {
+          "value": "162.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "IGST @ 18%                         162.00",
+          "box_2d": null
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 1,062.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Total Credit              Rs. 1,062.00",
+      "box_2d": null
+    },
+    "lines": [
+      {
+        "description": "Whiteboard marker set",
+        "hsn_sac": "9608",
+        "qty": "5",
+        "uom": "SET",
+        "unit_price": "180.00",
+        "tax_rate": "18%",
+        "amount": "900.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}

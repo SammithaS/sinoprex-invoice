@@ -1,0 +1,156 @@
+{
+  "key": "malabar-math-error",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 803,
+    "output_tokens": 1354
+  },
+  "read": {
+    "doc_type": "invoice",
+    "vendor_name": {
+      "value": "Malabar Furniture Works",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Malabar Furniture Works",
+      "box_2d": null
+    },
+    "vendor_gstin": {
+      "value": "32ABMFM5567P1ZI",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 32ABMFM5567P1ZI",
+      "box_2d": null
+    },
+    "vendor_address": {
+      "value": "NH 66 Bypass, Edappally\nKochi, Kerala 682024",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "NH 66 Bypass, Edappally\nKochi, Kerala 682024",
+      "box_2d": null
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": null
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM",
+      "box_2d": null
+    },
+    "invoice_number": {
+      "value": "MFW/2026/0229",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Invoice No.      MFW/2026/0229",
+      "box_2d": null
+    },
+    "invoice_date": {
+      "value": "16-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Date             16-11-2026",
+      "box_2d": null
+    },
+    "due_date": {
+      "value": "16-12-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Due Date        16-12-2026",
+      "box_2d": null
+    },
+    "po_number": {
+      "value": "PO-2026-0051",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "PO No.          PO-2026-0051",
+      "box_2d": null
+    },
+    "place_of_supply": {
+      "value": "Karnataka (29)",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Supply          Karnataka (29)",
+      "box_2d": null
+    },
+    "service_period": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "original_invoice_ref": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": "Federal Bank, Edappally",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Bank: Federal Bank, Edappally",
+      "box_2d": null
+    },
+    "bank_account_number": {
+      "value": "11020100088890",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "A/c No.: 11020100088890",
+      "box_2d": null
+    },
+    "bank_ifsc": {
+      "value": "FDRL0001102",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "IFSC: FDRL0001102",
+      "box_2d": null
+    },
+    "subtotal": {
+      "value": "95,000.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Taxable Value                          95,000.00",
+      "box_2d": null
+    },
+    "tax_rows": [
+      {
+        "head": "IGST",
+        "rate": "18%",
+        "amount": {
+          "value": "17,100.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "IGST @ 18%                           17,100.00",
+          "box_2d": null
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 1,12,200.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Grand Total (INR)           Rs. 1,12,200.00",
+      "box_2d": null
+    },
+    "lines": [
+      {
+        "description": "Steel storage cabinet, 4-shelf",
+        "hsn_sac": "9403",
+        "qty": "10",
+        "uom": "NOS",
+        "unit_price": "9,500.00",
+        "tax_rate": "18%",
+        "amount": "95,000.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}

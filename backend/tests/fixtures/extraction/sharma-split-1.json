@@ -1,0 +1,156 @@
+{
+  "key": "sharma-split-1",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 818,
+    "output_tokens": 1357
+  },
+  "read": {
+    "doc_type": "invoice",
+    "vendor_name": {
+      "value": "SHARMA OFFICE SUPPLIES",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "SHARMA OFFICE SUPPLIES",
+      "box_2d": null
+    },
+    "vendor_gstin": {
+      "value": "27AKZPS6612M1Z4",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN/UIN: 27AKZPS6612M1Z4",
+      "box_2d": null
+    },
+    "vendor_address": {
+      "value": "Shop 4, Kalbadevi Road, Mumbai, Maharashtra 400002",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Shop 4, Kalbadevi Road, Mumbai, Maharashtra 400002",
+      "box_2d": null
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": null
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM",
+      "box_2d": null
+    },
+    "invoice_number": {
+      "value": "SOS-2026-0518",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Invoice No.     : SOS-2026-0518",
+      "box_2d": null
+    },
+    "invoice_date": {
+      "value": "12-10-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Date            : 12-10-2026",
+      "box_2d": null
+    },
+    "due_date": {
+      "value": "27-10-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Due Date        : 27-10-2026",
+      "box_2d": null
+    },
+    "po_number": {
+      "value": "PO-2026-0038",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "PO No.          : PO-2026-0038",
+      "box_2d": null
+    },
+    "place_of_supply": {
+      "value": "Karnataka (29)",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Place of Supply : Karnataka (29)",
+      "box_2d": null
+    },
+    "service_period": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "original_invoice_ref": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": "ICICI Bank, Kalbadevi",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Bank: ICICI Bank, Kalbadevi",
+      "box_2d": null
+    },
+    "bank_account_number": {
+      "value": "104505000921",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "A/c No.: 104505000921",
+      "box_2d": null
+    },
+    "bank_ifsc": {
+      "value": "ICIC0001045",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "IFSC: ICIC0001045",
+      "box_2d": null
+    },
+    "subtotal": {
+      "value": "24,000.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Taxable Value                   24,000.00",
+      "box_2d": null
+    },
+    "tax_rows": [
+      {
+        "head": "IGST",
+        "rate": "12%",
+        "amount": {
+          "value": "2,880.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "IGST @ 12%                       2,880.00",
+          "box_2d": null
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 26,880.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Grand Total (INR)        Rs. 26,880.00",
+      "box_2d": null
+    },
+    "lines": [
+      {
+        "description": "A4 copier paper 75gsm (ream)",
+        "hsn_sac": "4802",
+        "qty": "100",
+        "uom": "REAM",
+        "unit_price": "240.00",
+        "tax_rate": "12%",
+        "amount": "24,000.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}

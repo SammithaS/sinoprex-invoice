@@ -1,0 +1,156 @@
+{
+  "key": "malabar-missing-po",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 785,
+    "output_tokens": 1323
+  },
+  "read": {
+    "doc_type": "invoice",
+    "vendor_name": {
+      "value": "Malabar Furniture Works",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Malabar Furniture Works",
+      "box_2d": null
+    },
+    "vendor_gstin": {
+      "value": "32ABMFM5567P1ZI",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 32ABMFM5567P1ZI",
+      "box_2d": null
+    },
+    "vendor_address": {
+      "value": "NH 66 Bypass, Edappally\nKochi, Kerala 682024",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "NH 66 Bypass, Edappally\nKochi, Kerala 682024",
+      "box_2d": null
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": null
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM",
+      "box_2d": null
+    },
+    "invoice_number": {
+      "value": "MFW/2026/0218",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Invoice No.      MFW/2026/0218",
+      "box_2d": null
+    },
+    "invoice_date": {
+      "value": "13-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Date             13-11-2026",
+      "box_2d": null
+    },
+    "due_date": {
+      "value": "13-12-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Due Date        13-12-2026",
+      "box_2d": null
+    },
+    "po_number": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "place_of_supply": {
+      "value": "Karnataka (29)",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Supply          Karnataka (29)",
+      "box_2d": null
+    },
+    "service_period": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "original_invoice_ref": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": "Federal Bank",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Bank: Federal Bank, Edappally",
+      "box_2d": null
+    },
+    "bank_account_number": {
+      "value": "11020100088890",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "A/c No.: 11020100088890",
+      "box_2d": null
+    },
+    "bank_ifsc": {
+      "value": "FDRL0001102",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "IFSC: FDRL0001102",
+      "box_2d": null
+    },
+    "subtotal": {
+      "value": "3,56,000.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Taxable Value                         3,56,000.00",
+      "box_2d": null
+    },
+    "tax_rows": [
+      {
+        "head": "IGST",
+        "rate": "18%",
+        "amount": {
+          "value": "64,080.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "IGST @ 18%                           64,080.00",
+          "box_2d": null
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 4,20,080.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Grand Total (INR)           Rs. 4,20,080.00",
+      "box_2d": null
+    },
+    "lines": [
+      {
+        "description": "Ergonomic office chair",
+        "hsn_sac": "9401",
+        "qty": "40",
+        "uom": "NOS",
+        "unit_price": "8,900.00",
+        "tax_rate": "18%",
+        "amount": "3,56,000.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}

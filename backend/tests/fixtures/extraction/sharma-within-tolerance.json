@@ -1,0 +1,156 @@
+{
+  "key": "sharma-within-tolerance",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 814,
+    "output_tokens": 1355
+  },
+  "read": {
+    "doc_type": "invoice",
+    "vendor_name": {
+      "value": "SHARMA OFFICE SUPPLIES",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "SHARMA OFFICE SUPPLIES",
+      "box_2d": null
+    },
+    "vendor_gstin": {
+      "value": "27AKZPS6612M1Z4",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN/UIN: 27AKZPS6612M1Z4",
+      "box_2d": null
+    },
+    "vendor_address": {
+      "value": "Shop 4, Kalbadevi Road, Mumbai, Maharashtra 400002",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Shop 4, Kalbadevi Road, Mumbai, Maharashtra 400002",
+      "box_2d": null
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": null
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM",
+      "box_2d": null
+    },
+    "invoice_number": {
+      "value": "SOS-2026-0529",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Invoice No.     : SOS-2026-0529",
+      "box_2d": null
+    },
+    "invoice_date": {
+      "value": "15-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Date            : 15-11-2026",
+      "box_2d": null
+    },
+    "due_date": {
+      "value": "30-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Due Date        : 30-11-2026",
+      "box_2d": null
+    },
+    "po_number": {
+      "value": "PO-2026-0049",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "PO No.          : PO-2026-0049",
+      "box_2d": null
+    },
+    "place_of_supply": {
+      "value": "Karnataka (29)",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Place of Supply : Karnataka (29)",
+      "box_2d": null
+    },
+    "service_period": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "original_invoice_ref": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": "ICICI Bank, Kalbadevi",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Bank: ICICI Bank, Kalbadevi",
+      "box_2d": null
+    },
+    "bank_account_number": {
+      "value": "104505000921",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "A/c No.: 104505000921",
+      "box_2d": null
+    },
+    "bank_ifsc": {
+      "value": "ICIC0001045",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "IFSC: ICIC0001045",
+      "box_2d": null
+    },
+    "subtotal": {
+      "value": "42,500.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Taxable Value                   42,500.00",
+      "box_2d": null
+    },
+    "tax_rows": [
+      {
+        "head": "IGST",
+        "rate": "18%",
+        "amount": {
+          "value": "7,650.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "IGST @ 18%                       7,650.00",
+          "box_2d": null
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 50,150.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Grand Total (INR)        Rs. 50,150.00",
+      "box_2d": null
+    },
+    "lines": [
+      {
+        "description": "Thermal receipt rolls 79mm",
+        "hsn_sac": "4811",
+        "qty": "1,000",
+        "uom": "ROLL",
+        "unit_price": "42.50",
+        "tax_rate": "18%",
+        "amount": "42,500.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}

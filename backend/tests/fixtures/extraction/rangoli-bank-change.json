@@ -1,0 +1,167 @@
+{
+  "key": "rangoli-bank-change",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 886,
+    "output_tokens": 1482
+  },
+  "read": {
+    "doc_type": "invoice",
+    "vendor_name": {
+      "value": "Rangoli Packaging Industries",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Rangoli Packaging Industries",
+      "box_2d": null
+    },
+    "vendor_gstin": {
+      "value": "24AAPFR8813C1Z5",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN 24AAPFR8813C1Z5",
+      "box_2d": null
+    },
+    "vendor_address": {
+      "value": "Survey 114, GIDC Makarpura, Vadodara, Gujarat 390010",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Survey 114, GIDC Makarpura, Vadodara, Gujarat 390010",
+      "box_2d": null
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": null
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM",
+      "box_2d": null
+    },
+    "invoice_number": {
+      "value": "RPI/26-27/0284",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Invoice No.TAX INVOICE                                                                         RPI/26-27/0284",
+      "box_2d": null
+    },
+    "invoice_date": {
+      "value": "27-10-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "27-10-2026",
+      "box_2d": null
+    },
+    "due_date": {
+      "value": "11-12-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "11-12-2026",
+      "box_2d": null
+    },
+    "po_number": {
+      "value": "PO-2026-0040",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "PO-2026-0040",
+      "box_2d": null
+    },
+    "place_of_supply": {
+      "value": "Karnataka (29)",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Karnataka (29)",
+      "box_2d": null
+    },
+    "service_period": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "original_invoice_ref": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": "Yes Bank, Alkapuri",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Bank: Yes Bank, Alkapuri",
+      "box_2d": null
+    },
+    "bank_account_number": {
+      "value": "045661209917",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "A/c No.: 045661209917",
+      "box_2d": null
+    },
+    "bank_ifsc": {
+      "value": "YESB0000456",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "IFSC: YESB0000456",
+      "box_2d": null
+    },
+    "subtotal": {
+      "value": "1,89,200.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Taxable Value                         1,89,200.00",
+      "box_2d": null
+    },
+    "tax_rows": [
+      {
+        "head": "IGST",
+        "rate": "18%",
+        "amount": {
+          "value": "34,056.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "IGST @ 18%                           34,056.00",
+          "box_2d": null
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 2,23,256.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Grand Total (INR)           Rs. 2,23,256.00",
+      "box_2d": null
+    },
+    "lines": [
+      {
+        "description": "Corrugated box 5-ply 18x12x12",
+        "hsn_sac": "4819",
+        "qty": "4,000",
+        "uom": "NOS",
+        "unit_price": "38.00",
+        "tax_rate": "18%",
+        "amount": "1,52,000.00",
+        "confidence": 1.0,
+        "page": 1
+      },
+      {
+        "description": "Packing tape 48mm x 65m",
+        "hsn_sac": "3919",
+        "qty": "600",
+        "uom": "ROLL",
+        "unit_price": "62.00",
+        "tax_rate": "18%",
+        "amount": "37,200.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "key": "zenith-blocked-vendor",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 820,
+    "output_tokens": 1421
+  },
+  "read": {
+    "doc_type": "invoice",
+    "vendor_name": {
+      "value": "ZENITH TRADERS",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "ZENITH TRADERS",
+      "box_2d": null
+    },
+    "vendor_gstin": {
+      "value": "29AGHPZ1290B1Z7",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN/UIN: 29AGHPZ1290B1Z7",
+      "box_2d": null
+    },
+    "vendor_address": {
+      "value": "45, Avenue Road, Bengaluru, Karnataka 560002",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "45, Avenue Road, Bengaluru, Karnataka 560002",
+      "box_2d": null
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": null
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM",
+      "box_2d": null
+    },
+    "invoice_number": {
+      "value": "ZT-0112",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Invoice No.     : ZT-0112",
+      "box_2d": null
+    },
+    "invoice_date": {
+      "value": "09-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Date            : 09-11-2026",
+      "box_2d": null
+    },
+    "due_date": {
+      "value": "09-12-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Due Date        : 09-12-2026",
+      "box_2d": null
+    },
+    "po_number": {
+      "value": "PO-2026-0030",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "PO No.          : PO-2026-0030",
+      "box_2d": null
+    },
+    "place_of_supply": {
+      "value": "Karnataka (29)",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Place of Supply : Karnataka (29)",
+      "box_2d": null
+    },
+    "service_period": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "original_invoice_ref": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": "Indian Bank, Avenue Road",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Bank: Indian Bank, Avenue Road",
+      "box_2d": null
+    },
+    "bank_account_number": {
+      "value": "6012003141",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "A/c No.: 6012003141",
+      "box_2d": null
+    },
+    "bank_ifsc": {
+      "value": "IDIB000B123",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "IFSC: IDIB000B123",
+      "box_2d": null
+    },
+    "subtotal": {
+      "value": "18,000.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Taxable Value                   18,000.00",
+      "box_2d": null
+    },
+    "tax_rows": [
+      {
+        "head": "CGST",
+        "rate": "9%",
+        "amount": {
+          "value": "1,620.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "CGST @ 9%                        1,620.00",
+          "box_2d": null
+        }
+      },
+      {
+        "head": "SGST",
+        "rate": "9%",
+        "amount": {
+          "value": "1,620.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "SGST @ 9%                        1,620.00",
+          "box_2d": null
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 21,240.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Grand Total (INR)        Rs. 21,240.00",
+      "box_2d": null
+    },
+    "lines": [
+      {
+        "description": "Assorted hangers (bundle of 100)",
+        "hsn_sac": "3926",
+        "qty": "20",
+        "uom": "BDL",
+        "unit_price": "900.00",
+        "tax_rate": "18%",
+        "amount": "18,000.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}

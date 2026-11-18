@@ -13,7 +13,8 @@ Full README (architecture, LangGraph diagram, eval results) lands in Phase 12.
 
 - [x] Phase 1 — Foundation: app shell, FastAPI, Neon + Alembic, seed data, `/reference`
 - [x] Phase 2 — Test invoices & knowledge base: 25 PDFs (4 layouts, 3 scans) with ground truth, AP policy, GST rules, vendor FAQ, 10 contracts
-- [ ] Phases 3–12 — see the build plan
+- [x] Phase 3 — Extraction: Gemini (text + vision) with Groq/Gemini-lite fallbacks, per-field evidence and calibrated confidence
+- [ ] Phases 4–12 — see the build plan
 
 ## Run it
 
@@ -52,6 +53,13 @@ Regenerate test data (deterministic; see `data/test-invoices/README.md`):
 
 ```bash
 cd backend && uv run python -m scripts.build_seed_data && uv run python -m scripts.generate_invoices
+```
+
+Extraction against the test invoices (needs `GOOGLE_API_KEY`; `--replay` uses recorded outputs, no LLM):
+
+```bash
+cd backend && uv run python -m scripts.eval_extraction            # live, prints field accuracy
+cd backend && uv run python -m scripts.eval_extraction --record   # refresh tests/fixtures/extraction
 ```
 
 Regenerate the typed API client after backend changes:

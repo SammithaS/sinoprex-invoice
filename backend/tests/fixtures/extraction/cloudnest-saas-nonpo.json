@@ -1,0 +1,167 @@
+{
+  "key": "cloudnest-saas-nonpo",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 834,
+    "output_tokens": 1416
+  },
+  "read": {
+    "doc_type": "invoice",
+    "vendor_name": {
+      "value": "CloudNest Software Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "CloudNest Software Pvt Ltd",
+      "box_2d": null
+    },
+    "vendor_gstin": {
+      "value": "29AAICC9054H1ZA",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN 29AAICC9054H1ZA",
+      "box_2d": null
+    },
+    "vendor_address": {
+      "value": "WeWork Galaxy, 43 Residency Road, Bengaluru, Karnataka 560025",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "WeWork Galaxy, 43 Residency Road, Bengaluru, Karnataka 560025",
+      "box_2d": null
+    },
+    "buyer_name": {
+      "value": "Acme Retail Pvt Ltd",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Acme Retail Pvt Ltd",
+      "box_2d": null
+    },
+    "buyer_gstin": {
+      "value": "29AACCA4821K1ZM",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "GSTIN: 29AACCA4821K1ZM",
+      "box_2d": null
+    },
+    "invoice_number": {
+      "value": "CN-INV-2026-11",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "CN-INV-2026-11",
+      "box_2d": null
+    },
+    "invoice_date": {
+      "value": "01-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "01-11-2026",
+      "box_2d": null
+    },
+    "due_date": {
+      "value": "08-11-2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "08-11-2026",
+      "box_2d": null
+    },
+    "po_number": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "place_of_supply": {
+      "value": "Karnataka (29)",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Karnataka (29)",
+      "box_2d": null
+    },
+    "service_period": {
+      "value": "1–30 November 2026",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "1–30 November 2026",
+      "box_2d": null
+    },
+    "original_invoice_ref": {
+      "value": null,
+      "confidence": 0.0,
+      "page": null,
+      "source_text": null,
+      "box_2d": null
+    },
+    "bank_name": {
+      "value": "Kotak Mahindra Bank, Residency Road",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Kotak Mahindra Bank, Residency Road",
+      "box_2d": null
+    },
+    "bank_account_number": {
+      "value": "8011241196",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "A/c No.: 8011241196",
+      "box_2d": null
+    },
+    "bank_ifsc": {
+      "value": "KKBK0008011",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "IFSC: KKBK0008011",
+      "box_2d": null
+    },
+    "subtotal": {
+      "value": "42,000.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Taxable Value                          42,000.00",
+      "box_2d": null
+    },
+    "tax_rows": [
+      {
+        "head": "CGST",
+        "rate": "9%",
+        "amount": {
+          "value": "3,780.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "CGST @ 9%                             3,780.00",
+          "box_2d": null
+        }
+      },
+      {
+        "head": "SGST",
+        "rate": "9%",
+        "amount": {
+          "value": "3,780.00",
+          "confidence": 1.0,
+          "page": 1,
+          "source_text": "SGST @ 9%                             3,780.00",
+          "box_2d": null
+        }
+      }
+    ],
+    "total": {
+      "value": "Rs. 49,560.00",
+      "confidence": 1.0,
+      "page": 1,
+      "source_text": "Grand Total (INR)             Rs. 49,560.00",
+      "box_2d": null
+    },
+    "lines": [
+      {
+        "description": "CloudNest Retail POS Suite — 60 user licences (Nov 2026)",
+        "hsn_sac": "997331",
+        "qty": "1",
+        "uom": "MONTH",
+        "unit_price": "42,000.00",
+        "tax_rate": "18%",
+        "amount": "42,000.00",
+        "confidence": 1.0,
+        "page": 1
+      }
+    ]
+  }
+}
