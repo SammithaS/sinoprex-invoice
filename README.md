@@ -168,7 +168,8 @@ database, manifest order) and the RAG question set. Full results are in
 | Answer correctness (LLM judge) | 84% |
 
 Free-tier Gemini was often overloaded: fallbacks caught 65 failed calls, but 9 cases still needed
-a rerun. Automatic retries are the first item under "What's next".
+a rerun. Extraction and contract reading now retry 503/429 errors with back-off (8 s, 30 s)
+before a case fails.
 <!-- eval-summary:end -->
 
 ## Run it locally
@@ -242,9 +243,8 @@ HTTPS) on an Oracle Cloud Always Free ARM VM; database on Neon. Total ₹0 on fr
 
 ## What's next
 
-- Retry transient LLM errors (503/429) automatically, so a case doesn't end `FAILED` and wait
-  for a manual rerun.
-- Real users and roles (approvers are names today; four-eyes is checked by name).
+- Real users and roles. Today there is one optional shared password (`SITE_PASSWORD`),
+  approvers are names, and four-eyes is checked by name.
 - A real ERP connector behind the `ErpProvider` interface (Tally / SAP B1 / Zoho Books).
 - File storage on R2/S3 instead of local disk; a queue + worker split for scale.
 - Vendor portal: vendors answer follow-ups and upload corrected invoices directly.

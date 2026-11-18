@@ -88,6 +88,8 @@ What the stack does:
 2. Environment variables (Production), both **server-side** (never `NEXT_PUBLIC_`):
    - `API_URL` = `https://<API_DOMAIN>`
    - `API_KEY` = the same value as `API_KEY` in `deploy/api.env`
+   - `SITE_PASSWORD` = a password for visitors (recommended: the app has no user
+     accounts yet, so without it anyone with the link can approve cases or reset the demo)
 3. Deploy. Then set `FRONTEND_ORIGIN` and `APP_URL` in `deploy/api.env` to the Vercel URL and
    `docker compose up -d api` to apply them.
 

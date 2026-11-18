@@ -16,6 +16,7 @@ from app.erp import ErpProvider, MockErp
 from app.extraction import ExtractionResult, extract_invoice
 from app.extraction.models import InvoiceData, LineItem
 from app.graph.explain import Explanation, explain_case
+from app.llm.retry import retry_transient
 from app.rag.contract_terms import (
     ContractTermsResult,
     read_contract_terms,
@@ -37,7 +38,13 @@ SAMPLES = Path(__file__).resolve().parents[3] / "data" / "test-invoices"
 
 
 async def _extract(pdf: bytes, _sample_key: str | None, hints: Sequence[str]) -> ExtractionResult:
-    return await extract_invoice(pdf, hints=hints)
+    return await retry_transient(
+        lambda: extract_invoice(pdf, hints=hints), delays=_retry_delays(), label="extraction"
+    )
+
+
+def _retry_delays() -> tuple[float, ...]:
+    return tuple(get_settings().llm_retry_delays)
 
 
 # Contract readings keyed by the exact excerpts retrieved: contracts only change on re-index, and
@@ -55,7 +62,11 @@ async def _contract_terms(
     if key in _contract_cache:
         _contract_cache.move_to_end(key)
         return _contract_cache[key]
-    result = await read_contract_terms(vendor.id, vendor.legal_name, lines, [h.chunk for h in hits])
+    result = await retry_transient(
+        lambda: read_contract_terms(vendor.id, vendor.legal_name, lines, [h.chunk for h in hits]),
+        delays=_retry_delays(),
+        label="contract reading",
+    )
     if result.terms is not None:
         _contract_cache[key] = result
         if len(_contract_cache) > CONTRACT_CACHE_SIZE:

@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     groq_model: str = "openai/gpt-oss-120b"
     llm_timeout_seconds: float = 90
     llm_max_retries: int = 2
+    # Outer retries for 503/429 when every provider in the fallback chain is briefly down.
+    llm_retry_delays: list[float] = [8, 30]
     # RAG: local FastEmbed model (no API, no rate limits) and the PGVector table it fills.
     embedding_model: str = "BAAI/bge-small-en-v1.5"
     embedding_dim: int = 384
