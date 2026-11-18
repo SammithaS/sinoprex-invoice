@@ -509,7 +509,7 @@ SPECS: tuple[InvoiceSpec, ...] = (
             matched_grn="GRN-0305",
             reasons=(
                 "Invoice ₹40,516 exceeds the PO remaining balance ₹35,140 by ₹5,376.",
-                "Paper billed 340 reams in total vs 300 ordered and received.",
+                "Paper billed 320 reams in total vs 300 ordered and received.",
             ),
             citations=("ap-policy §3.5", "ap-policy §3.3"),
         ),
