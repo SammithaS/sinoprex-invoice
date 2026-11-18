@@ -36,3 +36,7 @@ backend/var/
 # n8n workflow copies with secrets filled in (n8n/README.md)
 n8n/local/
 data/test-invoices/live/
+frontend/test-results/
+frontend/playwright-report/
+deploy/api.env
+data/eval/last-run.json

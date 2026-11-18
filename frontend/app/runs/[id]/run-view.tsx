@@ -123,7 +123,7 @@ export function RunView() {
         </div>
       </div>
 
-      <div className="grid items-start gap-5 lg:grid-cols-2 2xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.3fr)]">
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-5 lg:grid-cols-2 2xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.3fr)]">
         <PdfPreview
           runId={id}
           fileName={run.file_name}

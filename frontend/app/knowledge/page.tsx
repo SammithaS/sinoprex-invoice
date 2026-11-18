@@ -1,11 +1,20 @@
-import { PlannedPage } from "@/components/planned-page";
+import type { Metadata } from "next";
+import { PageTitle } from "@/components/ui/card";
+import { KnowledgeBase } from "./knowledge-base";
 
-export const metadata = { title: "Knowledge base" };
+export const metadata: Metadata = { title: "Knowledge base" };
 
-export default function Page() {
+export default function KnowledgePage() {
   return (
-    <PlannedPage title="Knowledge base" phase={5}>
-      AP policy, GST rules and vendor contracts indexed for retrieval, with re-index.
-    </PlannedPage>
+    <>
+      <div className="flex flex-col gap-1">
+        <PageTitle>Knowledge base</PageTitle>
+        <p className="text-muted">
+          The AP policy, GST rules, vendor FAQ and contracts the pipeline and Ask AP cite. Each numbered section is a
+          citable chunk; try a search to see what retrieval finds.
+        </p>
+      </div>
+      <KnowledgeBase />
+    </>
   );
 }

@@ -117,7 +117,7 @@ export function ProcedureEditor() {
   const next = Math.max(...history.data.map((p) => p.version)) + 1;
 
   return (
-    <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
+    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
       <div className="flex flex-col gap-5">
         <Section title="Tolerances" note="Policy §3.2–3.7, §5.3. Lines above either price limit become a PRICE_VARIANCE exception.">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

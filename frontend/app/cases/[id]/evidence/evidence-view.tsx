@@ -67,7 +67,7 @@ export function EvidenceView() {
         </div>
       </div>
 
-      <div className="grid items-start gap-5 xl:grid-cols-2">
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-5 xl:grid-cols-2">
         <Section title="Case">
           <dl className="grid grid-cols-[140px_1fr] gap-x-3 gap-y-1.5 text-[13px]">
             <dt className="text-muted">Received</dt>
@@ -174,7 +174,7 @@ export function EvidenceView() {
           {b.timeline
             .filter((t: Bundle) => t.type !== "step_started")
             .map((t: Bundle) => (
-              <li key={t.seq} className="grid grid-cols-[160px_150px_1fr] gap-2">
+              <li key={t.seq} className="grid grid-cols-[minmax(0,1fr)] gap-x-2 gap-y-0.5 sm:grid-cols-[160px_150px_minmax(0,1fr)]">
                 <span className="text-muted">{when(t.at)}</span>
                 <span className="font-mono text-xs">{t.node}</span>
                 <span>{t.message}</span>

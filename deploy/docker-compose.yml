@@ -1,0 +1,55 @@
+# Oracle Cloud Always Free VM (Ampere A1, arm64): API + n8n behind Caddy (automatic HTTPS).
+# The database is Neon; the frontend is on Vercel. See DEPLOY.md.
+#
+#   cd deploy && cp .env.example .env && cp api.env.example api.env   # fill both in
+#   docker compose up -d --build
+
+name: invoiceiq
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    env_file: api.env
+    volumes:
+      - invoiceiq-data:/var/invoiceiq # uploaded PDFs + archived evidence bundles
+    restart: unless-stopped
+    expose: ["8000"]
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:${N8N_VERSION:?set N8N_VERSION in deploy/.env}
+    environment:
+      N8N_HOST: ${N8N_DOMAIN}
+      N8N_PROTOCOL: https
+      N8N_PORT: "5678"
+      WEBHOOK_URL: https://${N8N_DOMAIN}/
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:?set N8N_ENCRYPTION_KEY in deploy/.env}
+      GENERIC_TIMEZONE: Asia/Kolkata
+      TZ: Asia/Kolkata
+      N8N_RUNNERS_ENABLED: "true"
+      N8N_DIAGNOSTICS_ENABLED: "false"
+    volumes:
+      - n8n-data:/home/node/.n8n # workflows, credentials (encrypted), executions (SQLite)
+    restart: unless-stopped
+    expose: ["5678"]
+
+  caddy:
+    image: caddy:2
+    ports: ["80:80", "443:443", "443:443/udp"]
+    environment:
+      API_DOMAIN: ${API_DOMAIN:?set API_DOMAIN in deploy/.env}
+      N8N_DOMAIN: ${N8N_DOMAIN:?set N8N_DOMAIN in deploy/.env}
+      ACME_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL in deploy/.env}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on: [api, n8n]
+    restart: unless-stopped
+
+volumes:
+  invoiceiq-data:
+  n8n-data:
+  caddy-data:
+  caddy-config:

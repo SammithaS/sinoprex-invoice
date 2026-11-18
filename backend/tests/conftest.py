@@ -1,4 +1,4 @@
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Iterator
 
 import pytest
 from httpx import ASGITransport, AsyncClient
@@ -9,6 +9,17 @@ from app.db.models import Base
 from app.db.seed import seed_reference_data
 from app.db.session import get_session
 from app.main import create_app
+
+
+@pytest.fixture(autouse=True)
+def _hermetic_settings(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
+    """Tests never pick up the developer's real n8n / API settings from backend/.env
+    (environment variables win over the .env file); tests that need them set them."""
+    for name in ("N8N_BASE_URL", "N8N_WEBHOOK_SECRET", "APP_URL"):
+        monkeypatch.setenv(name, "")
+    get_settings.cache_clear()
+    yield
+    get_settings.cache_clear()
 
 
 @pytest.fixture

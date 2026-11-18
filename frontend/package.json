@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "gen:api": "openapi-typescript lib/api/openapi.json -o lib/api/schema.d.ts",
-    "typecheck": "next typegen && tsc --noEmit"
+    "typecheck": "next typegen && tsc --noEmit",
+    "e2e": "next build && playwright test"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.5.0",
@@ -25,6 +26,7 @@
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.65.1",
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "^20",
     "@types/react": "^19",

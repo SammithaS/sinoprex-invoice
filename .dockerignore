@@ -1,0 +1,17 @@
+# Build context is the repo root (backend/Dockerfile); keep it small and secret-free.
+**/.env
+**/.env.*
+!**/.env.example
+**/__pycache__
+**/.venv
+**/.mypy_cache
+**/.ruff_cache
+**/.pytest_cache
+backend/var
+backend/tests
+frontend
+n8n/local
+data/test-invoices/live
+.git
+.claude
+docs
