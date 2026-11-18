@@ -1,0 +1,286 @@
+[
+  {
+    "order": 1,
+    "key": "northwind-clean",
+    "title": "Clean 3-way match (inter-state, IGST)",
+    "edge_case": "clean",
+    "file": "northwind-clean.pdf",
+    "ground_truth": "ground-truth/northwind-clean.json",
+    "is_scanned": false,
+    "expected_decision": "APPROVED",
+    "depends_on": []
+  },
+  {
+    "order": 2,
+    "key": "technova-keyboards",
+    "title": "Clean 3-way match (intra-state, CGST + SGST)",
+    "edge_case": "clean",
+    "file": "technova-keyboards.pdf",
+    "ground_truth": "ground-truth/technova-keyboards.json",
+    "is_scanned": false,
+    "expected_decision": "APPROVED",
+    "depends_on": []
+  },
+  {
+    "order": 3,
+    "key": "kaveri-po-remainder",
+    "title": "Partial invoice that completes a PO",
+    "edge_case": "clean",
+    "file": "kaveri-po-remainder.pdf",
+    "ground_truth": "ground-truth/kaveri-po-remainder.json",
+    "is_scanned": false,
+    "expected_decision": "APPROVED",
+    "depends_on": []
+  },
+  {
+    "order": 4,
+    "key": "sharma-within-tolerance",
+    "title": "Price 1.2% above PO — inside the 2% tolerance",
+    "edge_case": "tolerance",
+    "file": "sharma-within-tolerance.pdf",
+    "ground_truth": "ground-truth/sharma-within-tolerance.json",
+    "is_scanned": false,
+    "expected_decision": "APPROVED",
+    "depends_on": []
+  },
+  {
+    "order": 5,
+    "key": "deccan-scanned-poor",
+    "title": "Scanned, low-quality invoice",
+    "edge_case": "#1",
+    "file": "deccan-scanned-poor.pdf",
+    "ground_truth": "ground-truth/deccan-scanned-poor.json",
+    "is_scanned": true,
+    "expected_decision": "NEEDS_REVIEW",
+    "depends_on": []
+  },
+  {
+    "order": 6,
+    "key": "blueleaf-scanned-good",
+    "title": "Scanned invoice, good quality",
+    "edge_case": "#1 (control)",
+    "file": "blueleaf-scanned-good.pdf",
+    "ground_truth": "ground-truth/blueleaf-scanned-good.json",
+    "is_scanned": true,
+    "expected_decision": "APPROVED",
+    "depends_on": []
+  },
+  {
+    "order": 7,
+    "key": "kaveri-scanned-medium",
+    "title": "Scanned invoice, medium quality (skewed)",
+    "edge_case": "#1 (control)",
+    "file": "kaveri-scanned-medium.pdf",
+    "ground_truth": "ground-truth/kaveri-scanned-medium.json",
+    "is_scanned": true,
+    "expected_decision": "APPROVED",
+    "depends_on": []
+  },
+  {
+    "order": 8,
+    "key": "sharma-split-1",
+    "title": "Split invoicing — part 1 of 3",
+    "edge_case": "#2",
+    "file": "sharma-split-1.pdf",
+    "ground_truth": "ground-truth/sharma-split-1.json",
+    "is_scanned": false,
+    "expected_decision": "APPROVED",
+    "depends_on": []
+  },
+  {
+    "order": 9,
+    "key": "sharma-split-2",
+    "title": "Split invoicing — part 2 of 3",
+    "edge_case": "#2",
+    "file": "sharma-split-2.pdf",
+    "ground_truth": "ground-truth/sharma-split-2.json",
+    "is_scanned": false,
+    "expected_decision": "APPROVED",
+    "depends_on": [
+      "sharma-split-1"
+    ]
+  },
+  {
+    "order": 10,
+    "key": "sharma-split-3",
+    "title": "Split invoicing — part 3 exceeds the PO",
+    "edge_case": "#2",
+    "file": "sharma-split-3.pdf",
+    "ground_truth": "ground-truth/sharma-split-3.json",
+    "is_scanned": false,
+    "expected_decision": "NEEDS_REVIEW",
+    "depends_on": [
+      "sharma-split-1",
+      "sharma-split-2"
+    ]
+  },
+  {
+    "order": 11,
+    "key": "technova-contract-rate",
+    "title": "Unit price above the contracted rate",
+    "edge_case": "#3",
+    "file": "technova-contract-rate.pdf",
+    "ground_truth": "ground-truth/technova-contract-rate.json",
+    "is_scanned": false,
+    "expected_decision": "NEEDS_REVIEW",
+    "depends_on": []
+  },
+  {
+    "order": 12,
+    "key": "northwind-resubmitted",
+    "title": "Exact duplicate — same invoice number resubmitted",
+    "edge_case": "#4",
+    "file": "northwind-resubmitted.pdf",
+    "ground_truth": "ground-truth/northwind-resubmitted.json",
+    "is_scanned": false,
+    "expected_decision": "REJECTED",
+    "depends_on": [
+      "northwind-clean"
+    ]
+  },
+  {
+    "order": 13,
+    "key": "northwind-suspect-duplicate",
+    "title": "Likely duplicate — new number, same amount",
+    "edge_case": "#4",
+    "file": "northwind-suspect-duplicate.pdf",
+    "ground_truth": "ground-truth/northwind-suspect-duplicate.json",
+    "is_scanned": false,
+    "expected_decision": "NEEDS_REVIEW",
+    "depends_on": [
+      "northwind-clean"
+    ]
+  },
+  {
+    "order": 14,
+    "key": "malabar-missing-po",
+    "title": "No PO reference — PO must be inferred",
+    "edge_case": "#5",
+    "file": "malabar-missing-po.pdf",
+    "ground_truth": "ground-truth/malabar-missing-po.json",
+    "is_scanned": false,
+    "expected_decision": "NEEDS_REVIEW",
+    "depends_on": []
+  },
+  {
+    "order": 15,
+    "key": "rangoli-bank-change",
+    "title": "Bank details changed (fraud signal)",
+    "edge_case": "#6",
+    "file": "rangoli-bank-change.pdf",
+    "ground_truth": "ground-truth/rangoli-bank-change.json",
+    "is_scanned": false,
+    "expected_decision": "ON_HOLD",
+    "depends_on": []
+  },
+  {
+    "order": 16,
+    "key": "cloudnest-saas-nonpo",
+    "title": "Non-PO invoice — monthly SaaS subscription",
+    "edge_case": "#7",
+    "file": "cloudnest-saas-nonpo.pdf",
+    "ground_truth": "ground-truth/cloudnest-saas-nonpo.json",
+    "is_scanned": false,
+    "expected_decision": "NEEDS_REVIEW",
+    "depends_on": []
+  },
+  {
+    "order": 17,
+    "key": "malabar-erp-mismatch",
+    "title": "ERP read-back mismatch (mock ERP drops a paisa)",
+    "edge_case": "#8",
+    "file": "malabar-erp-mismatch.pdf",
+    "ground_truth": "ground-truth/malabar-erp-mismatch.json",
+    "is_scanned": false,
+    "expected_decision": "APPROVED",
+    "depends_on": []
+  },
+  {
+    "order": 18,
+    "key": "northwind-quote",
+    "title": "Not an invoice — a quotation",
+    "edge_case": "other",
+    "file": "northwind-quote.pdf",
+    "ground_truth": "ground-truth/northwind-quote.json",
+    "is_scanned": false,
+    "expected_decision": "REJECTED",
+    "depends_on": []
+  },
+  {
+    "order": 19,
+    "key": "sharma-credit-note",
+    "title": "Not an invoice — a credit note",
+    "edge_case": "other",
+    "file": "sharma-credit-note.pdf",
+    "ground_truth": "ground-truth/sharma-credit-note.json",
+    "is_scanned": false,
+    "expected_decision": "REJECTED",
+    "depends_on": []
+  },
+  {
+    "order": 20,
+    "key": "kaveri-igst-intra-state",
+    "title": "IGST charged on an intra-state supply",
+    "edge_case": "other",
+    "file": "kaveri-igst-intra-state.pdf",
+    "ground_truth": "ground-truth/kaveri-igst-intra-state.json",
+    "is_scanned": false,
+    "expected_decision": "NEEDS_REVIEW",
+    "depends_on": []
+  },
+  {
+    "order": 21,
+    "key": "northwind-over-approval-limit",
+    "title": "Amount above ₹5 lakh — Finance Manager approval",
+    "edge_case": "other",
+    "file": "northwind-over-approval-limit.pdf",
+    "ground_truth": "ground-truth/northwind-over-approval-limit.json",
+    "is_scanned": false,
+    "expected_decision": "NEEDS_REVIEW",
+    "depends_on": []
+  },
+  {
+    "order": 22,
+    "key": "blueleaf-no-grn",
+    "title": "Goods/services not yet received (no GRN)",
+    "edge_case": "other",
+    "file": "blueleaf-no-grn.pdf",
+    "ground_truth": "ground-truth/blueleaf-no-grn.json",
+    "is_scanned": false,
+    "expected_decision": "ON_HOLD",
+    "depends_on": []
+  },
+  {
+    "order": 23,
+    "key": "malabar-math-error",
+    "title": "Totals do not add up",
+    "edge_case": "other",
+    "file": "malabar-math-error.pdf",
+    "ground_truth": "ground-truth/malabar-math-error.json",
+    "is_scanned": false,
+    "expected_decision": "REJECTED",
+    "depends_on": []
+  },
+  {
+    "order": 24,
+    "key": "zenith-blocked-vendor",
+    "title": "Invoice from a blocked vendor",
+    "edge_case": "other",
+    "file": "zenith-blocked-vendor.pdf",
+    "ground_truth": "ground-truth/zenith-blocked-vendor.json",
+    "is_scanned": false,
+    "expected_decision": "REJECTED",
+    "depends_on": []
+  },
+  {
+    "order": 25,
+    "key": "sunrise-unknown-vendor",
+    "title": "Supplier not in the vendor master",
+    "edge_case": "other",
+    "file": "sunrise-unknown-vendor.pdf",
+    "ground_truth": "ground-truth/sunrise-unknown-vendor.json",
+    "is_scanned": false,
+    "expected_decision": "ON_HOLD",
+    "depends_on": []
+  }
+]

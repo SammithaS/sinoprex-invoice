@@ -1,0 +1,67 @@
+{
+  "key": "sharma-credit-note",
+  "title": "Not an invoice — a credit note",
+  "edge_case": "other",
+  "file": "sharma-credit-note.pdf",
+  "layout": "ledger",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V002",
+  "fields": {
+    "doc_type": "credit_note",
+    "vendor_name": "Sharma Office Supplies",
+    "vendor_gstin": "27AKZPS6612M1Z4",
+    "vendor_address": "Shop 4, Kalbadevi Road, Mumbai, Maharashtra 400002",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "SOS-CN-2026-014",
+    "invoice_date": "2026-11-05",
+    "due_date": null,
+    "po_number": null,
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": "SOS-2026-0412 dated 30-08-2026",
+    "bank_name": null,
+    "bank_account_number": null,
+    "bank_ifsc": null,
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Whiteboard marker set",
+        "hsn_sac": "9608",
+        "qty": "5",
+        "uom": "SET",
+        "unit_price": "180.00",
+        "tax_rate": "18",
+        "amount": "900.00"
+      }
+    ],
+    "subtotal": "900.00",
+    "cgst": "0.00",
+    "sgst": "0.00",
+    "igst": "162.00",
+    "tax_total": "162.00",
+    "total": "1062.00"
+  },
+  "computed_total": "1062.00",
+  "expected": {
+    "decision": "REJECTED",
+    "exceptions": [],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "Credit note: adjust against SOS-2026-0412, not paid."
+    ],
+    "citations": [
+      "ap-policy §1.1",
+      "gst-rules §6"
+    ],
+    "matched_po": null,
+    "matched_grn": null,
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}

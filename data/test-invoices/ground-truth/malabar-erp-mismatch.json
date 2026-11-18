@@ -1,0 +1,66 @@
+{
+  "key": "malabar-erp-mismatch",
+  "title": "ERP read-back mismatch (mock ERP drops a paisa)",
+  "edge_case": "#8",
+  "file": "malabar-erp-mismatch.pdf",
+  "layout": "classic",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V009",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "Malabar Furniture Works",
+    "vendor_gstin": "32ABMFM5567P1ZI",
+    "vendor_address": "NH 66 Bypass, Edappally, Kochi, Kerala 682024",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "MFW/2026/0225",
+    "invoice_date": "2026-11-14",
+    "due_date": "2026-12-14",
+    "po_number": "PO-2026-0046",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "Federal Bank, Edappally",
+    "bank_account_number": "11020100088890",
+    "bank_ifsc": "FDRL0001102",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Meeting table 8-seater",
+        "hsn_sac": "9403",
+        "qty": "3",
+        "uom": "NOS",
+        "unit_price": "42000.00",
+        "tax_rate": "18",
+        "amount": "126000.00"
+      }
+    ],
+    "subtotal": "126000.00",
+    "cgst": "0.00",
+    "sgst": "0.00",
+    "igst": "22680.00",
+    "tax_total": "22680.00",
+    "total": "148680.00"
+  },
+  "computed_total": "148680.00",
+  "expected": {
+    "decision": "APPROVED",
+    "exceptions": [],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "Rules pass; the mock ERP stores ₹1,48,679.99 ≠ approved ₹1,48,680.00 → read-back exception, case stays open."
+    ],
+    "citations": [
+      "ap-policy §10.1"
+    ],
+    "matched_po": "PO-2026-0046",
+    "matched_grn": "GRN-0316",
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": "amount_minus_one_paisa",
+  "demo_notes": ""
+}

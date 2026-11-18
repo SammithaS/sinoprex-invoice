@@ -1,0 +1,78 @@
+{
+  "key": "northwind-resubmitted",
+  "title": "Exact duplicate — same invoice number resubmitted",
+  "edge_case": "#4",
+  "file": "northwind-resubmitted.pdf",
+  "layout": "classic",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V008",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "Northwind Electricals Pvt Ltd",
+    "vendor_gstin": "07AADCN4471G1ZH",
+    "vendor_address": "B-41, Okhla Industrial Area Phase II, New Delhi, Delhi 110020",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "NWE/DL/2026/0763",
+    "invoice_date": "2026-11-06",
+    "due_date": "2026-12-06",
+    "po_number": "PO-2026-0041",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "Punjab National Bank, Okhla",
+    "bank_account_number": "1120002100002048",
+    "bank_ifsc": "PUNB0011200",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "LED panel light 2x2 ft, 36W",
+        "hsn_sac": "9405",
+        "qty": "150",
+        "uom": "NOS",
+        "unit_price": "1650.00",
+        "tax_rate": "18",
+        "amount": "247500.00"
+      },
+      {
+        "line_no": "2",
+        "description": "Electrical installation labour",
+        "hsn_sac": "995461",
+        "qty": "1",
+        "uom": "LOT",
+        "unit_price": "45000.00",
+        "tax_rate": "18",
+        "amount": "45000.00"
+      }
+    ],
+    "subtotal": "292500.00",
+    "cgst": "0.00",
+    "sgst": "0.00",
+    "igst": "52650.00",
+    "tax_total": "52650.00",
+    "total": "345150.00"
+  },
+  "computed_total": "345150.00",
+  "expected": {
+    "decision": "REJECTED",
+    "exceptions": [],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "Same vendor and invoice number as northwind-clean (exact duplicate)."
+    ],
+    "citations": [
+      "ap-policy §4.1"
+    ],
+    "matched_po": null,
+    "matched_grn": null,
+    "proposed_coding": null
+  },
+  "depends_on": [
+    "northwind-clean"
+  ],
+  "erp_fault": null,
+  "demo_notes": ""
+}

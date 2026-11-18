@@ -484,5 +484,53 @@
         "tax_rate": "18"
       }
     ]
+  },
+  {
+    "po_number": "PO-2026-0050",
+    "vendor_id": "V004",
+    "po_date": "2026-11-04",
+    "status": "OPEN",
+    "requires_grn": true,
+    "cost_centre": "CC-MKT-04",
+    "buyer": "Sneha Kulkarni",
+    "subtotal": "64000.00",
+    "tax_total": "11520.00",
+    "total": "75520.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Product catalogue print, 16pp A4",
+        "hsn_sac": "4911",
+        "qty": "2000",
+        "uom": "NOS",
+        "unit_price": "32",
+        "tax_rate": "18"
+      }
+    ]
+  },
+  {
+    "po_number": "PO-2026-0051",
+    "vendor_id": "V009",
+    "po_date": "2026-11-05",
+    "status": "OPEN",
+    "requires_grn": true,
+    "cost_centre": "CC-FAC-05",
+    "buyer": "Imran Sheikh",
+    "subtotal": "95000.00",
+    "tax_total": "17100.00",
+    "total": "112100.00",
+    "amount_invoiced": "0",
+    "lines": [
+      {
+        "line_no": 1,
+        "description": "Steel storage cabinet, 4-shelf",
+        "hsn_sac": "9403",
+        "qty": "10",
+        "uom": "NOS",
+        "unit_price": "9500",
+        "tax_rate": "18"
+      }
+    ]
   }
 ]

@@ -1,0 +1,83 @@
+{
+  "key": "rangoli-bank-change",
+  "title": "Bank details changed (fraud signal)",
+  "edge_case": "#6",
+  "file": "rangoli-bank-change.pdf",
+  "layout": "band",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V007",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "Rangoli Packaging Industries",
+    "vendor_gstin": "24AAPFR8813C1Z5",
+    "vendor_address": "Survey 114, GIDC Makarpura, Vadodara, Gujarat 390010",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "RPI/26-27/0284",
+    "invoice_date": "2026-10-27",
+    "due_date": "2026-12-11",
+    "po_number": "PO-2026-0040",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "Yes Bank, Alkapuri",
+    "bank_account_number": "045661209917",
+    "bank_ifsc": "YESB0000456",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Corrugated box 5-ply 18x12x12",
+        "hsn_sac": "4819",
+        "qty": "4000",
+        "uom": "NOS",
+        "unit_price": "38.00",
+        "tax_rate": "18",
+        "amount": "152000.00"
+      },
+      {
+        "line_no": "2",
+        "description": "Packing tape 48mm x 65m",
+        "hsn_sac": "3919",
+        "qty": "600",
+        "uom": "ROLL",
+        "unit_price": "62.00",
+        "tax_rate": "18",
+        "amount": "37200.00"
+      }
+    ],
+    "subtotal": "189200.00",
+    "cgst": "0.00",
+    "sgst": "0.00",
+    "igst": "34056.00",
+    "tax_total": "34056.00",
+    "total": "223256.00"
+  },
+  "computed_total": "223256.00",
+  "expected": {
+    "decision": "ON_HOLD",
+    "exceptions": [
+      "BANK_CHANGE"
+    ],
+    "approvals": [
+      "AP Manager",
+      "Finance Controller"
+    ],
+    "final_decision": null,
+    "reasons": [
+      "Invoice bank account ends 9917; vendor master has ••••6634.",
+      "Verify with the vendor via the contact on file before payment."
+    ],
+    "citations": [
+      "ap-policy §6.2",
+      "contracts/rangoli §5.1"
+    ],
+    "matched_po": "PO-2026-0040",
+    "matched_grn": "GRN-0308",
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}

@@ -1,0 +1,68 @@
+{
+  "key": "northwind-over-approval-limit",
+  "title": "Amount above ₹5 lakh — Finance Manager approval",
+  "edge_case": "other",
+  "file": "northwind-over-approval-limit.pdf",
+  "layout": "classic",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V008",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "Northwind Electricals Pvt Ltd",
+    "vendor_gstin": "07AADCN4471G1ZH",
+    "vendor_address": "B-41, Okhla Industrial Area Phase II, New Delhi, Delhi 110020",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "NWE/DL/2026/0790",
+    "invoice_date": "2026-11-15",
+    "due_date": "2026-12-15",
+    "po_number": "PO-2026-0044",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "Punjab National Bank, Okhla",
+    "bank_account_number": "1120002100002048",
+    "bank_ifsc": "PUNB0011200",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Diesel generator 125 kVA with AMF panel",
+        "hsn_sac": "8502",
+        "qty": "1",
+        "uom": "NOS",
+        "unit_price": "745000.00",
+        "tax_rate": "18",
+        "amount": "745000.00"
+      }
+    ],
+    "subtotal": "745000.00",
+    "cgst": "0.00",
+    "sgst": "0.00",
+    "igst": "134100.00",
+    "tax_total": "134100.00",
+    "total": "879100.00"
+  },
+  "computed_total": "879100.00",
+  "expected": {
+    "decision": "NEEDS_REVIEW",
+    "exceptions": [],
+    "approvals": [
+      "Finance Manager"
+    ],
+    "final_decision": "APPROVED",
+    "reasons": [
+      "Total ₹8,79,100 > ₹5,00,000 → Finance Manager approval."
+    ],
+    "citations": [
+      "ap-policy §7.1"
+    ],
+    "matched_po": "PO-2026-0044",
+    "matched_grn": "GRN-0314",
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}

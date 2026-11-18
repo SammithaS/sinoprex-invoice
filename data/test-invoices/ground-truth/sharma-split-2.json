@@ -1,0 +1,76 @@
+{
+  "key": "sharma-split-2",
+  "title": "Split invoicing — part 2 of 3",
+  "edge_case": "#2",
+  "file": "sharma-split-2.pdf",
+  "layout": "ledger",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V002",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "Sharma Office Supplies",
+    "vendor_gstin": "27AKZPS6612M1Z4",
+    "vendor_address": "Shop 4, Kalbadevi Road, Mumbai, Maharashtra 400002",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "SOS-2026-0526",
+    "invoice_date": "2026-10-26",
+    "due_date": "2026-11-10",
+    "po_number": "PO-2026-0038",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "ICICI Bank, Kalbadevi",
+    "bank_account_number": "104505000921",
+    "bank_ifsc": "ICIC0001045",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "A4 copier paper 75gsm (ream)",
+        "hsn_sac": "4802",
+        "qty": "100",
+        "uom": "REAM",
+        "unit_price": "240.00",
+        "tax_rate": "12",
+        "amount": "24000.00"
+      },
+      {
+        "line_no": "2",
+        "description": "Ball pen, blue (box of 50)",
+        "hsn_sac": "9608",
+        "qty": "20",
+        "uom": "BOX",
+        "unit_price": "350.00",
+        "tax_rate": "18",
+        "amount": "7000.00"
+      }
+    ],
+    "subtotal": "31000.00",
+    "cgst": "0.00",
+    "sgst": "0.00",
+    "igst": "4140.00",
+    "tax_total": "4140.00",
+    "total": "35140.00"
+  },
+  "computed_total": "35140.00",
+  "expected": {
+    "decision": "APPROVED",
+    "exceptions": [],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "Cumulative ₹62,020 of ₹97,160; remaining ₹35,140."
+    ],
+    "citations": [],
+    "matched_po": "PO-2026-0038",
+    "matched_grn": "GRN-0305",
+    "proposed_coding": null
+  },
+  "depends_on": [
+    "sharma-split-1"
+  ],
+  "erp_fault": null,
+  "demo_notes": ""
+}

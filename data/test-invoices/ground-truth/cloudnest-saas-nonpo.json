@@ -1,0 +1,73 @@
+{
+  "key": "cloudnest-saas-nonpo",
+  "title": "Non-PO invoice — monthly SaaS subscription",
+  "edge_case": "#7",
+  "file": "cloudnest-saas-nonpo.pdf",
+  "layout": "band",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V005",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "CloudNest Software Pvt Ltd",
+    "vendor_gstin": "29AAICC9054H1ZA",
+    "vendor_address": "WeWork Galaxy, 43 Residency Road, Bengaluru, Karnataka 560025",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "CN-INV-2026-11",
+    "invoice_date": "2026-11-01",
+    "due_date": "2026-11-08",
+    "po_number": null,
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": "1–30 November 2026",
+    "original_invoice_ref": null,
+    "bank_name": "Kotak Mahindra Bank, Residency Road",
+    "bank_account_number": "8011241196",
+    "bank_ifsc": "KKBK0008011",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "CloudNest Retail POS Suite — 60 user licences (Nov 2026)",
+        "hsn_sac": "997331",
+        "qty": "1",
+        "uom": "MONTH",
+        "unit_price": "42000.00",
+        "tax_rate": "18",
+        "amount": "42000.00"
+      }
+    ],
+    "subtotal": "42000.00",
+    "cgst": "3780.00",
+    "sgst": "3780.00",
+    "igst": "0.00",
+    "tax_total": "7560.00",
+    "total": "49560.00"
+  },
+  "computed_total": "49560.00",
+  "expected": {
+    "decision": "NEEDS_REVIEW",
+    "exceptions": [],
+    "approvals": [
+      "Department Head — IT"
+    ],
+    "final_decision": "APPROVED",
+    "reasons": [
+      "Non-PO branch: recurring subscription permitted without PO.",
+      "Proposed GL 6420 / CC-IT-01 — same vendor coded so in 5 reviewed cases."
+    ],
+    "citations": [
+      "ap-policy §7.2",
+      "contracts/cloudnest §2.3"
+    ],
+    "matched_po": null,
+    "matched_grn": null,
+    "proposed_coding": {
+      "gl_account": "6420",
+      "cost_centre": "CC-IT-01"
+    }
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}

@@ -1,0 +1,66 @@
+{
+  "key": "sharma-split-1",
+  "title": "Split invoicing — part 1 of 3",
+  "edge_case": "#2",
+  "file": "sharma-split-1.pdf",
+  "layout": "ledger",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V002",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "Sharma Office Supplies",
+    "vendor_gstin": "27AKZPS6612M1Z4",
+    "vendor_address": "Shop 4, Kalbadevi Road, Mumbai, Maharashtra 400002",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "SOS-2026-0518",
+    "invoice_date": "2026-10-12",
+    "due_date": "2026-10-27",
+    "po_number": "PO-2026-0038",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "ICICI Bank, Kalbadevi",
+    "bank_account_number": "104505000921",
+    "bank_ifsc": "ICIC0001045",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "A4 copier paper 75gsm (ream)",
+        "hsn_sac": "4802",
+        "qty": "100",
+        "uom": "REAM",
+        "unit_price": "240.00",
+        "tax_rate": "12",
+        "amount": "24000.00"
+      }
+    ],
+    "subtotal": "24000.00",
+    "cgst": "0.00",
+    "sgst": "0.00",
+    "igst": "2880.00",
+    "tax_total": "2880.00",
+    "total": "26880.00"
+  },
+  "computed_total": "26880.00",
+  "expected": {
+    "decision": "APPROVED",
+    "exceptions": [],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "₹26,880 of ₹97,160 PO; remaining ₹70,280."
+    ],
+    "citations": [
+      "contracts/sharma §2.2"
+    ],
+    "matched_po": "PO-2026-0038",
+    "matched_grn": "GRN-0305",
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}

@@ -1,0 +1,70 @@
+{
+  "key": "kaveri-igst-intra-state",
+  "title": "IGST charged on an intra-state supply",
+  "edge_case": "other",
+  "file": "kaveri-igst-intra-state.pdf",
+  "layout": "band",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V004",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "Kaveri Print House",
+    "vendor_gstin": "29BNKPK3389D1ZN",
+    "vendor_address": "12/3, Industrial Suburb, Rajajinagar, Bengaluru, Karnataka 560010",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "KPH/2026/140",
+    "invoice_date": "2026-11-12",
+    "due_date": "2026-11-27",
+    "po_number": "PO-2026-0050",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "Canara Bank, Rajajinagar",
+    "bank_account_number": "2210101007781",
+    "bank_ifsc": "CNRB0002210",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Product catalogue print, 16pp A4",
+        "hsn_sac": "4911",
+        "qty": "2000",
+        "uom": "NOS",
+        "unit_price": "32.00",
+        "tax_rate": "18",
+        "amount": "64000.00"
+      }
+    ],
+    "subtotal": "64000.00",
+    "cgst": "0.00",
+    "sgst": "0.00",
+    "igst": "11520.00",
+    "tax_total": "11520.00",
+    "total": "75520.00"
+  },
+  "computed_total": "75520.00",
+  "expected": {
+    "decision": "NEEDS_REVIEW",
+    "exceptions": [
+      "TAX_MISMATCH"
+    ],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "Karnataka supplier to Karnataka buyer must charge CGST + SGST, not IGST."
+    ],
+    "citations": [
+      "gst-rules §2.2",
+      "ap-policy §5.2",
+      "contracts/kaveri §2.5"
+    ],
+    "matched_po": "PO-2026-0050",
+    "matched_grn": "GRN-0320",
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}

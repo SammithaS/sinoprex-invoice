@@ -1,0 +1,64 @@
+{
+  "key": "technova-keyboards",
+  "title": "Clean 3-way match (intra-state, CGST + SGST)",
+  "edge_case": "clean",
+  "file": "technova-keyboards.pdf",
+  "layout": "classic",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V001",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "TechNova Solutions Pvt Ltd",
+    "vendor_gstin": "29AABCT1332L1ZA",
+    "vendor_address": "No. 18, 2nd Cross, Koramangala 5th Block, Bengaluru, Karnataka 560095",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "TN/2026/1038",
+    "invoice_date": "2026-11-11",
+    "due_date": "2026-12-11",
+    "po_number": "PO-2026-0045",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "HDFC Bank, Koramangala",
+    "bank_account_number": "50200031284417",
+    "bank_ifsc": "HDFC0000123",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Wireless keyboard and mouse set",
+        "hsn_sac": "8471",
+        "qty": "50",
+        "uom": "NOS",
+        "unit_price": "1450.00",
+        "tax_rate": "18",
+        "amount": "72500.00"
+      }
+    ],
+    "subtotal": "72500.00",
+    "cgst": "6525.00",
+    "sgst": "6525.00",
+    "igst": "0.00",
+    "tax_total": "13050.00",
+    "total": "85550.00"
+  },
+  "computed_total": "85550.00",
+  "expected": {
+    "decision": "APPROVED",
+    "exceptions": [],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [],
+    "citations": [
+      "contracts/technova §2.4"
+    ],
+    "matched_po": "PO-2026-0045",
+    "matched_grn": "GRN-0315",
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}

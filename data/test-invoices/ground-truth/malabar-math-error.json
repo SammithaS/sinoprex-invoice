@@ -1,0 +1,66 @@
+{
+  "key": "malabar-math-error",
+  "title": "Totals do not add up",
+  "edge_case": "other",
+  "file": "malabar-math-error.pdf",
+  "layout": "classic",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V009",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "Malabar Furniture Works",
+    "vendor_gstin": "32ABMFM5567P1ZI",
+    "vendor_address": "NH 66 Bypass, Edappally, Kochi, Kerala 682024",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "MFW/2026/0229",
+    "invoice_date": "2026-11-16",
+    "due_date": "2026-12-16",
+    "po_number": "PO-2026-0051",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "Federal Bank, Edappally",
+    "bank_account_number": "11020100088890",
+    "bank_ifsc": "FDRL0001102",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Steel storage cabinet, 4-shelf",
+        "hsn_sac": "9403",
+        "qty": "10",
+        "uom": "NOS",
+        "unit_price": "9500.00",
+        "tax_rate": "18",
+        "amount": "95000.00"
+      }
+    ],
+    "subtotal": "95000.00",
+    "cgst": "0.00",
+    "sgst": "0.00",
+    "igst": "17100.00",
+    "tax_total": "17100.00",
+    "total": "112200.00"
+  },
+  "computed_total": "112100.00",
+  "expected": {
+    "decision": "REJECTED",
+    "exceptions": [],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "Taxable ₹95,000 + IGST ₹17,100 = ₹1,12,100, but the total says ₹1,12,200."
+    ],
+    "citations": [
+      "ap-policy §5.3"
+    ],
+    "matched_po": "PO-2026-0051",
+    "matched_grn": null,
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}

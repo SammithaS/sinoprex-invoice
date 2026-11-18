@@ -1,0 +1,84 @@
+{
+  "key": "sharma-split-3",
+  "title": "Split invoicing — part 3 exceeds the PO",
+  "edge_case": "#2",
+  "file": "sharma-split-3.pdf",
+  "layout": "ledger",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V002",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "Sharma Office Supplies",
+    "vendor_gstin": "27AKZPS6612M1Z4",
+    "vendor_address": "Shop 4, Kalbadevi Road, Mumbai, Maharashtra 400002",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "SOS-2026-0533",
+    "invoice_date": "2026-11-09",
+    "due_date": "2026-11-24",
+    "po_number": "PO-2026-0038",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "ICICI Bank, Kalbadevi",
+    "bank_account_number": "104505000921",
+    "bank_ifsc": "ICIC0001045",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "A4 copier paper 75gsm (ream)",
+        "hsn_sac": "4802",
+        "qty": "120",
+        "uom": "REAM",
+        "unit_price": "240.00",
+        "tax_rate": "12",
+        "amount": "28800.00"
+      },
+      {
+        "line_no": "2",
+        "description": "Ball pen, blue (box of 50)",
+        "hsn_sac": "9608",
+        "qty": "20",
+        "uom": "BOX",
+        "unit_price": "350.00",
+        "tax_rate": "18",
+        "amount": "7000.00"
+      }
+    ],
+    "subtotal": "35800.00",
+    "cgst": "0.00",
+    "sgst": "0.00",
+    "igst": "4716.00",
+    "tax_total": "4716.00",
+    "total": "40516.00"
+  },
+  "computed_total": "40516.00",
+  "expected": {
+    "decision": "NEEDS_REVIEW",
+    "exceptions": [
+      "OVER_PO_BALANCE",
+      "QTY_VARIANCE"
+    ],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "Invoice ₹40,516 exceeds the PO remaining balance ₹35,140 by ₹5,376.",
+      "Paper billed 340 reams in total vs 300 ordered and received."
+    ],
+    "citations": [
+      "ap-policy §3.5",
+      "ap-policy §3.3"
+    ],
+    "matched_po": "PO-2026-0038",
+    "matched_grn": "GRN-0305",
+    "proposed_coding": null
+  },
+  "depends_on": [
+    "sharma-split-1",
+    "sharma-split-2"
+  ],
+  "erp_fault": null,
+  "demo_notes": ""
+}

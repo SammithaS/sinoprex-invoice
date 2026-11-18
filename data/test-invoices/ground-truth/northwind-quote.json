@@ -1,0 +1,66 @@
+{
+  "key": "northwind-quote",
+  "title": "Not an invoice — a quotation",
+  "edge_case": "other",
+  "file": "northwind-quote.pdf",
+  "layout": "classic",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V008",
+  "fields": {
+    "doc_type": "quote",
+    "vendor_name": "Northwind Electricals Pvt Ltd",
+    "vendor_gstin": "07AADCN4471G1ZH",
+    "vendor_address": "B-41, Okhla Industrial Area Phase II, New Delhi, Delhi 110020",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "NWE/Q/2026/0145",
+    "invoice_date": "2026-11-10",
+    "due_date": null,
+    "po_number": null,
+    "place_of_supply": null,
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": null,
+    "bank_account_number": null,
+    "bank_ifsc": null,
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Online UPS 10 kVA with batteries",
+        "hsn_sac": "8504",
+        "qty": "2",
+        "uom": "NOS",
+        "unit_price": "185000.00",
+        "tax_rate": "18",
+        "amount": "370000.00"
+      }
+    ],
+    "subtotal": "370000.00",
+    "cgst": "0.00",
+    "sgst": "0.00",
+    "igst": "66600.00",
+    "tax_total": "66600.00",
+    "total": "436600.00"
+  },
+  "computed_total": "436600.00",
+  "expected": {
+    "decision": "REJECTED",
+    "exceptions": [],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "Document is a quotation, not a tax invoice."
+    ],
+    "citations": [
+      "ap-policy §1.1"
+    ],
+    "matched_po": null,
+    "matched_grn": null,
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}

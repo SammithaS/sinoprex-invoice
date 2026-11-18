@@ -1,0 +1,64 @@
+{
+  "key": "blueleaf-scanned-good",
+  "title": "Scanned invoice, good quality",
+  "edge_case": "#1 (control)",
+  "file": "blueleaf-scanned-good.pdf",
+  "layout": "service",
+  "is_scanned": true,
+  "scan_quality": "good",
+  "vendor_id": "V003",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "BlueLeaf Logistics Pvt Ltd",
+    "vendor_gstin": "33AAECB7720Q1ZE",
+    "vendor_address": "Plot 22, SIDCO Industrial Estate, Ambattur, Chennai, Tamil Nadu 600098",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "BLL/TN/26-27/0431",
+    "invoice_date": "2026-11-15",
+    "due_date": "2026-12-15",
+    "po_number": "PO-2026-0047",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": "1–14 November 2026",
+    "original_invoice_ref": null,
+    "bank_name": "State Bank of India, Ambattur",
+    "bank_account_number": "38211903305",
+    "bank_ifsc": "SBIN0004821",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Last-mile delivery, Bengaluru stores",
+        "hsn_sac": "9965",
+        "qty": "120",
+        "uom": "DROP",
+        "unit_price": "450.00",
+        "tax_rate": "12",
+        "amount": "54000.00"
+      }
+    ],
+    "subtotal": "54000.00",
+    "cgst": "0.00",
+    "sgst": "0.00",
+    "igst": "6480.00",
+    "tax_total": "6480.00",
+    "total": "60480.00"
+  },
+  "computed_total": "60480.00",
+  "expected": {
+    "decision": "APPROVED",
+    "exceptions": [],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "Clean scan; fields should extract with high confidence."
+    ],
+    "citations": [],
+    "matched_po": "PO-2026-0047",
+    "matched_grn": "GRN-0317",
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}

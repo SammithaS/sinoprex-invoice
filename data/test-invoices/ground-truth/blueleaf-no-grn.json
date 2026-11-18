@@ -1,0 +1,69 @@
+{
+  "key": "blueleaf-no-grn",
+  "title": "Goods/services not yet received (no GRN)",
+  "edge_case": "other",
+  "file": "blueleaf-no-grn.pdf",
+  "layout": "service",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V003",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "BlueLeaf Logistics Pvt Ltd",
+    "vendor_gstin": "33AAECB7720Q1ZE",
+    "vendor_address": "Plot 22, SIDCO Industrial Estate, Ambattur, Chennai, Tamil Nadu 600098",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "BLL/TN/26-27/0412",
+    "invoice_date": "2026-10-28",
+    "due_date": "2026-11-27",
+    "po_number": "PO-2026-0035",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": "Trips 02-Oct to 24-Oct-2026",
+    "original_invoice_ref": null,
+    "bank_name": "State Bank of India, Ambattur",
+    "bank_account_number": "38211903305",
+    "bank_ifsc": "SBIN0004821",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Line haul Chennai–Bengaluru, 32ft container",
+        "hsn_sac": "9965",
+        "qty": "6",
+        "uom": "TRIP",
+        "unit_price": "12500.00",
+        "tax_rate": "12",
+        "amount": "75000.00"
+      }
+    ],
+    "subtotal": "75000.00",
+    "cgst": "0.00",
+    "sgst": "0.00",
+    "igst": "9000.00",
+    "tax_total": "9000.00",
+    "total": "84000.00"
+  },
+  "computed_total": "84000.00",
+  "expected": {
+    "decision": "ON_HOLD",
+    "exceptions": [
+      "NO_RECEIPT"
+    ],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "PO requires a GRN and none exists; receiver must confirm delivery."
+    ],
+    "citations": [
+      "ap-policy §3.4",
+      "contracts/blueleaf §2.5"
+    ],
+    "matched_po": "PO-2026-0035",
+    "matched_grn": null,
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}

@@ -375,6 +375,29 @@ _POS = [
         [("Thermal receipt rolls 79mm", "4811", 1000, "ROLL", "42", 18)],
         "0",
     ),
+    # Added in Phase 2 for test invoices (intra-state IGST error, line-math error).
+    (
+        "PO-2026-0050",
+        "V004",
+        "2026-11-04",
+        "OPEN",
+        True,
+        "CC-MKT-04",
+        "Sneha Kulkarni",
+        [("Product catalogue print, 16pp A4", "4911", 2000, "NOS", "32", 18)],
+        "0",
+    ),
+    (
+        "PO-2026-0051",
+        "V009",
+        "2026-11-05",
+        "OPEN",
+        True,
+        "CC-FAC-05",
+        "Imran Sheikh",
+        [("Steel storage cabinet, 4-shelf", "9403", 10, "NOS", "9500", 18)],
+        "0",
+    ),
 ]
 
 # grn number, po number, date, received by, {line_no: qty received}
@@ -389,6 +412,14 @@ _GRNS = [
     ("GRN-0313", "PO-2026-0043", "2026-11-12", "Facilities", {1: 40, 2: 40}),
     ("GRN-0290", "PO-2026-0030", "2026-08-25", "Warehouse HSR", {1: 50}),
     ("GRN-0314", "PO-2026-0044", "2026-11-14", "Facilities", {1: 1}),
+    # Added in Phase 2 so the clean test invoices can 3-way match.
+    ("GRN-0315", "PO-2026-0045", "2026-11-10", "Store BLR-01", {1: 50}),
+    ("GRN-0316", "PO-2026-0046", "2026-11-13", "Facilities", {1: 3}),
+    ("GRN-0317", "PO-2026-0047", "2026-11-14", "Warehouse HSR", {1: 120}),
+    ("GRN-0318", "PO-2026-0048", "2026-11-12", "Marketing", {1: 5000}),
+    ("GRN-0319", "PO-2026-0049", "2026-11-14", "HQ admin", {1: 1000}),
+    ("GRN-0320", "PO-2026-0050", "2026-11-11", "Marketing", {1: 2000}),
+    ("GRN-0321", "PO-2026-0051", "2026-11-12", "Facilities", {1: 10}),
 ]
 
 # vendor, invoice no, date, po, subtotal, tax, gl, cost centre, status

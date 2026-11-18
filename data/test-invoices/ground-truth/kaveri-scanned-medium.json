@@ -1,0 +1,64 @@
+{
+  "key": "kaveri-scanned-medium",
+  "title": "Scanned invoice, medium quality (skewed)",
+  "edge_case": "#1 (control)",
+  "file": "kaveri-scanned-medium.pdf",
+  "layout": "band",
+  "is_scanned": true,
+  "scan_quality": "medium",
+  "vendor_id": "V004",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "Kaveri Print House",
+    "vendor_gstin": "29BNKPK3389D1ZN",
+    "vendor_address": "12/3, Industrial Suburb, Rajajinagar, Bengaluru, Karnataka 560010",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "KPH/2026/137",
+    "invoice_date": "2026-11-13",
+    "due_date": "2026-11-28",
+    "po_number": "PO-2026-0048",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "Canara Bank, Rajajinagar",
+    "bank_account_number": "2210101007781",
+    "bank_ifsc": "CNRB0002210",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Shelf talkers, laminated",
+        "hsn_sac": "4911",
+        "qty": "5000",
+        "uom": "NOS",
+        "unit_price": "4.50",
+        "tax_rate": "18",
+        "amount": "22500.00"
+      }
+    ],
+    "subtotal": "22500.00",
+    "cgst": "2025.00",
+    "sgst": "2025.00",
+    "igst": "0.00",
+    "tax_total": "4050.00",
+    "total": "26550.00"
+  },
+  "computed_total": "26550.00",
+  "expected": {
+    "decision": "APPROVED",
+    "exceptions": [],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "Skewed scan; NEEDS_REVIEW is acceptable if any key field reads below 0.8."
+    ],
+    "citations": [],
+    "matched_po": "PO-2026-0048",
+    "matched_grn": "GRN-0318",
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}

@@ -12,7 +12,7 @@ Full README (architecture, LangGraph diagram, eval results) lands in Phase 12.
 ## Status
 
 - [x] Phase 1 — Foundation: app shell, FastAPI, Neon + Alembic, seed data, `/reference`
-- [ ] Phase 2 — Test invoices & knowledge base
+- [x] Phase 2 — Test invoices & knowledge base: 25 PDFs (4 layouts, 3 scans) with ground truth, AP policy, GST rules, vendor FAQ, 10 contracts
 - [ ] Phases 3–12 — see the build plan
 
 ## Run it
@@ -48,6 +48,12 @@ cd backend && uv run ruff check . && uv run ruff format --check . && uv run mypy
 cd frontend && pnpm lint && pnpm typecheck && pnpm build
 ```
 
+Regenerate test data (deterministic; see `data/test-invoices/README.md`):
+
+```bash
+cd backend && uv run python -m scripts.build_seed_data && uv run python -m scripts.generate_invoices
+```
+
 Regenerate the typed API client after backend changes:
 
 ```bash
@@ -59,7 +65,7 @@ cd backend && uv run python -m scripts.export_openapi && cd ../frontend && pnpm 
 ```
 backend/   FastAPI app (app/), Alembic migrations, scripts/, tests/
 frontend/  Next.js App Router UI
-data/      seed data (and, from Phase 2, knowledge base + test invoices)
+data/      seed/ reference data, knowledge/ RAG corpus, test-invoices/ PDFs + ground truth
 docs/      ASSUMPTIONS.md, later ARCHITECTURE.md and EVAL_RESULTS.md
 n8n/       workflow exports (Phase 10)
 deploy/    deploy config (Phase 12)

@@ -138,5 +138,89 @@
         "qty_received": "1"
       }
     ]
+  },
+  {
+    "grn_number": "GRN-0315",
+    "po_number": "PO-2026-0045",
+    "received_date": "2026-11-10",
+    "received_by": "Store BLR-01",
+    "lines": [
+      {
+        "line_no": 1,
+        "qty_received": "50"
+      }
+    ]
+  },
+  {
+    "grn_number": "GRN-0316",
+    "po_number": "PO-2026-0046",
+    "received_date": "2026-11-13",
+    "received_by": "Facilities",
+    "lines": [
+      {
+        "line_no": 1,
+        "qty_received": "3"
+      }
+    ]
+  },
+  {
+    "grn_number": "GRN-0317",
+    "po_number": "PO-2026-0047",
+    "received_date": "2026-11-14",
+    "received_by": "Warehouse HSR",
+    "lines": [
+      {
+        "line_no": 1,
+        "qty_received": "120"
+      }
+    ]
+  },
+  {
+    "grn_number": "GRN-0318",
+    "po_number": "PO-2026-0048",
+    "received_date": "2026-11-12",
+    "received_by": "Marketing",
+    "lines": [
+      {
+        "line_no": 1,
+        "qty_received": "5000"
+      }
+    ]
+  },
+  {
+    "grn_number": "GRN-0319",
+    "po_number": "PO-2026-0049",
+    "received_date": "2026-11-14",
+    "received_by": "HQ admin",
+    "lines": [
+      {
+        "line_no": 1,
+        "qty_received": "1000"
+      }
+    ]
+  },
+  {
+    "grn_number": "GRN-0320",
+    "po_number": "PO-2026-0050",
+    "received_date": "2026-11-11",
+    "received_by": "Marketing",
+    "lines": [
+      {
+        "line_no": 1,
+        "qty_received": "2000"
+      }
+    ]
+  },
+  {
+    "grn_number": "GRN-0321",
+    "po_number": "PO-2026-0051",
+    "received_date": "2026-11-12",
+    "received_by": "Facilities",
+    "lines": [
+      {
+        "line_no": 1,
+        "qty_received": "10"
+      }
+    ]
   }
 ]

@@ -1,0 +1,71 @@
+{
+  "key": "technova-contract-rate",
+  "title": "Unit price above the contracted rate",
+  "edge_case": "#3",
+  "file": "technova-contract-rate.pdf",
+  "layout": "classic",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V001",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "TechNova Solutions Pvt Ltd",
+    "vendor_gstin": "29AABCT1332L1ZA",
+    "vendor_address": "No. 18, 2nd Cross, Koramangala 5th Block, Bengaluru, Karnataka 560095",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "TN/2026/1042",
+    "invoice_date": "2026-11-10",
+    "due_date": "2026-12-10",
+    "po_number": "PO-2026-0042",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "HDFC Bank, Koramangala",
+    "bank_account_number": "50200031284417",
+    "bank_ifsc": "HDFC0000123",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Laptop docking station",
+        "hsn_sac": "8473",
+        "qty": "100",
+        "uom": "NOS",
+        "unit_price": "1250.00",
+        "tax_rate": "18",
+        "amount": "125000.00"
+      }
+    ],
+    "subtotal": "125000.00",
+    "cgst": "11250.00",
+    "sgst": "11250.00",
+    "igst": "0.00",
+    "tax_total": "22500.00",
+    "total": "147500.00"
+  },
+  "computed_total": "147500.00",
+  "expected": {
+    "decision": "NEEDS_REVIEW",
+    "exceptions": [
+      "PRICE_VARIANCE"
+    ],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "Docking station billed at ₹1,250 vs contracted ₹1,100 (+13.6%, ₹15,000 over).",
+      "No signed amendment; contract rates are firm for the term."
+    ],
+    "citations": [
+      "contracts/technova §2.1",
+      "contracts/technova §2.5",
+      "ap-policy §3.2"
+    ],
+    "matched_po": "PO-2026-0042",
+    "matched_grn": "GRN-0311",
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": "Question for the buyer: has TechNova's docking-station rate changed from ₹1,100 to ₹1,250? If yes, attach the amendment."
+}

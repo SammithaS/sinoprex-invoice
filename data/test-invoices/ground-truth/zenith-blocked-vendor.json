@@ -1,0 +1,68 @@
+{
+  "key": "zenith-blocked-vendor",
+  "title": "Invoice from a blocked vendor",
+  "edge_case": "other",
+  "file": "zenith-blocked-vendor.pdf",
+  "layout": "ledger",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V010",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "Zenith Traders",
+    "vendor_gstin": "29AGHPZ1290B1Z7",
+    "vendor_address": "45, Avenue Road, Bengaluru, Karnataka 560002",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "ZT-0112",
+    "invoice_date": "2026-11-09",
+    "due_date": "2026-12-09",
+    "po_number": "PO-2026-0030",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "Indian Bank, Avenue Road",
+    "bank_account_number": "6012003141",
+    "bank_ifsc": "IDIB000B123",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Assorted hangers (bundle of 100)",
+        "hsn_sac": "3926",
+        "qty": "20",
+        "uom": "BDL",
+        "unit_price": "900.00",
+        "tax_rate": "18",
+        "amount": "18000.00"
+      }
+    ],
+    "subtotal": "18000.00",
+    "cgst": "1620.00",
+    "sgst": "1620.00",
+    "igst": "0.00",
+    "tax_total": "3240.00",
+    "total": "21240.00"
+  },
+  "computed_total": "21240.00",
+  "expected": {
+    "decision": "REJECTED",
+    "exceptions": [],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "Vendor V010 is BLOCKED; contract terminated 2026-09-30.",
+      "PO-2026-0030 is closed."
+    ],
+    "citations": [
+      "ap-policy §6.1",
+      "contracts/zenith §2.2"
+    ],
+    "matched_po": null,
+    "matched_grn": null,
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}

@@ -1,0 +1,68 @@
+{
+  "key": "malabar-missing-po",
+  "title": "No PO reference — PO must be inferred",
+  "edge_case": "#5",
+  "file": "malabar-missing-po.pdf",
+  "layout": "classic",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V009",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "Malabar Furniture Works",
+    "vendor_gstin": "32ABMFM5567P1ZI",
+    "vendor_address": "NH 66 Bypass, Edappally, Kochi, Kerala 682024",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "MFW/2026/0218",
+    "invoice_date": "2026-11-13",
+    "due_date": "2026-12-13",
+    "po_number": null,
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "Federal Bank, Edappally",
+    "bank_account_number": "11020100088890",
+    "bank_ifsc": "FDRL0001102",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Ergonomic office chair",
+        "hsn_sac": "9401",
+        "qty": "40",
+        "uom": "NOS",
+        "unit_price": "8900.00",
+        "tax_rate": "18",
+        "amount": "356000.00"
+      }
+    ],
+    "subtotal": "356000.00",
+    "cgst": "0.00",
+    "sgst": "0.00",
+    "igst": "64080.00",
+    "tax_total": "64080.00",
+    "total": "420080.00"
+  },
+  "computed_total": "420080.00",
+  "expected": {
+    "decision": "NEEDS_REVIEW",
+    "exceptions": [
+      "NO_PO"
+    ],
+    "approvals": [],
+    "final_decision": "APPROVED",
+    "reasons": [
+      "No PO printed; vendor, item, qty and price match PO-2026-0043 line 1."
+    ],
+    "citations": [
+      "ap-policy §3.1"
+    ],
+    "matched_po": "PO-2026-0043",
+    "matched_grn": "GRN-0313",
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}

@@ -1,0 +1,66 @@
+{
+  "key": "sharma-within-tolerance",
+  "title": "Price 1.2% above PO — inside the 2% tolerance",
+  "edge_case": "tolerance",
+  "file": "sharma-within-tolerance.pdf",
+  "layout": "ledger",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V002",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "Sharma Office Supplies",
+    "vendor_gstin": "27AKZPS6612M1Z4",
+    "vendor_address": "Shop 4, Kalbadevi Road, Mumbai, Maharashtra 400002",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "SOS-2026-0529",
+    "invoice_date": "2026-11-15",
+    "due_date": "2026-11-30",
+    "po_number": "PO-2026-0049",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "ICICI Bank, Kalbadevi",
+    "bank_account_number": "104505000921",
+    "bank_ifsc": "ICIC0001045",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Thermal receipt rolls 79mm",
+        "hsn_sac": "4811",
+        "qty": "1000",
+        "uom": "ROLL",
+        "unit_price": "42.50",
+        "tax_rate": "18",
+        "amount": "42500.00"
+      }
+    ],
+    "subtotal": "42500.00",
+    "cgst": "0.00",
+    "sgst": "0.00",
+    "igst": "7650.00",
+    "tax_total": "7650.00",
+    "total": "50150.00"
+  },
+  "computed_total": "50150.00",
+  "expected": {
+    "decision": "APPROVED",
+    "exceptions": [],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "Unit price ₹42.50 vs PO ₹42.00 = +1.19%, total +₹500: within ap-policy §3.2."
+    ],
+    "citations": [
+      "ap-policy §3.2"
+    ],
+    "matched_po": "PO-2026-0049",
+    "matched_grn": "GRN-0319",
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}

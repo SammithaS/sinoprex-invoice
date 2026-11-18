@@ -1,0 +1,74 @@
+{
+  "key": "kaveri-po-remainder",
+  "title": "Partial invoice that completes a PO",
+  "edge_case": "clean",
+  "file": "kaveri-po-remainder.pdf",
+  "layout": "band",
+  "is_scanned": false,
+  "scan_quality": null,
+  "vendor_id": "V004",
+  "fields": {
+    "doc_type": "invoice",
+    "vendor_name": "Kaveri Print House",
+    "vendor_gstin": "29BNKPK3389D1ZN",
+    "vendor_address": "12/3, Industrial Suburb, Rajajinagar, Bengaluru, Karnataka 560010",
+    "buyer_name": "Acme Retail Pvt Ltd",
+    "buyer_gstin": "29AACCA4821K1ZM",
+    "invoice_number": "KPH/2026/131",
+    "invoice_date": "2026-10-20",
+    "due_date": "2026-11-04",
+    "po_number": "PO-2026-0033",
+    "place_of_supply": "29",
+    "currency": "INR",
+    "service_period": null,
+    "original_invoice_ref": null,
+    "bank_name": "Canara Bank, Rajajinagar",
+    "bank_account_number": "2210101007781",
+    "bank_ifsc": "CNRB0002210",
+    "lines": [
+      {
+        "line_no": "1",
+        "description": "Festive flyers A5, 4-colour",
+        "hsn_sac": "4911",
+        "qty": "10000",
+        "uom": "NOS",
+        "unit_price": "1.10",
+        "tax_rate": "18",
+        "amount": "11000.00"
+      },
+      {
+        "line_no": "2",
+        "description": "Standee 6x3 ft with stand",
+        "hsn_sac": "4911",
+        "qty": "25",
+        "uom": "NOS",
+        "unit_price": "1850.00",
+        "tax_rate": "18",
+        "amount": "46250.00"
+      }
+    ],
+    "subtotal": "57250.00",
+    "cgst": "5152.50",
+    "sgst": "5152.50",
+    "igst": "0.00",
+    "tax_total": "10305.00",
+    "total": "67555.00"
+  },
+  "computed_total": "67555.00",
+  "expected": {
+    "decision": "APPROVED",
+    "exceptions": [],
+    "approvals": [],
+    "final_decision": null,
+    "reasons": [
+      "Invoice equals the PO's remaining balance (₹67,555) after KPH/2026/118."
+    ],
+    "citations": [],
+    "matched_po": "PO-2026-0033",
+    "matched_grn": "GRN-0299",
+    "proposed_coding": null
+  },
+  "depends_on": [],
+  "erp_fault": null,
+  "demo_notes": ""
+}
