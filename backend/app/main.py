@@ -5,12 +5,13 @@ import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
+from typing import Any
 
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
-from app.api import case, knowledge, procedures, reference, runs, stats
+from app.api import case, chat, knowledge, procedures, reference, runs, stats
 from app.api.schemas import HealthOut
 from app.config import Settings, get_settings
 from app.deps import SessionDep, require_api_key
@@ -45,6 +46,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         graph = build_graph(deps, saver)
         service = RunService(graph, sessionmaker, storage_dir(settings))
         app.state.run_service = service
+        app.state.assistant = build_assistant_service(sessionmaker, saver)  # None → 503
         from app.rag.embeddings import get_embeddings
 
         warm = asyncio.create_task(asyncio.to_thread(get_embeddings().warm_up))
@@ -53,6 +55,23 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
             log.info("resumed %d interrupted run(s)", recovered)
         yield
         warm.cancel()
+
+
+def build_assistant_service(sessionmaker: Any, saver: Any) -> Any:
+    """Ask AP on the shared checkpointer (one thread per chat) and the Neon knowledge store."""
+    from app.assistant.agent import build_assistant
+    from app.assistant.service import AssistantService
+    from app.assistant.tools import AssistantTools
+    from app.llm.models import LLMNotConfiguredError, chat_model
+    from app.rag.index import get_knowledge_store
+    from app.rag.retriever import HybridRetriever
+
+    tools = AssistantTools(sessionmaker, HybridRetriever(get_knowledge_store())).as_tools()
+    try:
+        return AssistantService(build_assistant(tools, chat_model, saver))
+    except LLMNotConfiguredError as exc:
+        log.warning("Ask AP is off: %s", exc)
+        return None
 
 
 def create_app() -> FastAPI:
@@ -87,6 +106,7 @@ def create_app() -> FastAPI:
     app.include_router(stats.router, dependencies=protected)
     app.include_router(procedures.router, dependencies=protected)
     app.include_router(case.router, dependencies=protected)
+    app.include_router(chat.router, dependencies=protected)
     return app
 
 

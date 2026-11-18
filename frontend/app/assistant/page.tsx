@@ -1,11 +1,20 @@
-import { PlannedPage } from "@/components/planned-page";
+import type { Metadata } from "next";
+import { PageTitle } from "@/components/ui/card";
+import { AskAp } from "./ask-ap";
 
-export const metadata = { title: "Ask AP" };
+export const metadata: Metadata = { title: "Ask AP" };
 
-export default function Page() {
+export default function AssistantPage() {
   return (
-    <PlannedPage title="Ask AP" phase={9}>
-      Chat over policies and processed invoices, with cited answers.
-    </PlannedPage>
+    <>
+      <div className="flex flex-col gap-1">
+        <PageTitle>Ask AP</PageTitle>
+        <p className="text-muted">
+          Questions about the AP policy, vendor contracts, GST rules and the invoices processed here. Every answer
+          cites where it came from — and says so when it can&apos;t find something.
+        </p>
+      </div>
+      <AskAp />
+    </>
   );
 }

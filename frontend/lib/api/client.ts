@@ -17,6 +17,9 @@ export type CaseException = Schemas["ExceptionOut"];
 export type Approval = Schemas["ApprovalOut"];
 export type InboxItem = Schemas["InboxItem"];
 export type LedgerRow = Schemas["LedgerRow"];
+export type ChatTurn = Schemas["ChatTurn"];
+export type ChatSource = Schemas["ChatSource"];
+export type ChatHistory = Schemas["ChatHistoryOut"];
 
 export class ApiError extends Error {
   constructor(

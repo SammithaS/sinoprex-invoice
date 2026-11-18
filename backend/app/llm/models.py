@@ -4,12 +4,13 @@ Text documents:   primary provider → other provider → Gemini lite model (whi
 Scanned (vision): Gemini → Gemini lite model (Groq is used for text only, per the plan)
 """
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from typing import Any, Literal
 
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import BaseMessage
 from langchain_core.runnables import Runnable
+from langchain_core.tools import BaseTool
 from pydantic import BaseModel
 
 from app.config import Settings, get_settings
@@ -96,6 +97,30 @@ def extraction_model(
 ) -> Runnable[list[BaseMessage], dict[str, Any]]:
     """Structured extraction runnable with fallbacks. Output: {'raw', 'parsed', 'parsing_error'}."""
     return structured_model(InvoiceRead, kind, settings)
+
+
+def chat_model(
+    tools: Sequence[BaseTool] | None = None, settings: Settings | None = None
+) -> Runnable[list[BaseMessage], BaseMessage]:
+    """Tool-calling chat model (Ask AP): primary text provider → other → Gemini lite."""
+    s = settings or get_settings()
+    built: list[tuple[str, Callable[[], BaseChatModel]]] = []
+    if s.google_api_key:
+        built.append(("gemini", lambda: _gemini(s, s.gemini_model)))
+    if s.groq_api_key:
+        built.append(("groq", lambda: _groq(s)))
+    if s.google_api_key:
+        built.append(("gemini-lite", lambda: _gemini(s, s.gemini_fallback_model)))
+    if s.llm_provider == "groq":
+        built.sort(key=lambda t: t[0] != "groq")
+    if not built:
+        raise LLMNotConfiguredError("set GOOGLE_API_KEY or GROQ_API_KEY in backend/.env (Ask AP)")
+    models: list[Runnable[list[BaseMessage], BaseMessage]] = []
+    for _, build in built:
+        m = build()
+        models.append(m.bind_tools(list(tools)) if tools else m)
+    primary, rest = models[0], models[1:]
+    return primary.with_fallbacks(rest) if rest else primary
 
 
 def structured_model(
