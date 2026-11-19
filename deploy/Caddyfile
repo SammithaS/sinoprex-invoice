@@ -1,6 +1,7 @@
 # FastAPI. flush_interval -1 streams Server-Sent Events (live run view, Ask AP) unbuffered.
+# No `encode`: compressing an event stream holds events back, and through the Vercel proxy
+# the Ask AP stream was reset; responses are small and Vercel compresses for the browser.
 {$API_DOMAIN} {
-	encode zstd gzip
 	reverse_proxy api:8000 {
 		flush_interval -1
 	}

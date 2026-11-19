@@ -40,3 +40,4 @@ frontend/test-results/
 frontend/playwright-report/
 deploy/api.env
 data/eval/last-run.json
+deploy/vercel.env
