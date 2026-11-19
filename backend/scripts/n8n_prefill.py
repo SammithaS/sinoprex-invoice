@@ -32,6 +32,11 @@ def main() -> None:
         help="where API_KEY and N8N_WEBHOOK_SECRET come from (e.g. the server's deploy/api.env)",
     )
     parser.add_argument("--app-url", default="", help="the site's URL for links in emails")
+    parser.add_argument(
+        "--intake-to",
+        default="",
+        help="only take emails sent to this address (Gmail trigger search), e.g. a dedicated inbox",
+    )
     args = parser.parse_args()
 
     env = Path(args.env_file).read_text(encoding="utf-8")
@@ -51,6 +56,10 @@ def main() -> None:
         wf = json.loads(src.read_text(encoding="utf-8"))
         todo: list[str] = []
         for node in wf["nodes"]:
+            if node["type"] == "n8n-nodes-base.gmailTrigger" and args.intake_to:
+                node["parameters"]["filters"]["q"] = (
+                    f"to:{args.intake_to} has:attachment filename:pdf is:unread"
+                )
             if node["name"] != "Config":
                 continue
             for a in node["parameters"]["assignments"]["assignments"]:
