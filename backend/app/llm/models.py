@@ -49,6 +49,9 @@ def _groq(settings: Settings) -> BaseChatModel:
     )
 
 
+# Groq: JSON-schema structured output. With "function_calling", gpt-oss models often answer
+# with plain JSON instead of a tool call and Groq rejects it (tool_use_failed), so the
+# fallback never worked for extraction (found in the live deploy, ASSUMPTIONS #118).
 def _structured(
     model: BaseChatModel, method: str, schema: type[BaseModel]
 ) -> Runnable[Any, dict[str, Any]]:
@@ -76,7 +79,7 @@ def candidate_models(
         else []
     )
     groq: list[tuple[str, Builder]] = (
-        [(f"groq:{s.groq_model}", lambda: _structured(_groq(s), "function_calling", schema))]
+        [(f"groq:{s.groq_model}", lambda: _structured(_groq(s), "json_schema", schema))]
         if s.groq_api_key and kind == "text"
         else []
     )
