@@ -2,9 +2,10 @@
 
     python -m scripts.n8n_prefill https://<random>.trycloudflare.com [--email you@gmail.com]
 
-Reads API_KEY and N8N_WEBHOOK_SECRET from backend/.env and writes ../n8n/local/*.json
-(git-ignored: the copies contain secrets). Run it again whenever the tunnel URL changes or you
-move to another n8n account, then re-import. Prints no secret values.
+Reads API_KEY and N8N_WEBHOOK_SECRET from backend/.env (or --env-file, e.g. the server's
+deploy/api.env) and writes ../n8n/local/*.json (git-ignored: the copies contain secrets).
+Run it again whenever the backend URL changes or you move to another n8n account, then
+re-import. Prints no secret values.
 """
 
 import argparse
@@ -25,17 +26,24 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("backend_url", help="public URL of the backend (the tunnel)")
     parser.add_argument("--email", default="", help="Gmail address for the recipient fields")
+    parser.add_argument(
+        "--env-file",
+        default=str(ROOT / "backend" / ".env"),
+        help="where API_KEY and N8N_WEBHOOK_SECRET come from (e.g. the server's deploy/api.env)",
+    )
+    parser.add_argument("--app-url", default="", help="the site's URL for links in emails")
     args = parser.parse_args()
 
-    env = (ROOT / "backend" / ".env").read_text(encoding="utf-8")
+    env = Path(args.env_file).read_text(encoding="utf-8")
     fill = {
         "backend_url": args.backend_url.rstrip("/"),
         "webhook_secret": env_value(env, "N8N_WEBHOOK_SECRET"),
         "api_key": env_value(env, "API_KEY"),
     }
+    optional = {"app_url": args.app_url.rstrip("/")} if args.app_url else {}
     missing = [k for k, v in fill.items() if not v]
     if missing:
-        raise SystemExit(f"missing in backend/.env or arguments: {', '.join(missing)}")
+        raise SystemExit(f"missing in {args.env_file} or arguments: {', '.join(missing)}")
 
     out = ROOT / "n8n" / "local"
     out.mkdir(exist_ok=True)
@@ -48,6 +56,8 @@ def main() -> None:
             for a in node["parameters"]["assignments"]["assignments"]:
                 if a["name"] in fill:
                     a["value"] = fill[a["name"]]
+                elif a["name"] in optional:
+                    a["value"] = optional[a["name"]]
                 elif a["name"] in RECIPIENTS:
                     a["value"] = args.email or "YOUR-GMAIL-ADDRESS"
                     if not args.email:
