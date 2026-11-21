@@ -1,4 +1,4 @@
-"""Phase 10: signed webhooks, email intake, the tunnel guard and n8n notifications.
+"""Signed webhooks, email intake, the tunnel guard and n8n notifications.
 
 No n8n is called: outbound webhooks go to an httpx MockTransport, which checks the signature
 the same way the n8n workflows do.

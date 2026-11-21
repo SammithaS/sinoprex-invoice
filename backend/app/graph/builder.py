@@ -1,4 +1,4 @@
-"""Assemble the invoice `StateGraph` (plan §6)."""
+"""Assemble the invoice `StateGraph`."""
 
 import itertools
 from collections.abc import Callable

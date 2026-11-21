@@ -4,7 +4,7 @@ Deterministic and LLM-free ("the AI extracts and retrieves; the rules decide"). 
 stages; a stage that rejects the document (or can't identify the vendor) stops the later ones,
 because matching a quotation or a blocked vendor's invoice against POs only adds noise.
 
-Precedence (handoff notes / ap-policy): any critical FAIL → REJECTED; a missing dependency
+Precedence (ap-policy): any critical FAIL → REJECTED; a missing dependency
 (no GRN, bank change, unknown vendor) → ON_HOLD; any WARN/FAIL, low key-field confidence or an
 approval gate → NEEDS_REVIEW; otherwise APPROVED.
 """

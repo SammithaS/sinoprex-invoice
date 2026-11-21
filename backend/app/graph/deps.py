@@ -85,7 +85,7 @@ def policy_sections() -> dict[str, str]:
 
 @cache
 def sample_erp_fault(sample_key: str | None) -> str | None:
-    """Demo mode: the ERP fault a sample's ground truth asks for (ASSUMPTIONS #16)."""
+    """Demo mode: the ERP fault a sample's ground truth asks for."""
     if not sample_key or not get_settings().erp_demo_faults:
         return None
     path = SAMPLES / "ground-truth" / f"{sample_key}.json"

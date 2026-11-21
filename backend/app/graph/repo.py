@@ -15,8 +15,8 @@ COMPANY_GSTIN = "29AACCA4821K1ZM"
 COMPANY_STATE = "29"
 
 
-# Vendors, POs and GRNs change rarely (seed, Phase 8 master-data edits); invoice history changes
-# with every case. Cache the former briefly, always read the latter (ASSUMPTIONS #71).
+# Vendors, POs and GRNs change rarely (seed, master-data edits); invoice history changes
+# with every case. Cache the former briefly, always read the latter.
 MASTER_TTL_SECONDS = 30.0
 _master: tuple[float, rm.ReferenceData] | None = None
 

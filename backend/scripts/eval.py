@@ -1,4 +1,4 @@
-"""End-to-end evaluation (plan §9): every sample through the real LangGraph pipeline.
+"""End-to-end evaluation: every sample through the real LangGraph pipeline.
 
     uv run python -m scripts.eval                  # replayed LLM outputs, no API calls
     uv run python -m scripts.eval --live           # real LLM calls (extract, contracts, explain)

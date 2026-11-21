@@ -1,7 +1,7 @@
 """Inputs and outputs of the rules engine. Plain data — no I/O, no LLM.
 
 Inputs: the extraction result, reference data (vendors, POs, GRNs, invoice history), the
-vendor's contract terms (from RAG in Phase 5) and the policy numbers. Output: an `Assessment`
+vendor's contract terms (from RAG) and the policy numbers. Output: an `Assessment`
 with PASS/WARN/FAIL rule results, exceptions, approvals and the decision.
 """
 
@@ -27,7 +27,7 @@ class RuleStatus(StrEnum):
     SKIP = "SKIP"  # not applicable to this invoice, or a dependency is missing
 
 
-# What a non-passing rule does to the decision (policy precedence, handoff notes).
+# What a non-passing rule does to the decision (policy precedence).
 Severity = Literal["reject", "hold", "review"]
 
 
@@ -41,7 +41,7 @@ class ExceptionCategory(StrEnum):
     TAX_MISMATCH = "TAX_MISMATCH"
     LOW_CONFIDENCE = "LOW_CONFIDENCE"
     OVER_PO_BALANCE = "OVER_PO_BALANCE"
-    ERP_MISMATCH = "ERP_MISMATCH"  # read-back differs from the approved values (#16)
+    ERP_MISMATCH = "ERP_MISMATCH"  # read-back differs from the approved values
 
 
 # --- reference data ----------------------------------------------------------------------------
@@ -192,7 +192,7 @@ class RuleResult(BaseModel):
 
 
 class ExceptionItem(BaseModel):
-    """An exception handed to a named owner with one specific question (§2b.4)."""
+    """An exception handed to a named owner with one specific question."""
 
     category: ExceptionCategory
     rule_code: str
@@ -245,7 +245,7 @@ class Assessment(BaseModel):
     proposed_coding: ProposedCoding | None = None
     duplicate_of: str | None = None
     min_key_confidence: float
-    touchless: dict[str, bool]  # §2b.3 checklist (ERP read-back is added in Phase 8)
+    touchless: dict[str, bool]  # touchless checklist (the ERP read-back is added by the graph)
     reasons: list[str]
     citations: list[str]
 

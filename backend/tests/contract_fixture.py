@@ -1,4 +1,4 @@
-"""Stand-in for Phase 5's RAG: read `ContractTerms` straight from the contract Markdown.
+"""Stand-in for the RAG step: read `ContractTerms` straight from the contract Markdown.
 
 Only the cited facts the rules need — agreed rates with validity, the rate-revision clause and
 a "no purchase order" clause — each with its `contracts/<vendor> §x.y` citation.

@@ -1,6 +1,6 @@
 """Hybrid retrieval: dense (embeddings) + sparse (full-text), merged by Reciprocal Rank Fusion.
 
-Grounding (plan §7): a chunk is only returned if at least one signal finds it relevant — dense
+Grounding: a chunk is only returned if at least one signal finds it relevant — dense
 cosine similarity ≥ `min_similarity`, or a full-text hit. If nothing passes, the result is empty
 and callers say "nothing found" instead of guessing.
 """

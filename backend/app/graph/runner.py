@@ -70,7 +70,7 @@ def _now() -> datetime:
 
 
 class EventBroker:
-    """In-process pub/sub of run events (one API process; n8n/webhooks come in Phase 10)."""
+    """In-process pub/sub of run events (one API process)."""
 
     def __init__(self) -> None:
         self._subs: dict[str, set[asyncio.Queue[dict[str, Any]]]] = defaultdict(set)
@@ -141,7 +141,7 @@ class RunService:
         )
         async with self.sessionmaker() as session:
             if rerun_of:
-                # The earlier attempt no longer counts as a registered invoice (ASSUMPTIONS #56).
+                # The earlier attempt no longer counts as a registered invoice.
                 old = await session.scalar(select(Invoice).where(Invoice.run_id == rerun_of))
                 if old is not None:
                     old.status = "SUPERSEDED"
@@ -375,7 +375,7 @@ class RunService:
         )
         session.add(step)
         # Live clients get the event now; the row is committed at the next step boundary
-        # (one Neon round trip per stage instead of one per event — ASSUMPTIONS #64).
+        # (one Neon round trip per stage instead of one per event).
         self.broker.publish(run_id, {"seq": seq, **event})
         if step.type == "step_finished" and step.node not in SNAPSHOT_NODES:
             await session.commit()

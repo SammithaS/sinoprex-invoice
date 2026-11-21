@@ -95,7 +95,7 @@ class InvoiceRead(BaseModel):
     lines: list[ReadLine]
 
 
-# --- contract terms (RAG, Phase 5) ---------------------------------------------------------------
+# --- contract terms (RAG) ----------------------------------------------------------------------
 
 
 class ContractRateRead(BaseModel):
@@ -161,7 +161,7 @@ class AnswerJudgement(BaseModel):
     reason: str = Field(description="One sentence.")
 
 
-# --- case explanation (graph `explain` node, Phase 6) -------------------------------------------
+# --- case explanation (graph `explain` node) --------------------------------------------------
 
 
 class ExplanationRead(BaseModel):

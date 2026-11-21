@@ -73,7 +73,7 @@ def check_suspected_duplicate(
     data: InvoiceData, vendor_id: str, ref: ReferenceData, policy: Policy
 ) -> tuple[list[InvoiceRecord], RuleResult]:
     """Same vendor, same total, within the window, different number — unless the service
-    periods show they bill different months (recurring subscriptions, ASSUMPTIONS #18)."""
+    periods show they bill different months (recurring subscriptions)."""
     if data.total is None or data.invoice_date is None:
         return [], RuleResult(
             code="duplicate.suspect",

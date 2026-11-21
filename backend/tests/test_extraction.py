@@ -1,4 +1,4 @@
-"""Phase 3 — extraction. No network: the LLM is replaced by
+"""Extraction. No network: the LLM is replaced by
 * a synthetic "perfect reader" built from ground truth (exercises everything after the LLM
   on the real generated PDFs), and
 * recorded real model outputs from tests/fixtures/extraction/ when present.

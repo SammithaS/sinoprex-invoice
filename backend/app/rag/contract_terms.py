@@ -4,7 +4,7 @@
 The LLM reads; Python checks. A rate survives only if its citation is one of the retrieved
 excerpts and that excerpt's text contains the same amount (and the same validity dates, when
 given). Anything else is dropped with a note, so the rules never see an invented rate
-(plan §7 grounding rules, policy §3.6).
+(policy §3.6).
 """
 
 import asyncio

@@ -7,7 +7,7 @@ import { defineConfig, devices } from "@playwright/test";
  *
  * Browser: the installed Microsoft Edge (`channel: "msedge"`), so no Playwright browser
  * download is needed. Set E2E_BROWSER_CHANNEL=chrome (or "" for bundled Chromium) to change it.
- * On Windows, UV_PROJECT_ENVIRONMENT is passed through to uv (see docs/ASSUMPTIONS.md).
+ * On Windows, UV_PROJECT_ENVIRONMENT is passed through to uv (keep the venv path short).
  */
 const API_PORT = 8020;
 const WEB_PORT = 3020;

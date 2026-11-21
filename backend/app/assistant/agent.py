@@ -1,4 +1,4 @@
-"""Ask-AP: a tool-calling LangGraph agent over the knowledge base and processed cases (plan §6).
+"""Ask-AP: a tool-calling LangGraph agent over the knowledge base and processed cases.
 
     START → agent ⇄ tools → … → finalize → END
 

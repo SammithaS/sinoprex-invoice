@@ -42,7 +42,7 @@ For each value also give box_2d ([ymin, xmin, ymax, xmax], 0-1000) on its page.
 
 
 def hints_block(hints: Sequence[str]) -> str:
-    """Reviewer corrections for this vendor, used as few-shot hints (Phase 8 fills these)."""
+    """Reviewer corrections for this vendor, used as few-shot hints."""
     if not hints:
         return ""
     items = "\n".join(f"- {h}" for h in hints)

@@ -2,7 +2,7 @@
 
 Produced by `python -m scripts.eval --live --rag --write` (backend/). Offline mode (`python -m scripts.eval`, recorded LLM outputs) scores 100% on every pipeline metric and is what CI-style runs use; the numbers below are from **live** model calls.
 
-Reliability note: on 2026-11-18 Gemini returned many 503s (overloaded) — the pipeline's fallbacks caught most of them, but 9 of 25 cases still ended on a provider error and were rerun (15 reruns in all; the times shown are the successful attempt's), and a second full run the same evening hit the free-tier daily quota (429) and was discarded. Automatic retries inside the LLM calls are on the README's "what's next" list.
+Reliability note: on 2026-11-18 Gemini returned many 503s (overloaded) — the pipeline's fallbacks caught most of them, but 9 of 25 cases still ended on a provider error and were rerun (15 reruns in all; the times shown are the successful attempt's), and a second full run the same evening hit the free-tier daily quota (429) and was discarded. Automatic retries inside the LLM calls were added afterwards.
 
 ## Pipeline (extraction → rules → decision)
 

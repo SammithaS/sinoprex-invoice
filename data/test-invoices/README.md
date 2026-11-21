@@ -1,6 +1,6 @@
 # Test invoices
 
-25 generated vendor documents covering every edge case in the build plan (§8), plus ground
+25 generated vendor documents covering every edge case the pipeline handles, plus ground
 truth for evaluation. **Do not edit by hand** — change `backend/scripts/invoice_specs.py` and run:
 
 ```bash
@@ -70,5 +70,5 @@ Totals in INR. *Decision* is the expected outcome before any human acts.
 - `sharma-split-2/3` assume the earlier split invoices were processed (PO balance).
 - `northwind-resubmitted` and `northwind-suspect-duplicate` assume `northwind-clean` was
   processed. Uploading any PDF twice also exercises the exact file-hash duplicate check.
-- `malabar-erp-mismatch` passes all rules; the mock ERP (Phase 8) is told by `erp_fault` to store
+- `malabar-erp-mismatch` passes all rules; the mock ERP is told by `erp_fault` to store
   the amount one paisa short so the read-back check fails.

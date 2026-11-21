@@ -1,4 +1,4 @@
-"""Consistency checks for the Phase 2 test data: specs ↔ seed data ↔ knowledge base ↔ files."""
+"""Consistency checks for the test data: specs ↔ seed data ↔ knowledge base ↔ files."""
 
 import json
 import re

@@ -37,14 +37,14 @@ class Settings(BaseSettings):
 
     storage_backend: Literal["local", "r2"] = "local"
     storage_dir: str = ""  # local uploads; default backend/var/uploads
-    # Mock ERP honours a sample's `erp_fault` (demo of the read-back check, ASSUMPTIONS #16).
+    # Mock ERP honours a sample's `erp_fault` (demo of the read-back check).
     erp_demo_faults: bool = True
     r2_account_id: str = ""
     r2_access_key_id: str = ""
     r2_secret_access_key: str = ""
     r2_bucket: str = ""
 
-    # n8n (Phase 10). Base URL of the n8n instance, e.g. https://<name>.app.n8n.cloud; webhooks
+    # n8n (optional). Base URL of the n8n instance, e.g. https://<name>.app.n8n.cloud; webhooks
     # both ways are HMAC-SHA256 signed with this shared secret (empty = intake and notices off).
     n8n_base_url: str = ""
     n8n_webhook_secret: str = ""

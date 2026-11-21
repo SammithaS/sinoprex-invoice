@@ -1,4 +1,4 @@
-"""The versioned Operating Procedure (plan §2b.1): the `Policy` numbers, edited in /procedure.
+"""The versioned Operating Procedure: the `Policy` numbers, edited in /procedure.
 
 Each case loads the active version when it starts and records it (`runs.procedure_version`), so a
 change applies from the next case. Versions are immutable; editing creates a new version.

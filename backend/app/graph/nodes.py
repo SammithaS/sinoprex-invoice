@@ -1,4 +1,4 @@
-"""Graph nodes, one per pipeline stage (plan §6). Each emits progress over the custom stream.
+"""Graph nodes, one per pipeline stage. Each emits progress over the custom stream.
 
     intake → document_check → extract → vendor_match → retrieve_policy → rules → register_case
       → route_exception → human_review (pause; only when there are exceptions to answer)
@@ -129,8 +129,8 @@ async def _read(state: CaseState) -> bytes:
 
 
 def _policy(state: CaseState) -> Policy:
-    # Cases paused before procedure versions existed (Phase 8) have no policy in their state;
-    # they ran under the code defaults, which is what v1 is (ASSUMPTIONS #74).
+    # Cases paused before procedure versions existed have no policy in their state;
+    # they ran under the code defaults, which is what v1 is.
     raw = state.get("policy")
     return Policy.model_validate(raw) if raw else Policy()
 
@@ -195,7 +195,7 @@ def build_nodes(deps: GraphDeps) -> dict[str, NodeFn]:
         pdf = await _read(state)
         gstins = (state.get("document") or {}).get("gstins") or []
         hints: list[str] = []
-        if gstins:  # reviewer corrections for this vendor become few-shot hints (§2b.8)
+        if gstins:  # reviewer corrections for this vendor become few-shot hints
             async with deps.sessionmaker() as session:
                 hints = await case_repo.hints_for_text(session, " ".join(gstins))
         result = await deps.extract(pdf, state.get("sample_key"), hints)
@@ -574,7 +574,7 @@ def build_nodes(deps: GraphDeps) -> dict[str, NodeFn]:
 
 
 def attempted_steps(e: ExceptionItem, state: CaseState) -> list[str]:
-    """What the agent already tried or checked before handing the exception over (§2b.4)."""
+    """What the agent already tried or checked before handing the exception over."""
     v = e.variance
     po = ((state.get("assessment") or {}).get("po_match") or {}).get("po_number")
     contract = state.get("contract") or {}

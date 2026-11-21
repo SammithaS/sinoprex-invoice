@@ -1,4 +1,4 @@
-"""Phase 9: Ask AP — tools over cases and the knowledge base, the agent loop, citations, the API.
+"""Ask AP: tools over cases and the knowledge base, the agent loop, citations, the API.
 
 The tools run for real (SQLite with a processed TechNova case, in-memory knowledge store);
 the chat model is scripted, so no LLM is called.
@@ -156,7 +156,7 @@ def factory(step: Any) -> Any:
 
 
 async def test_why_was_the_technova_invoice_flagged(tools: AssistantTools) -> None:
-    """Phase 9 'done when', with a scripted model: the right reason, with checked citations."""
+    """End to end with a scripted model: the right reason, with checked citations."""
     seen: list[int] = []
     graph = build_assistant(tools.as_tools(), factory(why_flagged_model(seen)), InMemorySaver())
     svc = AssistantService(graph)

@@ -1,4 +1,4 @@
-"""Phase 8 endpoints: approvals inbox, corrections, evidence bundle, mock ERP, demo reset."""
+"""Case endpoints: approvals inbox, corrections, evidence bundle, mock ERP, demo reset."""
 
 import asyncio
 from datetime import date, datetime

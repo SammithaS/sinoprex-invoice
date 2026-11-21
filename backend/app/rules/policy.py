@@ -1,6 +1,6 @@
-"""Policy numbers the rules use (ap-policy.md, ASSUMPTIONS #17).
+"""Policy numbers the rules use (ap-policy.md).
 
-These are the defaults the Phase 8 Operating Procedure starts from; the graph will load the
+These are the defaults the Operating Procedure starts from; the graph will load the
 active procedure version into a `Policy` at the start of each case.
 """
 

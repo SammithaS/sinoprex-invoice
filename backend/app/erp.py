@@ -1,10 +1,10 @@
-"""Mock ERP behind an `ErpProvider` interface (plan §2b.7).
+"""Mock ERP behind an `ErpProvider` interface.
 
 Posting is idempotent: the idempotency key is the run id, so a retried or resumed `post_erp`
 returns the document already posted. `read()` is what `verify_post` compares with the approved
 values. A real ERP adapter would implement the same two calls.
 
-Demo fault (ASSUMPTIONS #16): when the posting request carries `fault="amount_minus_one_paisa"`
+Demo fault: when the posting request carries `fault="amount_minus_one_paisa"`
 the mock stores the amount one paisa short, so the read-back check fails as in edge case #8.
 """
 

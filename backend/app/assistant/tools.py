@@ -1,7 +1,7 @@
 """Ask-AP tools: read-only, parameterised lookups over what the pipeline already stores.
 
 Every tool returns (content, artifact): `content` is compact JSON for the model, `artifact` is
-the list of sources the answer may cite (plan §6: `[ap-policy §3.2]`, `[TN/2026/1042]`). No tool
+the list of sources the answer may cite (e.g. `[ap-policy §3.2]`, `[TN/2026/1042]`). No tool
 writes anything and none takes free-form SQL; filters are bound parameters or Python-side
 matches over small master data.
 """

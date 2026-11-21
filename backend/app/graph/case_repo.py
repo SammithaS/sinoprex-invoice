@@ -1,4 +1,4 @@
-"""Phase 8 case records: exceptions, approvals, ERP postings, corrections (all idempotent per run,
+"""Case records: exceptions, approvals, ERP postings, corrections (all idempotent per run,
 because a node re-executes from its start when the graph resumes)."""
 
 import re

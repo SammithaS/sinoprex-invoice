@@ -1,7 +1,7 @@
 """Chat-model factory: provider switch + fallbacks, structured output.
 
 Text documents:   primary provider → other provider → Gemini lite model (whichever have keys)
-Scanned (vision): Gemini → Gemini lite model (Groq is used for text only, per the plan)
+Scanned (vision): Gemini → Gemini lite model (Groq is used for text only)
 """
 
 from collections.abc import Callable, Sequence
@@ -51,7 +51,7 @@ def _groq(settings: Settings) -> BaseChatModel:
 
 # Groq: JSON-schema structured output. With "function_calling", gpt-oss models often answer
 # with plain JSON instead of a tool call and Groq rejects it (tool_use_failed), so the
-# fallback never worked for extraction (found in the live deploy, ASSUMPTIONS #118).
+# fallback never worked for extraction (found in the live deploy).
 def _structured(
     model: BaseChatModel, method: str, schema: type[BaseModel]
 ) -> Runnable[Any, dict[str, Any]]:

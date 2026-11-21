@@ -1,4 +1,4 @@
-"""Outbound notices to n8n (plan §12 workflows 2 and 3), sent as signed webhooks.
+"""Outbound notices to n8n, sent as signed webhooks.
 
 - `review_needed`: a case paused for a person (review, approval or ERP recheck) → n8n emails the
   reviewer a deep link, and reminds after 24 h if it's still waiting.

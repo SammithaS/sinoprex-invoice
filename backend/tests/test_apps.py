@@ -1,4 +1,4 @@
-"""Phase 13: the apps platform: encrypted connections, app lifecycle, events, timers, built-ins.
+"""The apps platform: encrypted connections, app lifecycle, events, timers, built-ins.
 
 Nothing leaves the machine: email goes to fake mailers / mailboxes, HTTP to an httpx
 MockTransport. A fixed clock drives the timers.

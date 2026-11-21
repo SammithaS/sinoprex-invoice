@@ -1,4 +1,4 @@
-"""Run every sample through a live API in manifest order and time it (Phase 7 check, Phase 11 eval).
+"""Run every sample through a live API in manifest order and time it (live check and eval).
 
     uv run python -m scripts.run_samples_live --base-url http://localhost:8010
     uv run python -m scripts.run_samples_live northwind-clean deccan-scanned-poor

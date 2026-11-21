@@ -1,8 +1,9 @@
 """SQLAlchemy models.
 
-Phase 1: reference data (vendors, purchase orders, goods receipts) and prior invoices.
-Phase 6: runs (one per case), run steps (the live timeline), reviews, and invoice history rows
-written by runs. Exception, approval and ERP tables arrive in Phase 8.
+Reference data (vendors, purchase orders, goods receipts) and prior invoices; runs (one per
+case), run steps (the live timeline), reviews and invoice history rows written by runs; the
+operating procedure, exceptions, approvals, mock ERP postings and corrections; and the apps
+platform (connections with encrypted secrets, installs, run log, audit).
 """
 
 from datetime import date, datetime
@@ -132,7 +133,7 @@ class Invoice(Base):
     source: Mapped[str] = mapped_column(String(10), default="SEED")  # SEED | RUN
     extracted: Mapped[dict[str, Any] | None] = mapped_column(JsonType)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
-    # Phase 6: rows registered by a run (duplicates / PO consumption for later cases).
+    # Rows registered by a run (duplicates / PO consumption for later cases).
     run_id: Mapped[str | None] = mapped_column(ForeignKey("runs.id"), unique=True)
     service_period: Mapped[str | None] = mapped_column(String(100))
     po_lines: Mapped[list[dict[str, Any]] | None] = mapped_column(JsonType)  # [{po_line_no, qty}]
@@ -212,7 +213,7 @@ class Review(Base):
     run: Mapped[Run] = relationship(back_populates="reviews")
 
 
-# --- Phase 8: procedure, exceptions, approvals, mock ERP, corrections --------------------------
+# --- procedure, exceptions, approvals, mock ERP, corrections -----------------------------------
 
 
 class Procedure(Base):
@@ -229,7 +230,7 @@ class Procedure(Base):
 
 
 class CaseException(Base):
-    """An exception handed to an owner with one specific question (plan §2b.4)."""
+    """An exception handed to an owner with one specific question."""
 
     __tablename__ = "exceptions"
 
@@ -347,7 +348,7 @@ class Notification(Base):
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
 
-# --- Apps (installable automations, Phase 13) -----------------------------------------------------
+# --- Apps (installable automations) --------------------------------------------------------------
 
 
 class AppConnection(Base):

@@ -1,4 +1,4 @@
-"""Vendor follow-up email text from the templates in `vendor-faq.md` (plan §12 workflow 3).
+"""Vendor follow-up email text from the templates in `vendor-faq.md`.
 
 The template for the case's first vendor-facing exception is filled from what is known (vendor,
 invoice number and date, the exception's variance details). If a placeholder can't be filled, a

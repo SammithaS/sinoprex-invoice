@@ -1,4 +1,4 @@
-"""Dashboard KPIs (plan §2b.9, §11 `GET /stats`).
+"""Dashboard KPIs (`GET /stats`).
 
 Computed in Python from runs, exceptions, approvals, ERP postings and corrections — fine at
 demo scale (hundreds of runs).
@@ -94,7 +94,7 @@ async def stats(session: SessionDep, days: int = 30) -> Stats:
     corrections = list(await session.scalars(select(Correction)))
     with_approvals = {a.run_id for a in approvals}
     verified = {p.run_id for p in postings if p.verified}
-    # Touchless (§2b.3): approved with no reviewer, no approver, and the ERP write confirmed.
+    # Touchless: approved with no reviewer, no approver, and the ERP write confirmed.
     touchless = [
         r
         for r in completed
@@ -207,7 +207,7 @@ def _done_nodes(run: Run) -> set[str]:
     return done
 
 
-# --- evaluation (Phase 11) ---------------------------------------------------------------------
+# --- evaluation ----------------------------------------------------------------------------------
 
 EVAL_LATEST = Path(__file__).resolve().parents[3] / "data" / "eval" / "latest.json"
 

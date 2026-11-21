@@ -1,4 +1,4 @@
-"""Phase 6: the LangGraph pipeline, human-in-the-loop pause/resume, events and the runs API.
+"""The LangGraph pipeline, human-in-the-loop pause/resume, events and the runs API.
 
 The graph runs for real (in-memory checkpointer, SQLite database); extraction and contract
 readings are replayed from the recorded LLM fixtures, so no LLM is called.
@@ -181,7 +181,7 @@ async def test_rejected_document_skips_review(service: RunService) -> None:
     assert "human_review" not in finished_nodes(await steps(service, run.id))
 
 
-# --- human in the loop (Phase 6 "done when") -----------------------------------------------------
+# --- human in the loop ------------------------------------------------------------------------
 
 
 async def test_scanned_invoice_pauses_and_approval_resumes_to_completion(

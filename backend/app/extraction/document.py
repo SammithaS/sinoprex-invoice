@@ -75,7 +75,7 @@ def scan_quality(img: Image.Image) -> float:
     """0..1 legibility score for a scanned page from edge sharpness and ink/paper contrast.
 
     Calibrated on the generated scans (digital ≈ 1.0, good ≈ 1.0, medium ≈ 0.95, poor ≈ 0.4):
-    blur flattens edges, and washed-out scans lose contrast. Heuristic — see ASSUMPTIONS.md.
+    blur flattens edges, and washed-out scans lose contrast. A heuristic, tuned on the sample scans.
     """
     grey = img.convert("L")
     top = grey.crop((0, 0, grey.width, max(1, grey.height // 2)))  # where the text is

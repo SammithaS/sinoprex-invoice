@@ -1,4 +1,4 @@
-# n8n automations (plan §12)
+# n8n automations (optional)
 
 Four workflows, exported in `workflows/`, for **n8n cloud** with **Gmail**:
 
@@ -59,8 +59,8 @@ import those instead of `workflows/`.
 - **New n8n account** (e.g. after the 14-day trial): sign up, re-run the script, import the four
   files, connect Gmail again, activate, and set `N8N_BASE_URL` in `backend/.env` to the new
   `https://<name>.app.n8n.cloud`, then restart the backend. The secret and API key can stay.
-- **Longer term:** Phase 12 runs n8n self-hosted next to the backend on the free VM, which ends
-  both the trial and the changing tunnel URL.
+- **Longer term:** the built-in Apps (Gmail Inbox Intake, Reviewer Alerts, …) replace these
+  workflows, which ends both the trial and the changing tunnel URL.
 
 ## Try it
 

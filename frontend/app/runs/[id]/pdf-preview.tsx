@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 const PX_PER_POINT = 2; // GET /runs/{id}/pages/{n} renders 2 px per PDF point
 const LABELS = Object.fromEntries(FIELD_LABELS);
 
-/** Page images with a highlight over each field where it was read (plan §2b.2). */
+/** Page images with a highlight over each field where it was read. */
 export function PdfPreview({
   runId,
   fileName,

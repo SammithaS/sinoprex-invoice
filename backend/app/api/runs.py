@@ -1,4 +1,4 @@
-"""Runs: upload, list, detail, live events (SSE), review/resume, rerun, samples (plan §11)."""
+"""Runs: upload, list, detail, live events (SSE), review/resume, rerun, samples."""
 
 import asyncio
 import json

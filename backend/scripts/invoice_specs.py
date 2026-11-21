@@ -217,7 +217,7 @@ class Expected:
 class InvoiceSpec:
     key: str
     title: str
-    edge_case: str  # plan §8 reference, e.g. "#3" or "clean"
+    edge_case: str  # edge-case id, e.g. "#3" or "clean"
     vendor: str  # key into VENDORS
     number: str
     date: str

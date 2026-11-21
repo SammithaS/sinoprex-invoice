@@ -1,4 +1,4 @@
-"""Build `ReferenceData` from the seed JSON (tests, scripts). Phase 6 loads it from the DB."""
+"""Build `ReferenceData` from the seed JSON (tests, scripts). The graph loads it from the DB."""
 
 import json
 from pathlib import Path

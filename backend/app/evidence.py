@@ -1,4 +1,4 @@
-"""The case evidence bundle (plan §2b, §13.9): everything that explains a decision, in one place.
+"""The case evidence bundle: everything that explains a decision, in one place.
 
 JSON for machines; a plain PDF for people (rendered with PyMuPDF, already a dependency).
 Policy §10.3 keeps the evidence for 8 years; `close_case` archives a copy next to the upload.

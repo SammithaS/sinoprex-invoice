@@ -375,7 +375,7 @@ _POS = [
         [("Thermal receipt rolls 79mm", "4811", 1000, "ROLL", "42", 18)],
         "0",
     ),
-    # Added in Phase 2 for test invoices (intra-state IGST error, line-math error).
+    # Added for the test invoices (intra-state IGST error, line-math error).
     (
         "PO-2026-0050",
         "V004",
@@ -412,7 +412,7 @@ _GRNS = [
     ("GRN-0313", "PO-2026-0043", "2026-11-12", "Facilities", {1: 40, 2: 40}),
     ("GRN-0290", "PO-2026-0030", "2026-08-25", "Warehouse HSR", {1: 50}),
     ("GRN-0314", "PO-2026-0044", "2026-11-14", "Facilities", {1: 1}),
-    # Added in Phase 2 so the clean test invoices can 3-way match.
+    # Added so the clean test invoices can 3-way match.
     ("GRN-0315", "PO-2026-0045", "2026-11-10", "Store BLR-01", {1: 50}),
     ("GRN-0316", "PO-2026-0046", "2026-11-13", "Facilities", {1: 3}),
     ("GRN-0317", "PO-2026-0047", "2026-11-14", "Warehouse HSR", {1: 120}),

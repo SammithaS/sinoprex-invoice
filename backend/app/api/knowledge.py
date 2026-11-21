@@ -1,4 +1,4 @@
-"""Knowledge base: list documents, hybrid search, re-index (plan §11 `POST /admin/reindex`)."""
+"""Knowledge base: list documents, hybrid search, re-index (`POST /admin/reindex`)."""
 
 from collections import Counter
 from typing import Annotated

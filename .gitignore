@@ -30,7 +30,7 @@ Thumbs.db
 # local tooling
 .claude/
 
-# Local uploads (Phase 6)
+# Local uploads
 backend/var/
 
 # n8n workflow copies with secrets filled in (n8n/README.md)

@@ -1,4 +1,4 @@
-"""The vendor-contract sections behind non-price checks, found by topic (Phase 11 tuning).
+"""The vendor-contract sections behind non-price checks, found by topic.
 
 A blocked vendor, a changed bank account, the wrong GST heads or a missing GRN are decided from
 the vendor master, the GST rules and the PO — but the vendor's own contract usually says the

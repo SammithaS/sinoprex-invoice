@@ -37,7 +37,7 @@ ModelFactory = Callable[[Kind], Runnable[list[BaseMessage], dict[str, Any]]]
 CONFIDENCE_THRESHOLD = 0.8
 ROUNDING = Decimal("1.00")  # ₹1, GST rules §5
 
-# Confidence calibration constants (see docs/ASSUMPTIONS.md).
+# Confidence calibration constants (tuned on the sample set).
 FOUND_IN_TEXT = 0.95  # value found verbatim in the PDF's own text layer
 NOT_FOUND_IN_TEXT = 0.6  # digital PDF but the value isn't in its text → possible hallucination
 ARITHMETIC_AGREES = 0.9  # amounts that reconcile (lines → subtotal → total)
@@ -348,7 +348,7 @@ async def extract_invoice(
         data, evidence = to_invoice(read, info, doc)
         missing = _missing(data)
         if missing and read.doc_type == "invoice":
-            # Plan §6 edges: retry once with a stricter prompt, then continue with what we have.
+            # Edge case: retry once with a stricter prompt, then continue with what we have.
             attempts = 2
             retry, name2, t_in, t_out = await _read(model, build_messages(info, hints, missing))
             tok_in, tok_out = tok_in + t_in, tok_out + t_out

@@ -1,7 +1,7 @@
 """Retry transient LLM provider errors (503 overloaded, 429 rate-limited) with back-off.
 
 Each model call already has the SDK's own retries and a provider fallback chain; this is the
-outer layer for the moments when *every* provider is briefly unavailable (seen in the Phase 11
+outer layer for the moments when *every* provider is briefly unavailable (seen in the
 live eval: 9 of 25 cases needed a manual rerun). Anything else, including a daily quota that
 stays exhausted after the last attempt, is re-raised unchanged so the case fails visibly.
 """

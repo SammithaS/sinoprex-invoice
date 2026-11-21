@@ -1,4 +1,4 @@
-"""Operating Procedure versions (plan §11: list, create, activate)."""
+"""Operating Procedure versions (list, create, activate)."""
 
 from datetime import datetime
 from typing import Any

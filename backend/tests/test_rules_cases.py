@@ -1,4 +1,4 @@
-"""Phase 4 "done when": every test invoice yields its expected decision and exceptions.
+"""Every test invoice yields its expected decision and exceptions.
 
 Extraction comes from the recorded LLM fixtures (no LLM calls); reference data from the seed;
 contract terms from the recorded RAG readings (retrieved clauses + LLM reading, re-grounded
@@ -32,7 +32,7 @@ MANIFEST = json.loads((INVOICES / "manifest.json").read_text(encoding="utf-8"))
 KEYS = [m["key"] for m in MANIFEST]
 RECEIVED_ON = date(2026, 11, 18)
 
-# Expected citations that come from the ERP read-back (Phase 8), not the rules.
+# Expected citations that come from the ERP read-back, not the rules.
 DEFERRED_CITATIONS = {"ap-policy §10.1"}
 
 

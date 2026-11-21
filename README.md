@@ -263,7 +263,7 @@ Other scripts (from `backend/`):
 backend/   FastAPI app: app/{api,graph,rules,rag,extraction,llm,assistant,integrations}, alembic/, scripts/, tests/
 frontend/  Next.js App Router UI (app/), components/, lib/, e2e/ (Playwright)
 data/      seed/ reference data · knowledge/ RAG corpus · test-invoices/ PDFs + ground truth · eval/
-docs/      BUILD_PLAN.md · ASSUMPTIONS.md (every design decision) · EVAL_RESULTS.md · HANDOFF.md
+docs/      EVAL_RESULTS.md (live evaluation numbers)
 n8n/       workflow exports + setup
 deploy/    Docker Compose, Caddyfile and DEPLOY.md (Oracle VM + Vercel + Neon)
 ```

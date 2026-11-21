@@ -1,7 +1,7 @@
 """Email intake from n8n (`POST /intake/email`, HMAC-signed) and the integrations status.
 
 The intake route is not behind the shared API key: n8n proves itself with the webhook
-signature instead (plan §11). Each PDF attachment becomes one run (source EMAIL); a redelivered
+signature instead. Each PDF attachment becomes one run (source EMAIL); a redelivered
 email (same message id and file name) returns the existing run instead of creating another.
 """
 

@@ -1,4 +1,4 @@
-"""Apps marketplace and connections (Phase 13). Secrets are write-only: no endpoint returns one."""
+"""Apps marketplace and connections. Secrets are write-only: no endpoint returns one."""
 
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager

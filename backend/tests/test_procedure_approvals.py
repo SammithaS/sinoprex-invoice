@@ -1,4 +1,4 @@
-"""Phase 8: Operating Procedure versions, exception routing, approvals with four-eyes, mock ERP
+"""Operating Procedure versions, exception routing, approvals with four-eyes, mock ERP
 posting + read-back, corrections → extraction hints, evidence bundle, demo reset."""
 
 from collections.abc import Sequence
@@ -73,7 +73,7 @@ async def test_initial_procedure_is_the_policy_defaults(
 async def test_changing_the_tolerance_changes_the_next_case(
     db: async_sessionmaker[AsyncSession], service: RunService
 ) -> None:
-    """Phase 8 "done when" #1: 1.2% over the PO passes at 2%, is flagged at 1%."""
+    """1.2% over the PO passes at 2%, is flagged at 1%."""
     first = await run_sample(service, "sharma-within-tolerance")
     assert first.decision == "APPROVED" and first.procedure_version == "v1"
 
@@ -346,7 +346,7 @@ async def test_erp_ledger_and_reset(service: RunService, api: AsyncClient) -> No
 
 
 def test_cases_paused_before_procedure_versions_use_the_defaults() -> None:
-    """A case paused before Phase 8 has no `policy` in its state; resuming it must not fail."""
+    """A case paused before procedure versions existed has no `policy`; resuming it must work."""
     from app.graph.nodes import _policy
     from app.rules.policy import Policy
 

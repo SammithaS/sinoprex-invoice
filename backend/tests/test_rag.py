@@ -1,4 +1,4 @@
-"""Phase 5: ingestion, hybrid retrieval, grounded contract terms, knowledge API."""
+"""Ingestion, hybrid retrieval, grounded contract terms, knowledge API."""
 
 import hashlib
 import json
