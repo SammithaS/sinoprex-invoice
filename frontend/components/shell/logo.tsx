@@ -9,11 +9,11 @@ export function Logo({ compact = false }: { compact?: boolean }) {
       </span>
       <span
         className={cn(
-          "text-[21px] font-bold tracking-[-0.02em] text-navy",
+          "text-[18px] font-bold tracking-[-0.02em] whitespace-nowrap text-navy",
           compact && "sr-only",
         )}
       >
-        InvoiceIQ
+        SinoprexInvoice
       </span>
     </span>
   );

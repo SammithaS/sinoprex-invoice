@@ -1,5 +1,5 @@
 {
-  "name": "InvoiceIQ · 1 · Email intake",
+  "name": "SinoprexInvoice · 1 · Email intake",
   "nodes": [
     {
       "parameters": {
@@ -150,7 +150,7 @@
         "body": "={{ $json.body }}"
       },
       "id": "0eb983b0-b932-5cea-b0e4-6a8af0655933",
-      "name": "Send to InvoiceIQ",
+      "name": "Send to SinoprexInvoice",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -283,14 +283,14 @@
       "main": [
         [
           {
-            "node": "Send to InvoiceIQ",
+            "node": "Send to SinoprexInvoice",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Send to InvoiceIQ": {
+    "Send to SinoprexInvoice": {
       "main": [
         [
           {

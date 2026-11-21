@@ -46,10 +46,10 @@ export function Topbar({ onOpenMenu }: { onOpenMenu: () => void }) {
             aria-hidden
             className="flex size-[42px] items-center justify-center rounded-full bg-gradient-to-br from-brand-300 to-brand-500 text-[15px] font-semibold text-white"
           >
-            PS
+            SP
           </span>
           <div className="hidden flex-col leading-tight lg:flex">
-            <span className="text-sm font-semibold text-navy">Priya Shah</span>
+            <span className="text-sm font-semibold text-navy">Sammitha S Poojary</span>
             <span className="text-xs text-muted">AP Reviewer</span>
           </div>
         </div>

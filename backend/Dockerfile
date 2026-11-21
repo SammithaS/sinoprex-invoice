@@ -1,4 +1,4 @@
-# InvoiceIQ API — multi-arch (linux/arm64 on the Oracle Ampere VM, amd64 elsewhere).
+# SinoprexInvoice API — multi-arch (linux/arm64 on the Oracle Ampere VM, amd64 elsewhere).
 # Build context: the repository root (the app reads ../data at runtime).
 #   docker build -f backend/Dockerfile -t invoiceiq-api .
 

@@ -1,7 +1,7 @@
 [project]
 name = "invoiceiq-backend"
 version = "0.1.0"
-description = "InvoiceIQ — agentic AI invoice processing backend (FastAPI + LangGraph)"
+description = "SinoprexInvoice — agentic AI invoice processing backend (FastAPI + LangGraph)"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

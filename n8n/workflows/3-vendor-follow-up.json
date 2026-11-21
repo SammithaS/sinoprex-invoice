@@ -1,5 +1,5 @@
 {
-  "name": "InvoiceIQ · 3 · Vendor follow-up",
+  "name": "SinoprexInvoice · 3 · Vendor follow-up",
   "nodes": [
     {
       "parameters": {
@@ -59,7 +59,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Rebuild exactly what InvoiceIQ signed: \"<timestamp>.<compact JSON body>\".\n// The backend sends compact JSON without floats, so JSON.stringify(body) gives the same bytes.\nreturn $input.all().map((item) => {\n  const j = item.json;\n  const ts = String(j.headers['x-iiq-timestamp'] ?? '');\n  const age = Math.abs(Date.now() / 1000 - Number(ts));\n  return {\n    json: {\n      ...j,\n      signed: ts + '.' + JSON.stringify(j.body),\n      given: String(j.headers['x-iiq-signature'] ?? '').toLowerCase(),\n      fresh: ts !== '' && Number.isFinite(age) && age <= 300,\n    },\n  };\n});\n"
+        "jsCode": "// Rebuild exactly what SinoprexInvoice signed: \"<timestamp>.<compact JSON body>\".\n// The backend sends compact JSON without floats, so JSON.stringify(body) gives the same bytes.\nreturn $input.all().map((item) => {\n  const j = item.json;\n  const ts = String(j.headers['x-iiq-timestamp'] ?? '');\n  const age = Math.abs(Date.now() / 1000 - Number(ts));\n  return {\n    json: {\n      ...j,\n      signed: ts + '.' + JSON.stringify(j.body),\n      given: String(j.headers['x-iiq-signature'] ?? '').toLowerCase(),\n      fresh: ts !== '' && Number.isFinite(age) && age <= 300,\n    },\n  };\n});\n"
       },
       "id": "59018264-beb7-5c62-b610-924df083860f",
       "name": "Prepare check",
@@ -113,7 +113,7 @@
         "options": {}
       },
       "id": "eff8e40f-af7d-5819-980c-9a9bd5f59798",
-      "name": "Signed by InvoiceIQ?",
+      "name": "Signed by SinoprexInvoice?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
@@ -193,14 +193,14 @@
       "main": [
         [
           {
-            "node": "Signed by InvoiceIQ?",
+            "node": "Signed by SinoprexInvoice?",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Signed by InvoiceIQ?": {
+    "Signed by SinoprexInvoice?": {
       "main": [
         [
           {

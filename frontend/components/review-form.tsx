@@ -6,7 +6,7 @@ import { useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { apiPost, type ReviewAction, type Run } from "@/lib/api/client";
 
-const DEFAULT_REVIEWER = "Priya Nair";
+const DEFAULT_REVIEWER = "Sammitha S Poojary";
 
 /** Answer a paused run (POST /runs/{id}/review resumes the graph). Shows only the actions the
  *  pause allows: e.g. no Approve for an unknown supplier, only Re-check for an ERP mismatch. */

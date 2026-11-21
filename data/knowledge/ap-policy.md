@@ -32,7 +32,7 @@ may never create vendors, change bank details or release payments.
 ## 2. Receipt and registration
 
 ### 2.1 Single point of entry
-All invoices must be sent to `ap@acmeretail.example` or uploaded to InvoiceIQ. Invoices sent to
+All invoices must be sent to `ap@acmeretail.example` or uploaded to SinoprexInvoice. Invoices sent to
 individual employees must be forwarded to AP the same day.
 
 ### 2.2 Registration

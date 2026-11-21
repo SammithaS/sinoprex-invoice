@@ -1,5 +1,5 @@
 {
-  "name": "InvoiceIQ · 4 · Daily AP summary",
+  "name": "SinoprexInvoice · 4 · Daily AP summary",
   "nodes": [
     {
       "parameters": {
@@ -94,7 +94,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Daily AP summary from GET /stats.\nconst s = $input.first().json;\nconst cfg = $('Config').first().json;\nconst inr = (v) => '₹' + Number(v ?? 0).toLocaleString('en-IN');\nconst d = s.decisions ?? {};\nconst causes = Object.entries(s.exception_causes ?? {}).sort((a, b) => b[1] - a[1]).slice(0, 3);\nconst rate = s.straight_through_rate == null ? '—' : Math.round(s.straight_through_rate * 100) + '%';\nconst lines = [\n  'Good morning. Accounts payable, last 30 days:',\n  '',\n  `- Cases: ${s.runs} (${s.completed} closed)`,\n  `- Approved: ${d.APPROVED ?? 0} · Rejected: ${d.REJECTED ?? 0} · On hold: ${d.ON_HOLD ?? 0}`,\n  `- Straight-through (no human touch): ${rate}`,\n  `- Waiting for review: ${s.waiting_review} · for approval: ${s.waiting_approval} (value ${inr(s.pending_value)})`,\n  `- Posted to ERP: ${s.erp_posted} (${s.erp_verified} verified, ${s.erp_mismatches} mismatches)`,\n  causes.length ? `- Top issues: ${causes.map(([k, v]) => `${k} (${v})`).join(', ')}` : '- Top issues: none',\n  '',\n  `Dashboard: ${cfg.app_url}/dashboard`,\n  `Review queue: ${cfg.app_url}/review`,\n];\nreturn [{ json: { to: cfg.summary_to, subject: `InvoiceIQ daily AP summary · ${s.waiting_review} waiting for review`, text: lines.join('\\n') } }];\n"
+        "jsCode": "// Daily AP summary from GET /stats.\nconst s = $input.first().json;\nconst cfg = $('Config').first().json;\nconst inr = (v) => '₹' + Number(v ?? 0).toLocaleString('en-IN');\nconst d = s.decisions ?? {};\nconst causes = Object.entries(s.exception_causes ?? {}).sort((a, b) => b[1] - a[1]).slice(0, 3);\nconst rate = s.straight_through_rate == null ? '—' : Math.round(s.straight_through_rate * 100) + '%';\nconst lines = [\n  'Good morning. Accounts payable, last 30 days:',\n  '',\n  `- Cases: ${s.runs} (${s.completed} closed)`,\n  `- Approved: ${d.APPROVED ?? 0} · Rejected: ${d.REJECTED ?? 0} · On hold: ${d.ON_HOLD ?? 0}`,\n  `- Straight-through (no human touch): ${rate}`,\n  `- Waiting for review: ${s.waiting_review} · for approval: ${s.waiting_approval} (value ${inr(s.pending_value)})`,\n  `- Posted to ERP: ${s.erp_posted} (${s.erp_verified} verified, ${s.erp_mismatches} mismatches)`,\n  causes.length ? `- Top issues: ${causes.map(([k, v]) => `${k} (${v})`).join(', ')}` : '- Top issues: none',\n  '',\n  `Dashboard: ${cfg.app_url}/dashboard`,\n  `Review queue: ${cfg.app_url}/review`,\n];\nreturn [{ json: { to: cfg.summary_to, subject: `SinoprexInvoice daily AP summary · ${s.waiting_review} waiting for review`, text: lines.join('\\n') } }];\n"
       },
       "id": "75b1aceb-a39b-5935-8c1c-768e740c066e",
       "name": "Compose",

@@ -38,7 +38,7 @@ export function LoginForm() {
         <LockKeyhole aria-hidden className="size-6" />
       </span>
       <div className="flex flex-col gap-1">
-        <h1 className="text-xl font-semibold text-navy">Sign in to InvoiceIQ</h1>
+        <h1 className="text-xl font-semibold text-navy">Sign in to SinoprexInvoice</h1>
         <p className="text-muted">This demo is password-protected. Ask the owner for the password.</p>
       </div>
       <form onSubmit={submit} className="flex flex-col gap-3">
