@@ -52,7 +52,7 @@ export function Integrations() {
           <Link href="/apps" className="text-brand-800 underline">
             Apps
           </Link>{" "}
-          inside SinoprexInvoice. n8n is optional: install the n8n Connector app to keep using external workflows
+          inside Sinoprex Invoice. n8n is optional: install the n8n Connector app to keep using external workflows
           (webhooks both ways are HMAC-signed).
         </p>
       </div>

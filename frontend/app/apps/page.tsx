@@ -10,7 +10,7 @@ export default function AppsPage() {
       <div className="flex flex-col gap-1">
         <PageTitle>Apps</PageTitle>
         <p className="max-w-3xl text-muted">
-          Automations that run inside SinoprexInvoice: install one, fill in its settings, connect an account and
+          Automations that run inside Sinoprex Invoice: install one, fill in its settings, connect an account and
           activate it. Credentials live in Connections, encrypted, and are never shown again after you save them.
         </p>
       </div>

@@ -13,7 +13,7 @@ export function Logo({ compact = false }: { compact?: boolean }) {
           compact && "sr-only",
         )}
       >
-        SinoprexInvoice
+        Sinoprex Invoice
       </span>
     </span>
   );

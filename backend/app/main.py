@@ -94,7 +94,7 @@ def create_app() -> FastAPI:
     settings = get_settings()
     app = FastAPI(
         lifespan=lifespan,
-        title="SinoprexInvoice API",
+        title="Sinoprex Invoice API",
         version="0.1.0",
         description="Agentic AI invoice processing: PDF → reasoned decision.",
     )

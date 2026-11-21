@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "SinoprexInvoice API",
+    "title": "Sinoprex Invoice API",
     "description": "Agentic AI invoice processing: PDF \u2192 reasoned decision.",
     "version": "0.1.0"
   },

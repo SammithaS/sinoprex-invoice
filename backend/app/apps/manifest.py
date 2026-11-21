@@ -1,6 +1,6 @@
 """App and connection manifests: what an app declares (DevRev snap-in style).
 
-DevRev snap-in        SinoprexInvoice app
+DevRev snap-in        Sinoprex Invoice app
 --------------        -------------------
 inputs           →    `inputs` (typed settings, rendered as a form)
 keyrings         →    `connections` (requirements) + ConnectionType (secret fields)
@@ -220,7 +220,7 @@ class AppManifest:
     on_activate: Hook | None = None
     on_deactivate: Hook | None = None
     run_now: str | None = None  # handler run by the "Run now" button (a timer name)
-    publisher: str = "SinoprexInvoice"
+    publisher: str = "Sinoprex Invoice"
     version: str = "1.0.0"
 
     def __post_init__(self) -> None:

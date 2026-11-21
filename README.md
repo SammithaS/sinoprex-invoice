@@ -1,4 +1,4 @@
-# SinoprexInvoice
+# Sinoprex Invoice
 
 **Agentic AI invoice processing for accounts payable.** A vendor invoice PDF goes in, by upload
 or email, and a reasoned, cited, auditable decision comes out: `APPROVED`, `NEEDS_REVIEW`,
@@ -18,7 +18,7 @@ pressure, with little audit trail. Most invoices are clean and could flow straig
 hard part is the 20–30% that are not: someone must see exactly *why* a case was stopped, *which
 rule or clause* says so, and *who* has to act.
 
-SinoprexInvoice automates the clean path end to end and turns every exception into one specific
+Sinoprex Invoice automates the clean path end to end and turns every exception into one specific
 question for a named owner, with the evidence attached.
 
 ## What it does

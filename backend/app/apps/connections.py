@@ -23,7 +23,7 @@ async def _test_slack(values: ConnectionValues, transports: Transports) -> str:
     if not url.startswith("https://hooks.slack.com/"):
         raise ValueError("a Slack incoming-webhook URL starts with https://hooks.slack.com/")
     async with transports.client() as client:
-        res = await client.post(url, json={"text": "SinoprexInvoice is connected ✅"})
+        res = await client.post(url, json={"text": "Sinoprex Invoice is connected ✅"})
     if res.status_code >= 300:
         raise ValueError(f"Slack answered HTTP {res.status_code}: {res.text[:120]}")
     return "Posted a test message to the channel"
@@ -47,7 +47,7 @@ GMAIL = ConnectionType(
         Field(
             "display_name",
             "Sender name",
-            default="SinoprexInvoice AP",
+            default="Sinoprex Invoice AP",
             help="Shown as the 'From' name on emails",
         ),
     ),

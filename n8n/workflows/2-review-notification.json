@@ -1,5 +1,5 @@
 {
-  "name": "SinoprexInvoice · 2 · Review notification",
+  "name": "Sinoprex Invoice · 2 · Review notification",
   "nodes": [
     {
       "parameters": {
@@ -65,7 +65,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Rebuild exactly what SinoprexInvoice signed: \"<timestamp>.<compact JSON body>\".\n// The backend sends compact JSON without floats, so JSON.stringify(body) gives the same bytes.\nreturn $input.all().map((item) => {\n  const j = item.json;\n  const ts = String(j.headers['x-iiq-timestamp'] ?? '');\n  const age = Math.abs(Date.now() / 1000 - Number(ts));\n  return {\n    json: {\n      ...j,\n      signed: ts + '.' + JSON.stringify(j.body),\n      given: String(j.headers['x-iiq-signature'] ?? '').toLowerCase(),\n      fresh: ts !== '' && Number.isFinite(age) && age <= 300,\n    },\n  };\n});\n"
+        "jsCode": "// Rebuild exactly what Sinoprex Invoice signed: \"<timestamp>.<compact JSON body>\".\n// The backend sends compact JSON without floats, so JSON.stringify(body) gives the same bytes.\nreturn $input.all().map((item) => {\n  const j = item.json;\n  const ts = String(j.headers['x-iiq-timestamp'] ?? '');\n  const age = Math.abs(Date.now() / 1000 - Number(ts));\n  return {\n    json: {\n      ...j,\n      signed: ts + '.' + JSON.stringify(j.body),\n      given: String(j.headers['x-iiq-signature'] ?? '').toLowerCase(),\n      fresh: ts !== '' && Number.isFinite(age) && age <= 300,\n    },\n  };\n});\n"
       },
       "id": "233d5b75-3198-508d-aa80-bd32d7357b35",
       "name": "Prepare check",
@@ -119,7 +119,7 @@
         "options": {}
       },
       "id": "05ba5603-2e2f-5204-bb1c-09b2ea58b771",
-      "name": "Signed by SinoprexInvoice?",
+      "name": "Signed by Sinoprex Invoice?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
@@ -129,7 +129,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// The email to the reviewer (or approver), with a deep link to the case.\nreturn $input.all().map((item) => {\n  const b = item.json.body;\n  const what = b.kind === 'approval' ? 'Approval needed' : b.kind === 'erp' ? 'ERP recheck needed' : 'Review needed';\n  const who = b.vendor || 'Unknown supplier';\n  const inr = b.total_inr ? ` for ₹${Number(b.total_inr).toLocaleString('en-IN')}` : '';\n  const lines = [\n    `${what}: ${who} invoice ${b.invoice_number || '(no number)'}${inr}.`,\n    '',\n    b.question ? `Question: ${b.question}` : '',\n    ...(b.exceptions ?? []).map((e) => `- ${e.category}: ${e.summary} (owner: ${e.owner})`),\n    b.approver_role ? `Approver: ${b.approver_role}${b.approver_name ? ' (' + b.approver_name + ')' : ''}` : '',\n    '',\n    `Open the case: ${b.link}`,\n    b.kind === 'approval' ? `Approvals inbox: ${b.approvals_inbox}` : `Review queue: ${b.review_queue}`,\n  ].filter((l, i, a) => l !== '' || a[i - 1] !== '');\n  return {\n    json: {\n      to: item.json.reviewer_email,\n      subject: `SinoprexInvoice · ${what}: ${who} ${b.invoice_number || ''}`.trim(),\n      text: lines.join('\\n'),\n      run_id: b.run_id,\n      backend_url: item.json.backend_url,\n      api_key: item.json.api_key,\n    },\n  };\n});\n"
+        "jsCode": "// The email to the reviewer (or approver), with a deep link to the case.\nreturn $input.all().map((item) => {\n  const b = item.json.body;\n  const what = b.kind === 'approval' ? 'Approval needed' : b.kind === 'erp' ? 'ERP recheck needed' : 'Review needed';\n  const who = b.vendor || 'Unknown supplier';\n  const inr = b.total_inr ? ` for ₹${Number(b.total_inr).toLocaleString('en-IN')}` : '';\n  const lines = [\n    `${what}: ${who} invoice ${b.invoice_number || '(no number)'}${inr}.`,\n    '',\n    b.question ? `Question: ${b.question}` : '',\n    ...(b.exceptions ?? []).map((e) => `- ${e.category}: ${e.summary} (owner: ${e.owner})`),\n    b.approver_role ? `Approver: ${b.approver_role}${b.approver_name ? ' (' + b.approver_name + ')' : ''}` : '',\n    '',\n    `Open the case: ${b.link}`,\n    b.kind === 'approval' ? `Approvals inbox: ${b.approvals_inbox}` : `Review queue: ${b.review_queue}`,\n  ].filter((l, i, a) => l !== '' || a[i - 1] !== '');\n  return {\n    json: {\n      to: item.json.reviewer_email,\n      subject: `Sinoprex Invoice · ${what}: ${who} ${b.invoice_number || ''}`.trim(),\n      text: lines.join('\\n'),\n      run_id: b.run_id,\n      backend_url: item.json.backend_url,\n      api_key: item.json.api_key,\n    },\n  };\n});\n"
       },
       "id": "94704184-5448-5de8-9be2-be4e2060370d",
       "name": "Compose",
@@ -294,14 +294,14 @@
       "main": [
         [
           {
-            "node": "Signed by SinoprexInvoice?",
+            "node": "Signed by Sinoprex Invoice?",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Signed by SinoprexInvoice?": {
+    "Signed by Sinoprex Invoice?": {
       "main": [
         [
           {

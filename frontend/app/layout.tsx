@@ -19,7 +19,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: { default: "SinoprexInvoice", template: "%s · SinoprexInvoice" },
+  title: { default: "Sinoprex Invoice", template: "%s · Sinoprex Invoice" },
   description: "Agentic AI invoice processing — from PDF to a reasoned, auditable decision.",
 };
 

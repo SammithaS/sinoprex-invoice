@@ -1,1 +1,1 @@
-"""Installable apps (automations) for SinoprexInvoice, modelled on DevRev snap-ins."""
+"""Installable apps (automations) for Sinoprex Invoice, modelled on DevRev snap-ins."""

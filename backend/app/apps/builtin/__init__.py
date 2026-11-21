@@ -1,1 +1,1 @@
-"""Built-in apps shipped with SinoprexInvoice."""
+"""Built-in apps shipped with Sinoprex Invoice."""

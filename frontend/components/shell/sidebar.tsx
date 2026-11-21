@@ -45,7 +45,7 @@ export function Sidebar({ collapsed, onToggleCollapsed, mobileOpen, onCloseMobil
         )}
       >
         <div className="flex items-center gap-2 px-1.5 pb-3.5">
-          <Link href="/dashboard" aria-label="SinoprexInvoice home" onClick={onCloseMobile}>
+          <Link href="/dashboard" aria-label="Sinoprex Invoice home" onClick={onCloseMobile}>
             <span className="md:hidden lg:inline">
               <Logo compact={collapsed} />
             </span>

@@ -6,7 +6,7 @@ from app.apps.context import AppContext
 from app.db.models import Run
 from app.integrations.notify import REVIEW_NEEDED, VENDOR_FOLLOWUP, Notifier
 
-BRAND = "SinoprexInvoice"
+BRAND = "Sinoprex Invoice"
 
 
 async def case_details(

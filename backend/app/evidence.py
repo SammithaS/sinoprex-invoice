@@ -256,7 +256,7 @@ def bundle_pdf(bundle: dict[str, Any]) -> bytes:
             page.insert_text((margin, y), line, fontsize=size, fontname=font)
             y += size * 1.4
 
-    write("SinoprexInvoice — case evidence bundle", 16, bold=True)
+    write("Sinoprex Invoice — case evidence bundle", 16, bold=True)
     write(f"Case {case['run_id']}", 9)
     y += 6
     for title, lines in sections:

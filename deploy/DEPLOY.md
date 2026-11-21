@@ -1,4 +1,4 @@
-# Deploying SinoprexInvoice (₹0 on free tiers)
+# Deploying Sinoprex Invoice (₹0 on free tiers)
 
 ```
 Browser ──► Vercel (Next.js) ──API key──► Caddy ─► FastAPI ──► Neon Postgres (+ pgvector, checkpoints)
