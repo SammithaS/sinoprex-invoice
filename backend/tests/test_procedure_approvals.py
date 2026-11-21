@@ -150,6 +150,15 @@ async def test_override_of_a_price_variance_needs_a_second_approver(service: Run
     assert (row.kind, row.role, row.citation) == ("OVERRIDE", "AP Manager", "ap-policy §7.3")
     run = await approve(service, run.id, "Arjun Desai")
     assert run.final_decision == "APPROVED"
+    # The ERP posting records both the reviewer and the second approver.
+    async with service.sessionmaker() as session:
+        posting = await session.scalar(select(ErpPosting).where(ErpPosting.run_id == run.id))
+    assert posting is not None
+    payload = posting.request["payload"]
+    assert [r["reviewer"] for r in payload["approvals"]] == ["Rahul Menon"]
+    assert [(x["role"], x["decision"], x["by"]) for x in payload["sign_offs"]] == [
+        ("AP Manager", "APPROVED", "Arjun Desai")
+    ]
 
 
 async def test_an_approver_can_reject(service: RunService) -> None:

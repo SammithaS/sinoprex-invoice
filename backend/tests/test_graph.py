@@ -443,3 +443,31 @@ async def test_stats(api: AsyncClient, service: RunService) -> None:
     counts = [f["count"] for f in s["funnel"]]
     assert counts == [3, 3, 3, 2, 1] and counts == sorted(counts, reverse=True)
     assert len(s["recent"]) == 3 and sum(d["total"] for d in s["volume"]) == 3
+
+
+async def test_live_stream_fills_a_gap_from_the_table(service: RunService) -> None:
+    """An event published before a client subscribed, but committed after it read the table,
+    is fetched from the table when the next live event shows the gap."""
+    async with service.sessionmaker() as session:
+        session.add(
+            Run(id="gap-1", status="RUNNING", file_name="x.pdf", file_path="x.pdf", file_hash="h")
+        )
+        session.add(RunStep(run_id="gap-1", seq=1, type="step_started", node="intake"))
+        await session.commit()
+    stream = service.events("gap-1")
+    assert (await anext(stream))["seq"] == 1
+    assert (await anext(stream))["type"] == "status"
+    # seq 2 was published before the client subscribed; it is committed now.
+    async with service.sessionmaker() as session:
+        session.add(RunStep(run_id="gap-1", seq=2, type="step_finished", node="intake"))
+        session.add(RunStep(run_id="gap-1", seq=3, type="step_started", node="document_check"))
+        await session.commit()
+    service.broker.publish("gap-1", {"seq": 3, "type": "step_started", "node": "document_check"})
+    first, second = await anext(stream), await anext(stream)
+    assert [(first["seq"], first["type"]), (second["seq"], second["type"])] == [
+        (2, "step_finished"),
+        (3, "step_started"),
+    ]
+    service.broker.publish("gap-1", {"type": "status", "status": "COMPLETED"})
+    assert (await anext(stream))["status"] == "COMPLETED"
+    await stream.aclose()  # type: ignore[attr-defined]  # an async generator

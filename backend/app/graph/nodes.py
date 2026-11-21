@@ -433,7 +433,9 @@ def build_nodes(deps: GraphDeps) -> dict[str, NodeFn]:
 
     @step("post_erp")
     async def post_erp(state: CaseState) -> dict[str, Any]:
-        doc = erp_document(state)
+        async with deps.sessionmaker() as session:
+            sign_offs = await case_repo.approval_sign_offs(session, state["run_id"])
+        doc = erp_document(state, sign_offs)
         assert deps.erp is not None
         fault = deps.erp_fault(state.get("sample_key"))
         out = await deps.erp.post(doc, fault=fault)
@@ -717,7 +719,7 @@ def case_approval(row: Any) -> dict[str, Any]:
     }
 
 
-def erp_document(state: CaseState) -> ErpDocumentIn:
+def erp_document(state: CaseState, sign_offs: list[dict[str, Any]] | None = None) -> ErpDocumentIn:
     a = Assessment.model_validate(state["assessment"])
     data = ExtractionResult.model_validate(state["extraction"]).data
     policy = _policy(state)
@@ -749,6 +751,7 @@ def erp_document(state: CaseState) -> ErpDocumentIn:
                 "grn": a.matched_grn,
             },
             "approvals": state.get("reviews") or [],
+            "sign_offs": sign_offs or [],
             "procedure": state.get("procedure_version"),
         },
     )

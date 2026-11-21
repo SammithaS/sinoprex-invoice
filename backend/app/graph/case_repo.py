@@ -161,6 +161,26 @@ async def decide_approval(
     return row
 
 
+async def approval_sign_offs(session: AsyncSession, run_id: str) -> list[dict[str, Any]]:
+    """Decided approvals of a case, in level order (who signed what, when)."""
+    rows = await session.scalars(
+        select(Approval)
+        .where(Approval.run_id == run_id, Approval.decision != "PENDING")
+        .order_by(Approval.level)
+    )
+    return [
+        {
+            "level": a.level,
+            "role": a.role,
+            "decision": a.decision,
+            "by": a.decided_by,
+            "comment": a.comment,
+            "at": a.decided_at.isoformat() if a.decided_at else None,
+        }
+        for a in rows
+    ]
+
+
 def approval_dict(a: Approval) -> dict[str, Any]:
     return {
         "id": a.id,

@@ -432,15 +432,7 @@ class RunService:
             last = after
             for s in steps:
                 last = s.seq
-                yield {
-                    "seq": s.seq,
-                    "type": s.type,
-                    "node": s.node,
-                    "status": s.status,
-                    "message": s.message,
-                    "duration_ms": s.duration_ms,
-                    **(s.data or {}),
-                }
+                yield _step_event(s)
             yield snapshot
             if status in TERMINAL:
                 return
@@ -452,6 +444,23 @@ class RunService:
                     continue
                 if "seq" in event and event["seq"] <= last:
                     continue
+                if "seq" in event and event["seq"] > last + 1:
+                    # Published before we subscribed but not yet committed when we read the
+                    # table: it is committed by now (rows commit at step boundaries).
+                    async with self.sessionmaker() as session:
+                        missed = (
+                            await session.scalars(
+                                select(RunStep)
+                                .where(
+                                    RunStep.run_id == run_id,
+                                    RunStep.seq > last,
+                                    RunStep.seq < event["seq"],
+                                )
+                                .order_by(RunStep.seq)
+                            )
+                        ).all()
+                    for s in missed:
+                        yield _step_event(s)
                 last = event.get("seq", last)
                 yield event
                 if event.get("type") == "status" and event.get("status") in TERMINAL:
@@ -490,3 +499,15 @@ async def open_checkpointer(settings: Settings) -> AsyncIterator[BaseCheckpointS
         yield saver
     finally:
         await pool.close()
+
+
+def _step_event(s: RunStep) -> dict[str, Any]:
+    return {
+        "seq": s.seq,
+        "type": s.type,
+        "node": s.node,
+        "status": s.status,
+        "message": s.message,
+        "duration_ms": s.duration_ms,
+        **(s.data or {}),
+    }
