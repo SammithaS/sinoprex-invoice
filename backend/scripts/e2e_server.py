@@ -15,14 +15,22 @@ import tempfile
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import AsyncSession
+
+if TYPE_CHECKING:
+    from app.apps.mail import IncomingEmail, OutgoingEmail
+    from app.apps.platform import AppPlatform
+    from app.graph.runner import RunService
 
 os.environ["APP_ENV"] = "test"  # create_app's lifespan then leaves the services to us
 os.environ["N8N_BASE_URL"] = ""  # no notifications from test runs
 os.environ["N8N_WEBHOOK_SECRET"] = ""
 os.environ["API_KEY"] = ""  # local throwaway stack: no key, whatever backend/.env says
+# Apps: a throwaway encryption key; email and HTTP go to fakes (nothing leaves the machine).
+os.environ["SECRETS_KEY"] = __import__("cryptography.fernet").fernet.Fernet.generate_key().decode()
 
 from app.config import get_settings
 from app.db.session import get_session
@@ -35,6 +43,39 @@ from scripts.eval import make_service
 get_settings.cache_clear()
 _tmp = tempfile.TemporaryDirectory(prefix="invoiceiq-e2e-", ignore_cleanup_errors=True)
 app = create_app()
+
+
+class _FakeMail:
+    async def send(self, message: "OutgoingEmail") -> None:
+        return None
+
+    async def fetch(self, query: str, limit: int) -> "list[IncomingEmail]":
+        return []
+
+    async def mark_seen(self, uids: list[str]) -> None:
+        return None
+
+    async def check(self) -> None:
+        return None
+
+
+def _apps_platform(service: "RunService") -> "AppPlatform":
+    import httpx
+
+    from app.apps.context import Transports
+    from app.apps.platform import AppPlatform
+
+    fake = _FakeMail()
+    transports = Transports(
+        mailer=lambda v: fake,
+        mailbox=lambda v: fake,
+        http=httpx.MockTransport(lambda r: httpx.Response(200, text="ok")),
+    )
+    platform = AppPlatform(
+        service.sessionmaker, get_settings(), transports=transports, run_service=service
+    )
+    service.on_event = platform.emit
+    return platform
 
 
 @asynccontextmanager
@@ -54,7 +95,9 @@ async def _lifespan(_: FastAPI) -> AsyncIterator[None]:
     app.dependency_overrides[get_knowledge_store] = lambda: store
     app.state.run_service = service
     app.state.erp = MockErp(maker)
+    app.state.apps = _apps_platform(service)
     yield
+    await app.state.apps.stop()
     await service.wait_all()
     await engine.dispose()
     await asyncio.sleep(0)

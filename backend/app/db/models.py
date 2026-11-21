@@ -9,7 +9,7 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import Any
 
-from sqlalchemy import JSON, ForeignKey, Index, Numeric, String, func
+from sqlalchemy import JSON, ForeignKey, Index, Numeric, String, UniqueConstraint, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
@@ -345,3 +345,95 @@ class Notification(Base):
     error: Mapped[str | None]
     payload: Mapped[dict[str, Any] | None] = mapped_column(JsonType)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+
+# --- Apps (installable automations, Phase 13) -----------------------------------------------------
+
+
+class AppConnection(Base):
+    """Credentials an app uses (a Gmail account, a Slack webhook, an n8n instance).
+
+    Plain settings live in `fields`; secret values live encrypted in `app_secrets` and are
+    never returned by the API.
+    """
+
+    __tablename__ = "app_connections"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    type: Mapped[str] = mapped_column(String(40), index=True)  # gmail | slack | n8n
+    name: Mapped[str] = mapped_column(String(120))
+    fields: Mapped[dict[str, Any]] = mapped_column(JsonType, default=dict)
+    status: Mapped[str] = mapped_column(String(20), default="UNTESTED")  # OK | ERROR | UNTESTED
+    status_message: Mapped[str | None]
+    tested_at: Mapped[datetime | None]
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    updated_at: Mapped[datetime | None]
+
+    secrets: Mapped[list["AppSecret"]] = relationship(
+        back_populates="connection", cascade="all, delete-orphan"
+    )
+
+
+class AppSecret(Base):
+    """One encrypted secret value (Fernet). `hint` is the last 4 characters, for the UI."""
+
+    __tablename__ = "app_secrets"
+    __table_args__ = (UniqueConstraint("connection_id", "name"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    connection_id: Mapped[int] = mapped_column(
+        ForeignKey("app_connections.id", ondelete="CASCADE"), index=True
+    )
+    name: Mapped[str] = mapped_column(String(60))
+    ciphertext: Mapped[str]
+    hint: Mapped[str | None] = mapped_column(String(8))
+    updated_by: Mapped[str | None] = mapped_column(String(100))
+    updated_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+    connection: Mapped[AppConnection] = relationship(back_populates="secrets")
+
+
+class AppInstall(Base):
+    """An installed app: its lifecycle state, settings and which connections it uses."""
+
+    __tablename__ = "app_installs"
+
+    app_id: Mapped[str] = mapped_column(String(60), primary_key=True)
+    state: Mapped[str] = mapped_column(String(20))  # DRAFT | ACTIVE | INACTIVE | ERROR
+    inputs: Mapped[dict[str, Any]] = mapped_column(JsonType, default=dict)
+    bindings: Mapped[dict[str, Any]] = mapped_column(JsonType, default=dict)  # req → connection id
+    error: Mapped[str | None]
+    runtime: Mapped[dict[str, Any]] = mapped_column(JsonType, default=dict)  # timers, reminders
+    installed_by: Mapped[str | None] = mapped_column(String(100))
+    installed_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    updated_at: Mapped[datetime | None]
+
+
+class AppRun(Base):
+    """One execution of an app handler (an event, a timer tick, or "Run now")."""
+
+    __tablename__ = "app_runs"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    app_id: Mapped[str] = mapped_column(String(60), index=True)
+    trigger: Mapped[str] = mapped_column(String(60))  # event name, timer name, manual
+    status: Mapped[str] = mapped_column(String(20))  # OK | ERROR | SKIPPED
+    message: Mapped[str | None]
+    error: Mapped[str | None]
+    run_id: Mapped[str | None] = mapped_column(String(36))  # the case it was about, if any
+    duration_ms: Mapped[int | None]
+    started_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+
+class AppAudit(Base):
+    """Who installed / configured / activated what, and secret changes (never the values)."""
+
+    __tablename__ = "app_audit"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    app_id: Mapped[str | None] = mapped_column(String(60), index=True)
+    connection_id: Mapped[int | None]
+    action: Mapped[str] = mapped_column(String(60))
+    actor: Mapped[str | None] = mapped_column(String(100))
+    detail: Mapped[str | None]
+    at: Mapped[datetime] = mapped_column(server_default=func.now())

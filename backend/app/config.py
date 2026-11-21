@@ -53,6 +53,11 @@ class Settings(BaseSettings):
     intake_max_attachments: int = 5
     signature_tolerance_seconds: int = 300
     app_url: str = ""  # where deep links in notifications point; default: frontend_origin
+    # Apps platform: Fernet key(s) that encrypt app secrets (comma-separated; the first encrypts,
+    # all decrypt, for rotation). Server-side only; never stored in the database.
+    secrets_key: str = ""
+    # How often the app scheduler checks timers (seconds).
+    apps_tick_seconds: float = 20
 
     frontend_origin: str = "http://localhost:3000"
     api_key: str = ""

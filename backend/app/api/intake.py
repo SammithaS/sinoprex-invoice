@@ -14,10 +14,11 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field, ValidationError
 from sqlalchemy import select
 
-from app.api.runs import MAX_UPLOAD, ServiceDep
+from app.api.runs import ServiceDep
 from app.config import get_settings
-from app.db.models import Notification, Run
+from app.db.models import Notification
 from app.deps import SessionDep
+from app.integrations.intake import ingest_email
 from app.integrations.notify import Notifier
 from app.integrations.signing import SIGNATURE_HEADER, TIMESTAMP_HEADER, SignatureError, verify
 
@@ -58,33 +59,32 @@ class IntakeOut(BaseModel):
     rejected: list[Rejected]
 
 
-def _pdf(att: Attachment) -> bytes | str:
-    """The PDF bytes, or why the attachment was refused."""
-    if not att.filename.lower().endswith(".pdf"):
-        return "not a PDF file name"
+def _decode(att: Attachment) -> bytes | str:
+    """The attachment's bytes, or why it was refused."""
     try:
-        data = base64.b64decode(att.content_base64, validate=True)
+        return base64.b64decode(att.content_base64, validate=True)
     except (binascii.Error, ValueError):
         return "attachment is not valid base64"
-    if len(data) > MAX_UPLOAD:
-        return "larger than 10 MB"
-    if not data.startswith(b"%PDF"):
-        return "file content is not a PDF"
-    return data
 
 
 @intake_router.post("/intake/email", response_model=IntakeOut, status_code=202)
 async def intake_email(request: Request, service: ServiceDep, session: SessionDep) -> IntakeOut:
     settings = get_settings()
-    if not settings.n8n_webhook_secret:
-        raise HTTPException(status_code=503, detail="email intake is off (N8N_WEBHOOK_SECRET)")
+    platform = getattr(request.app.state, "apps", None)
+    secret = (await platform.n8n_intake_secret() if platform else None) or (
+        settings.n8n_webhook_secret
+    )
+    if not secret:
+        raise HTTPException(
+            status_code=503, detail="email intake is off (install the n8n Connector app)"
+        )
     length = request.headers.get("content-length")
     if length and length.isdigit() and int(length) > MAX_BODY:
         raise HTTPException(status_code=413, detail="request too large")
     body = await request.body()
     try:
         verify(
-            settings.n8n_webhook_secret,
+            secret,
             request.headers.get(TIMESTAMP_HEADER),
             request.headers.get(SIGNATURE_HEADER),
             body,
@@ -98,41 +98,24 @@ async def intake_email(request: Request, service: ServiceDep, session: SessionDe
         raise HTTPException(status_code=422, detail=exc.errors(include_url=False)) from exc
 
     app_url = (settings.app_url or settings.frontend_origin).rstrip("/")
-    runs: list[IntakeRun] = []
-    rejected: list[Rejected] = []
-    seen: set[str] = set()
-    for i, att in enumerate(mail.attachments):
-        if i >= settings.intake_max_attachments:
-            rejected.append(Rejected(filename=att.filename, reason="too many attachments"))
-            continue
-        result = _pdf(att)
-        if isinstance(result, str):
-            rejected.append(Rejected(filename=att.filename, reason=result))
-            continue
-        ref = f"{mail.message_id}#{att.filename}"[:300]
-        if ref in seen:
-            continue
-        seen.add(ref)
-        existing = await session.scalar(select(Run).where(Run.intake_ref == ref))
-        if existing is not None:
-            run, duplicate = existing, True
-        else:
-            run = await service.create_run(
-                result,
-                att.filename,
-                source="EMAIL",
-                intake_ref=ref,
-                intake_from=mail.sender or None,
-            )
-            duplicate = False
-        runs.append(
-            IntakeRun(
-                run_id=run.id,
-                file_name=run.file_name,
-                link=f"{app_url}/runs/{run.id}",
-                duplicate=duplicate,
-            )
+    ingested, refused = await ingest_email(
+        service,
+        session,
+        message_id=mail.message_id,
+        sender=mail.sender or None,
+        attachments=[(att.filename, _decode(att)) for att in mail.attachments],
+        max_attachments=settings.intake_max_attachments,
+    )
+    runs = [
+        IntakeRun(
+            run_id=r.run_id,
+            file_name=r.file_name,
+            link=f"{app_url}/runs/{r.run_id}",
+            duplicate=r.duplicate,
         )
+        for r in ingested
+    ]
+    rejected = [Rejected(filename=r.filename, reason=r.reason) for r in refused]
     return IntakeOut(message_id=mail.message_id, runs=runs, rejected=rejected)
 
 
@@ -164,9 +147,16 @@ async def integrations(request: Request, session: SessionDep) -> dict[str, Any]:
     settings = get_settings()
     notifier: Notifier | None = getattr(request.app.state, "notifier", None)
     rows = await session.scalars(select(Notification).order_by(Notification.id.desc()).limit(20))
+    platform = getattr(request.app.state, "apps", None)
+    try:
+        app_secret = await platform.n8n_intake_secret() if platform else None
+    except Exception:  # no or wrong SECRETS_KEY: report the n8n Connector as off
+        app_secret = None
     return {
-        "n8n_configured": bool(settings.n8n_base_url and settings.n8n_webhook_secret),
-        "intake_enabled": bool(settings.n8n_webhook_secret),
+        "n8n_configured": bool(
+            app_secret or (settings.n8n_base_url and settings.n8n_webhook_secret)
+        ),
+        "intake_enabled": bool(app_secret or settings.n8n_webhook_secret),
         "api_key_set": bool(settings.api_key),
         "webhooks": (
             {

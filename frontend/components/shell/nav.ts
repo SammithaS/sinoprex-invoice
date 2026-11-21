@@ -1,4 +1,5 @@
 import {
+  Blocks,
   BookOpen,
   Building2,
   ClipboardCheck,
@@ -32,6 +33,7 @@ export const NAV: NavGroup[] = [
       { href: "/procedure", label: "Procedure", icon: FilePen },
       { href: "/knowledge", label: "Knowledge base", icon: BookOpen },
       { href: "/reference", label: "Vendors & POs", icon: Building2 },
+      { href: "/apps", label: "Apps", icon: Blocks },
     ],
   },
   {

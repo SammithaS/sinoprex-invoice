@@ -62,6 +62,29 @@ test("knowledge search returns cited sections", async ({ page }) => {
   await expect(page.getByText("ap-policy §6.2")).toBeVisible();
 });
 
+test("apps: write-only secret, install, error state, activate", async ({ page }) => {
+  const secret = "https://hooks.slack.com/services/T0E2E/B0E2E/e2esecretvalueQRST";
+  await page.goto("/apps/connections?new=slack");
+  await page.getByLabel("Name", { exact: true }).fill("E2E Slack");
+  await page.getByLabel("Channel name").fill("#ap-e2e");
+  await page.getByLabel("Webhook URL").fill(secret);
+  await page.getByRole("button", { name: /Save\s+and test/ }).click();
+  await expect(page.getByText("E2E Slack")).toBeVisible();
+  await expect(page.getByText("Working")).toBeVisible();
+  await expect(page.getByText("••••••••QRST")).toBeVisible();
+  expect(await page.content()).not.toContain("e2esecretvalue");
+
+  await page.goto("/apps");
+  await page.getByRole("link", { name: /Slack Alerts/ }).click();
+  await page.getByRole("button", { name: "Install" }).click();
+  await page.getByRole("button", { name: "Activate" }).click();
+  await expect(page.getByRole("alert").filter({ hasText: "Choose a connection for 'Slack channel'" })).toBeVisible();
+  await page.getByRole("combobox").selectOption({ label: "E2E Slack · tested" });
+  await page.getByRole("button", { name: "Save and activate" }).click();
+  await expect(page.getByText("Active", { exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Pause" })).toBeVisible();
+});
+
 test("unknown pages get the app's 404", async ({ page }) => {
   const res = await page.goto("/no-such-page");
   expect(res?.status()).toBe(404);
@@ -70,7 +93,7 @@ test("unknown pages get the app's 404", async ({ page }) => {
 
 test.describe("phone layout", () => {
   test.use({ viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true });
-  for (const path of ["/", "/dashboard", "/review", "/approvals", "/erp", "/procedure", "/knowledge", "/settings"]) {
+  for (const path of ["/", "/dashboard", "/review", "/approvals", "/erp", "/procedure", "/knowledge", "/settings", "/apps", "/apps/connections"]) {
     test(`no sideways scroll on ${path}`, async ({ page }) => {
       await page.goto(path);
       await page.waitForLoadState("networkidle");

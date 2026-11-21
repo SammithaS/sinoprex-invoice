@@ -15,7 +15,7 @@ import hashlib
 import logging
 import uuid
 from collections import defaultdict
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -98,9 +98,12 @@ class RunService:
         storage_dir: Path,
         broker: EventBroker | None = None,
         notifier: "Notifier | None" = None,
+        on_event: "Callable[[str, dict[str, Any]], None] | None" = None,
     ) -> None:
         self.graph = graph
         self.notifier = notifier
+        # Apps platform: pipeline events (case.waiting_review, case.request_info, …).
+        self.on_event = on_event
         self.sessionmaker = sessionmaker
         self.storage_dir = storage_dir
         self.broker = broker or EventBroker()
@@ -316,18 +319,41 @@ class RunService:
             )
 
     def _notify(self, run: Run, payload: CaseState | Command[Any] | None) -> None:
-        """A case that now waits for a person → n8n tells them; a request for information
-        → n8n writes to the vendor (the case keeps waiting for the answer)."""
-        if self.notifier is None or run.status not in ("WAITING_REVIEW", "WAITING_APPROVAL"):
-            return
-        from app.integrations.notify import REVIEW_NEEDED, VENDOR_FOLLOWUP
+        """Tell the apps (and a directly wired notifier) what just happened to the case.
 
+        Waiting for a person → case.waiting_review / case.waiting_approval; after a request
+        for information → case.request_info (the case keeps waiting for the answer); closed or
+        failed → case.closed / case.failed."""
         resume = payload.resume if isinstance(payload, Command) else None
-        if isinstance(resume, dict) and resume.get("action") == "REQUEST_INFO":
-            context = {"comment": resume.get("comment"), "reviewer": resume.get("reviewer")}
-            self.notifier.schedule(run.id, VENDOR_FOLLOWUP, context)
+        request_info = isinstance(resume, dict) and resume.get("action") == "REQUEST_INFO"
+        info = (
+            {"comment": resume.get("comment"), "reviewer": resume.get("reviewer")}
+            if isinstance(resume, dict)
+            else {}
+        )
+        if run.status in ("WAITING_REVIEW", "WAITING_APPROVAL"):
+            event = (
+                "case.request_info"
+                if request_info
+                else "case.waiting_approval"
+                if run.status == "WAITING_APPROVAL"
+                else "case.waiting_review"
+            )
+        elif run.status == "COMPLETED":
+            event = "case.closed"
+        elif run.status == "FAILED":
+            event = "case.failed"
         else:
-            self.notifier.schedule(run.id, REVIEW_NEEDED)
+            return
+        if self.on_event is not None:
+            self.on_event(event, {"run_id": run.id, "status": run.status, **info})
+        if self.notifier is not None and run.status in ("WAITING_REVIEW", "WAITING_APPROVAL"):
+            from app.integrations.notify import REVIEW_NEEDED, VENDOR_FOLLOWUP
+
+            if request_info:
+                self.notifier.schedule(run.id, VENDOR_FOLLOWUP, info)
+            else:
+                self.notifier.schedule(run.id, REVIEW_NEEDED)
 
     async def _record(
         self, session: AsyncSession, run_id: str, seq: int, event: dict[str, Any]

@@ -15,7 +15,7 @@ from app.main import create_app
 def _hermetic_settings(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     """Tests never pick up the developer's real n8n / API settings from backend/.env
     (environment variables win over the .env file); tests that need them set them."""
-    for name in ("N8N_BASE_URL", "N8N_WEBHOOK_SECRET", "APP_URL"):
+    for name in ("N8N_BASE_URL", "N8N_WEBHOOK_SECRET", "APP_URL", "SECRETS_KEY"):
         monkeypatch.setenv(name, "")
     get_settings.cache_clear()
     yield

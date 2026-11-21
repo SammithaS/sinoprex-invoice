@@ -48,8 +48,12 @@ export function Integrations() {
       <div className="flex flex-col gap-1">
         <CardTitle>Integrations · n8n</CardTitle>
         <p className="text-muted">
-          Email intake, reviewer notifications, vendor follow-ups and the daily summary run as n8n workflows (
-          <code className="font-mono text-[13px]">n8n/README.md</code>). Webhooks both ways are HMAC-signed.
+          Email intake, reviewer alerts, vendor follow-ups and the daily summary now run as{" "}
+          <Link href="/apps" className="text-brand-800 underline">
+            Apps
+          </Link>{" "}
+          inside SinoprexInvoice. n8n is optional: install the n8n Connector app to keep using external workflows
+          (webhooks both ways are HMAC-signed).
         </p>
       </div>
 
@@ -64,11 +68,11 @@ export function Integrations() {
           <ul className="flex flex-col gap-3">
             <Row
               ok={q.data.intake_enabled}
-              label="Email intake"
+              label="Email intake via n8n"
               detail={
                 q.data.intake_enabled
                   ? "POST /intake/email accepts signed requests from n8n."
-                  : "Off: set N8N_WEBHOOK_SECRET in backend/.env."
+                  : "Off: use the Gmail Inbox Intake app, or install the n8n Connector app."
               }
             />
             <Row
@@ -77,7 +81,7 @@ export function Integrations() {
               detail={
                 q.data.n8n_configured
                   ? Object.values(q.data.webhooks).join(" · ")
-                  : "Off: set N8N_BASE_URL and N8N_WEBHOOK_SECRET. Notices are recorded as skipped."
+                  : "Off: the n8n Connector app isn't active. Notices are recorded as skipped."
               }
             />
             <Row

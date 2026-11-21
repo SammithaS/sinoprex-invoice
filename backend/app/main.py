@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
-from app.api import case, chat, intake, knowledge, procedures, reference, runs, stats
+from app.api import apps, case, chat, intake, knowledge, procedures, reference, runs, stats
 from app.api.schemas import HealthOut
 from app.config import Settings, get_settings
 from app.deps import SessionDep, require_api_key
@@ -48,8 +48,19 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         graph = build_graph(deps, saver)
         notifier = Notifier(sessionmaker, settings)
         app.state.notifier = notifier
-        service = RunService(graph, sessionmaker, storage_dir(settings), notifier=notifier)
+        service = RunService(graph, sessionmaker, storage_dir(settings))
         app.state.run_service = service
+        # Apps platform: pipeline events → installed apps; timers; n8n moves into an app.
+        from app.apps.platform import AppPlatform
+
+        platform = AppPlatform(sessionmaker, settings, run_service=service)
+        service.on_event = platform.emit
+        app.state.apps = platform
+        try:
+            await platform.import_env_n8n()
+        except Exception:
+            log.exception("could not move the n8n settings into the n8n Connector app")
+        platform.start()
         app.state.assistant = build_assistant_service(sessionmaker, saver)  # None → 503
         from app.rag.embeddings import get_embeddings
 
@@ -59,6 +70,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
             log.info("resumed %d interrupted run(s)", recovered)
         yield
         warm.cancel()
+        await platform.stop()
 
 
 def build_assistant_service(sessionmaker: Any, saver: Any) -> Any:
@@ -90,8 +102,8 @@ def create_app() -> FastAPI:
         CORSMiddleware,
         allow_origins=[settings.frontend_origin],
         allow_credentials=False,
-        allow_methods=["GET", "POST", "PUT", "DELETE"],
-        allow_headers=["Content-Type", "X-API-Key"],
+        allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
+        allow_headers=["Content-Type", "X-API-Key", "X-Actor"],
     )
 
     # Paths that stay reachable through a tunnel without the API key: the signed intake
@@ -132,6 +144,7 @@ def create_app() -> FastAPI:
     app.include_router(case.router, dependencies=protected)
     app.include_router(chat.router, dependencies=protected)
     app.include_router(intake.router, dependencies=protected)
+    app.include_router(apps.router, dependencies=protected)
     app.include_router(intake.intake_router)  # HMAC-signed by n8n, no API key
     return app
 

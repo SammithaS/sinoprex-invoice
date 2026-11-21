@@ -32,7 +32,7 @@ question for a named owner, with the evidence attached.
 | **Post & verify** | Posts to a mock ERP idempotently, reads the document back and compares it field by field. A one-paisa mismatch keeps the case open. |
 | **Explain** | An LLM writes a short summary that may only cite sources the rules used. Everything goes into an evidence bundle (JSON + PDF). |
 | **Ask AP** | A tool-calling agent answers "Why was the TechNova invoice flagged?" from the cases and the knowledge base, with citations. It says so when it doesn't know. |
-| **Automate** | n8n: email intake, reviewer notifications with deep links and a 24 h reminder, vendor follow-ups from FAQ templates, and a daily summary. HMAC-signed both ways. |
+| **Automate** | A built-in **Apps marketplace** (modelled on DevRev snap-ins): install Gmail Inbox Intake, Reviewer Alerts, Vendor Follow-up, Daily Summary, Slack Alerts or the n8n Connector, fill in a settings form, pick a connection and activate. Credentials are encrypted and write-only. |
 
 ## Architecture
 
@@ -129,7 +129,8 @@ flowchart LR
 | **FastEmbed (bge-small)** | Local embeddings: no API cost or rate limits, the same vectors everywhere. |
 | **Neon Postgres** | One free serverless database for business data, vectors and LangGraph checkpoints. |
 | **Next.js 16** | App Router UI with a server-side proxy, so the API key never reaches the browser. TanStack Query for data, Recharts for the dashboard. |
-| **n8n** | Email, reminders and schedules are integration glue that people can change without a deploy. Webhooks are HMAC-signed with a timestamp. |
+| **Apps platform** | Email, reminders and schedules are configured in the UI, not in code: apps declare inputs, connections, events and timers in a manifest; the platform validates, runs, logs and audits them. n8n stays available as an optional app. |
+| **Fernet (cryptography)** | Connection secrets are encrypted with a key that lives outside the database (`SECRETS_KEY`), rotatable with MultiFernet, never returned by the API. |
 | **Playwright** | End-to-end tests drive the real app on a throwaway stack (recorded LLM outputs, temp SQLite) in the installed Edge. |
 
 ## Edge cases covered
@@ -171,6 +172,37 @@ Free-tier Gemini was often overloaded: fallbacks caught 65 failed calls, but 9 c
 a rerun. Extraction and contract reading now retry 503/429 errors with back-off (8 s, 30 s)
 before a case fails.
 <!-- eval-summary:end -->
+
+## Apps (automations)
+
+Open **Apps** in the sidebar. Each app is a manifest (`backend/app/apps/builtin/*.py`) with:
+
+| Manifest part | DevRev snap-in equivalent | Example |
+|---|---|---|
+| `inputs` (typed fields) | inputs | reviewer emails, reminder hours, send-at time |
+| `connections` | keyrings / connections | "Send from: a Gmail account" |
+| `events` | event sources | `case.waiting_review`, `case.request_info`, `case.closed`, `case.failed` |
+| `timers` | timer event sources | "check the inbox every N minutes", "daily at 09:00 IST" |
+| `on_validate` / `on_activate` | hooks | log in to Gmail before activating |
+
+Lifecycle: **Install** (draft) → **Activate** (validated; on failure the app shows *Needs attention*
+with the reason) ⇄ **Pause** → **Uninstall**. Every run is logged (OK / SKIPPED / ERROR, with
+duration and the case it touched) and every change is audited with who made it.
+
+**Secrets.** A connection's secret (Gmail App Password, Slack webhook URL, n8n signing secret) is
+encrypted with Fernet before it is stored; the key (`SECRETS_KEY`) is a server setting, not in the
+database. The API never returns a secret, only "set", its last 4 characters and when and by whom it
+was set; you can replace or remove it. Secrets are decrypted only in memory while an app runs, and
+scrubbed from run logs and error messages. Rotate by putting a new key first in `SECRETS_KEY`.
+
+| App | What it does |
+|---|---|
+| Gmail Inbox Intake | Polls a Gmail inbox (IMAP; only unread mail sent *to* the chosen address with a PDF), creates cases, replies with references, marks the mail read. Redeliveries never duplicate. |
+| Reviewer Alerts | Emails reviewers (or approvers) when a case waits, with the question and a deep link; one reminder after N hours. |
+| Vendor Follow-up | When a reviewer requests information, emails the vendor (or a demo inbox) the drafted, cited follow-up. |
+| Daily Summary | A morning digest of what came in, what was decided and what is waiting. |
+| Slack Alerts | Posts selected case events to a Slack channel. |
+| n8n Connector | Keeps the original n8n workflows working (signed webhooks both ways). Existing `N8N_*` settings are moved into it on first start. |
 
 ## Run it locally
 

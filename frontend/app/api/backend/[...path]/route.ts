@@ -8,7 +8,7 @@ import type { NextRequest } from "next/server";
 const API_URL = process.env.API_URL ?? "http://localhost:8000";
 const API_KEY = process.env.API_KEY ?? "";
 
-const FORWARD_REQUEST_HEADERS = ["content-type", "accept", "last-event-id"];
+const FORWARD_REQUEST_HEADERS = ["content-type", "accept", "last-event-id", "x-actor"];
 const FORWARD_RESPONSE_HEADERS = ["content-type", "cache-control", "content-disposition"];
 
 async function proxy(req: NextRequest, ctx: RouteContext<"/api/backend/[...path]">) {
@@ -51,3 +51,4 @@ export const GET = proxy;
 export const POST = proxy;
 export const PUT = proxy;
 export const DELETE = proxy;
+export const PATCH = proxy;
