@@ -3333,6 +3333,81 @@
         }
       }
     },
+    "/payments/{payment_id}/check": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Check Payment",
+        "description": "'Confirm received': fetch this payout's latest status from RazorpayX now. Only\nRazorpayX's answer marks it paid; the person's word alone never does.",
+        "operationId": "check_payment_payments__payment_id__check_post",
+        "parameters": [
+          {
+            "name": "payment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Payment Id"
+            }
+          },
+          {
+            "name": "x-actor",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Actor"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/payments/{payment_id}/cancel": {
       "post": {
         "tags": [
@@ -4021,6 +4096,35 @@
           "citations"
         ],
         "title": "ChatTurn"
+      },
+      "CheckOut": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "payment": {
+            "$ref": "#/components/schemas/PaymentOut"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "message",
+          "payment"
+        ],
+        "title": "CheckOut"
       },
       "ConfigureIn": {
         "properties": {

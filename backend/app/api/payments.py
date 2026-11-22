@@ -206,6 +206,32 @@ async def release_batch(
     return _run(await platform.execute(APP_ID, "release", {"batch_id": batch_id, "actor": who}))
 
 
+class CheckOut(BaseModel):
+    status: str  # OK (paid or failed now) | SKIPPED (still in progress)
+    message: str | None
+    payment: PaymentOut
+
+
+@router.post("/payments/{payment_id}/check", response_model=CheckOut)
+async def check_payment(
+    platform: PlatformDep, payments: PaymentsDep, payment_id: int, actor: ActorDep = None
+) -> CheckOut:
+    """'Confirm received': fetch this payout's latest status from RazorpayX now. Only
+    RazorpayX's answer marks it paid; the person's word alone never does."""
+    if not await platform.is_active(APP_ID):
+        raise HTTPException(status_code=409, detail="activate the RazorpayX Payouts app first")
+    result = await platform.execute(APP_ID, "check", {"payment_ids": [payment_id]})
+    if result["status"] == "ERROR":
+        raise HTTPException(status_code=502, detail=result["error"])
+    async with payments.sessionmaker() as session:
+        p = await session.get(Payment, payment_id)
+    if p is None:
+        raise HTTPException(status_code=404, detail=f"payment {payment_id} not found")
+    return CheckOut(
+        status=result["status"], message=result["message"], payment=PaymentOut.model_validate(p)
+    )
+
+
 @router.post("/payments/{payment_id}/cancel", response_model=PaymentOut)
 async def cancel_payment(payments: PaymentsDep, payment_id: int) -> Payment:
     """Take one invoice out of a proposed batch (it is proposed again in the next run)."""

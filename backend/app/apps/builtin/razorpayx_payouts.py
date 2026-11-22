@@ -78,6 +78,24 @@ async def sync(ctx: AppContext, payload: dict[str, Any]) -> str:
     return f"{done} payout(s) processed, {len(events) - done} failed or reversed"
 
 
+async def check(ctx: AppContext, payload: dict[str, Any]) -> str:
+    """A person says a payment arrived: fetch its latest status from RazorpayX now."""
+    gateway = razorpayx(ctx.connections["razorpayx"], ctx.transports)
+    ids = [int(i) for i in payload.get("payment_ids") or []]
+    events = await _payments(ctx).sync(
+        gateway, ctx.runtime.setdefault("beneficiaries", {}), only=ids
+    )
+    for event, data in events:
+        ctx.emit(event, data)
+    paid = [d for e, d in events if e == "payment.processed"]
+    failed = [d for e, d in events if e == "payment.failed"]
+    if paid:
+        return f"Paid: RazorpayX confirms the transfer (UTR {paid[0].get('utr') or 'pending'})"
+    if failed:
+        return f"RazorpayX reports the payout failed: {failed[0].get('error')}"
+    return "SKIP: RazorpayX still shows it in progress; it is checked again automatically"
+
+
 APP = AppManifest(
     id=APP_ID,
     name="RazorpayX Payouts",
@@ -87,8 +105,10 @@ APP = AppManifest(
         "verified invoice that falls due before the next payment day. Invoices with a hold "
         "(changed bank details, open exceptions, blocked vendor) are left out with the reason. "
         "A person releases the batch on the Payments page; only then are payouts sent through "
-        "RazorpayX, each with an idempotency key. RazorpayX's webhook (and a half-hourly check) "
-        "marks the invoice PAID with the bank reference (UTR). Use test keys to try it with no "
+        "RazorpayX, each with an idempotency key. RazorpayX's webhook marks the invoice PAID "
+        "with the bank reference (UTR); without it, 'Confirm received' on the Payments page "
+        "fetches the payout's status at once, and each payout is checked automatically 30 "
+        "minutes after its last update. Use test keys to try it with no "
         "real money."
     ),
     icon="landmark",
@@ -120,9 +140,10 @@ APP = AppManifest(
     connections=(ConnectionRequirement("razorpayx", "razorpayx", "RazorpayX account"),),
     timers=(
         Timer("propose", "Payment proposal", daily_input="propose_at"),
-        Timer("sync", "Check payouts in flight", interval_minutes=30),
+        # Every 5 minutes, but each payout is only asked about 30 minutes after its last news.
+        Timer("sync", "Check payouts in flight", interval_minutes=5),
     ),
-    handlers={"propose": propose, "sync": sync, "release": release},
+    handlers={"propose": propose, "sync": sync, "release": release, "check": check},
     on_validate=_check,
     run_now="propose",
 )

@@ -223,7 +223,8 @@ reason), *proposed*, *in flight*, *paid* (with the UTR) or *failed* (with Razorp
 3. Each payout is sent with an idempotency key (`<document>:<attempt>`), so a retried request
    can't pay twice. RazorpayX's `payout.processed` / `failed` / `reversed` webhooks
    (`POST /webhooks/razorpayx`, HMAC-signed, no API key) update the payment; a half-hourly sync
-   catches a missed webhook.
+   catches a missed webhook: each payout is asked about (one GET by its payout id) 30 minutes
+   after its last update, or at once when someone clicks **Confirm received**.
 4. Paid: the ERP document becomes PAID with the UTR and the vendor gets a payment advice. Failed:
    the invoice comes back with the reason and is retried only after someone says so.
 

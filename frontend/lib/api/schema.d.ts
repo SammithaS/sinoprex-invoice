@@ -875,6 +875,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/payments/{payment_id}/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Check Payment
+         * @description 'Confirm received': fetch this payout's latest status from RazorpayX now. Only
+         *     RazorpayX's answer marks it paid; the person's word alone never does.
+         */
+        post: operations["check_payment_payments__payment_id__check_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/payments/{payment_id}/cancel": {
         parameters: {
             query?: never;
@@ -1093,6 +1114,14 @@ export interface components {
              * @default []
              */
             tools: components["schemas"]["ToolUse"][];
+        };
+        /** CheckOut */
+        CheckOut: {
+            /** Status */
+            status: string;
+            /** Message */
+            message: string | null;
+            payment: components["schemas"]["PaymentOut"];
         };
         /** ConfigureIn */
         ConfigureIn: {
@@ -4024,6 +4053,40 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProposalOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    check_payment_payments__payment_id__check_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-actor"?: string | null;
+                "x-api-key"?: string | null;
+            };
+            path: {
+                payment_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckOut"];
                 };
             };
             /** @description Validation Error */

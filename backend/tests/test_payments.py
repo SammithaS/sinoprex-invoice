@@ -9,7 +9,7 @@ import hmac
 import json
 from collections.abc import AsyncIterator
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from decimal import Decimal
 from typing import Any
 
@@ -353,16 +353,24 @@ async def test_sync_resends_unconfirmed_payouts_and_catches_missed_webhooks(
         [p] = list(await session.scalars(select(Payment)))
     assert p.status == "QUEUED" and p.payout_id is None and "will retry" in (p.error or "")
 
-    # The half-hourly sync re-sends with the same idempotency key …
+    # The next scheduler tick re-sends an unconfirmed payout with the same idempotency key …
     out = await rig.platform.execute("razorpayx-payouts", "sync", {"timer": "sync"})
     assert out["status"] == "SKIPPED"
     keys = [r.headers["X-Payout-Idempotency"] for r in rig.rzp.posted("/payouts")]
     assert keys == [p.idempotency_key, p.idempotency_key] and len(rig.rzp.payouts) == 1
 
-    # … and asks for the status of payouts in flight, in case a webhook never came.
+    # … but asks about a payout in flight only 30 minutes after its last news.
     rig.rzp.status_on_get = "processed"
+
+    def gets() -> list[httpx.Request]:
+        return [r for r in rig.rzp.requests if r.method == "GET" and "/payouts/" in r.url.path]
+
+    out = await rig.platform.execute("razorpayx-payouts", "sync", {"timer": "sync"})
+    assert out["status"] == "SKIPPED" and gets() == []
+    rig.clock.now += timedelta(minutes=31)
     out = await rig.platform.execute("razorpayx-payouts", "sync", {"timer": "sync"})
     assert out["status"] == "OK" and "1 payout(s) processed" in out["message"]
+    assert len(gets()) == 1
     doc = await doc_for(db, run.id)
     assert doc.status == "PAID" and doc.utr == "UTR0000GET01"
 
@@ -427,3 +435,62 @@ async def test_a_second_erp_document_for_the_same_invoice_is_never_paid(
     assert dup.state == "HELD" and not dup.releasable and original.doc_number in dup.holds[0]
     _, rows = await rig.payments.propose(["tue", "fri"])
     assert [r.doc_number for r in rows] == [original.doc_number]
+
+
+async def test_confirm_received_fetches_the_payout_now(
+    rig: Rig,
+    pay_api: AsyncClient,
+    service: RunService,
+    db: async_sessionmaker[AsyncSession],
+) -> None:
+    run = await run_sample(service, "northwind-clean")
+    await razorpayx_app(rig)
+    batch, _ = await rig.payments.propose(["tue", "fri"])
+    assert batch
+    await pay_api.post(f"/payments/batches/{batch}/release", headers=ACTOR)
+    async with db() as session:
+        [p] = list(await session.scalars(select(Payment)))
+    assert p.status == "PROCESSING"
+
+    # Still processing at RazorpayX: the person's word alone doesn't mark it paid.
+    res = await pay_api.post(f"/payments/{p.id}/check", headers=ACTOR)
+    assert res.status_code == 200, res.text
+    body = res.json()
+    assert body["status"] == "SKIPPED" and body["payment"]["status"] == "PROCESSING"
+    assert "in progress" in body["message"]
+
+    # Processed: the check closes it straight away, no 30-minute wait.
+    rig.rzp.status_on_get = "processed"
+    body = (await pay_api.post(f"/payments/{p.id}/check", headers=ACTOR)).json()
+    assert body["status"] == "OK" and body["payment"]["status"] == "PAID"
+    assert body["payment"]["utr"] == "UTR0000GET01" and "UTR0000GET01" in body["message"]
+    doc = await doc_for(db, run.id)
+    assert doc.status == "PAID"
+    assert (await pay_api.post("/payments/999/check", headers=ACTOR)).status_code == 404
+
+
+async def test_auto_check_takes_the_oldest_payouts_in_small_batches(
+    rig: Rig,
+    service: RunService,
+    db: async_sessionmaker[AsyncSession],
+) -> None:
+    await run_sample(service, "northwind-clean")
+    await razorpayx_app(rig)
+    batch, _ = await rig.payments.propose(["tue", "fri"])
+    assert batch
+    await rig.platform.execute(
+        "razorpayx-payouts", "release", {"batch_id": batch, "actor": "AP Manager"}
+    )
+    rig.clock.now += timedelta(minutes=31)
+    from app.apps.connections import razorpayx as rzp_gateway
+
+    conn = (await rig.platform.list_connections())[0]
+    async with db() as session:
+        values = await rig.platform.connection_values(session, int(conn["id"]))
+    gw = rzp_gateway(values, rig.platform.transports)
+    assert await rig.payments.sync(gw, {}, limit=0) == []  # limit respected
+    before = len(rig.rzp.requests)
+    await rig.payments.sync(gw, {})
+    assert len(rig.rzp.requests) == before + 1  # one GET for the one due payout
+    await rig.payments.sync(gw, {})
+    assert len(rig.rzp.requests) == before + 1  # just checked: not again for 30 minutes

@@ -307,6 +307,11 @@ function QueueRow({ item, today, onDone }: { item: PayableItem; today: string; o
     mutationFn: () => appsCall("POST", `/payments/${item.payment?.id}/retry`),
     onSettled: onDone,
   });
+  const confirm = useMutation({
+    mutationFn: () =>
+      appsCall<{ status: string; message: string | null }>("POST", `/payments/${item.payment?.id}/check`),
+    onSettled: onDone,
+  });
   return (
     <tr className="border-t border-line align-top">
       <td className="px-4 py-3">
@@ -339,10 +344,30 @@ function QueueRow({ item, today, onDone }: { item: PayableItem; today: string; o
           </span>
         )}
         {item.state === "IN_FLIGHT" && (
-          <span className="text-muted">
-            {item.payment?.payout_id ?? "sending"} · {item.payment?.provider_status ?? "queued"}
-            {item.payment?.error ? ` · ${item.payment.error}` : ""}
-          </span>
+          <div className="flex flex-col gap-2">
+            <span>Payment is being processed. Confirm once the vendor has received it.</span>
+            <span className="text-muted">
+              {item.payment?.payout_id ?? "sending"} · {item.payment?.provider_status ?? "queued"}
+              {item.payment?.error ? ` · ${item.payment.error}` : ""}
+            </span>
+            {item.payment?.payout_id && (
+              <Button
+                size="sm"
+                variant="soft"
+                className="self-start"
+                disabled={confirm.isPending}
+                onClick={() => confirm.mutate()}
+              >
+                {confirm.isPending ? <Loader2 aria-hidden className="animate-spin" /> : <CheckCircle2 aria-hidden />}{" "}
+                Confirm received
+              </Button>
+            )}
+            {confirm.data?.message && <span className="text-muted">{confirm.data.message}</span>}
+            {confirm.error && <span className="text-rejected">{confirm.error.message}</span>}
+            {!confirm.data && (
+              <span className="text-muted">Otherwise checked automatically 30 minutes after the last update.</span>
+            )}
+          </div>
         )}
         {item.state === "FAILED" && (
           <div className="flex flex-col gap-2">

@@ -36,6 +36,8 @@ from app.db.models import Approval, CaseException, ErpDocument, ErpPosting, Paym
 IST = ZoneInfo("Asia/Kolkata")
 WEEKDAYS = ("mon", "tue", "wed", "thu", "fri", "sat", "sun")
 IMPS_LIMIT = Decimal("500000")  # IMPS takes up to ₹5 lakh per transfer; above that, NEFT
+CHECK_AFTER = timedelta(minutes=30)  # ask RazorpayX about a payout this long after the last news
+CHECK_BATCH = 50  # most payouts checked per scheduler tick
 OPEN = ("QUEUED", "PROCESSING")  # released and not finished
 ACTIVE = ("PROPOSED", *OPEN, "PAID")  # an invoice with one of these is not proposed again
 
@@ -555,23 +557,49 @@ class Payments:
             return [("payment.failed", _event_payload(p, doc))]
         return []
 
-    async def sync(self, gateway: PayoutGateway, beneficiaries: dict[str, Any]) -> list[Event]:
-        """Ask RazorpayX about payouts still in flight (and re-send unconfirmed ones)."""
+    async def sync(
+        self,
+        gateway: PayoutGateway,
+        beneficiaries: dict[str, Any],
+        *,
+        only: list[int] | None = None,
+        limit: int = CHECK_BATCH,
+    ) -> list[Event]:
+        """Ask RazorpayX about payouts still in flight (and re-send unconfirmed ones).
+
+        `only`: check these payments now (a person says the money arrived). Otherwise each
+        payout is checked once it has gone CHECK_AFTER without news, oldest first, at most
+        `limit` per call, so many payouts in flight never mean one burst of requests.
+        """
+        due = self.clock() - CHECK_AFTER
+        query = select(Payment).where(Payment.status.in_(OPEN))
+        if only is not None:
+            query = query.where(Payment.id.in_(only))
+        else:
+            # Unconfirmed sends are retried every time; the rest once CHECK_AFTER has passed.
+            query = query.where(
+                Payment.payout_id.is_(None)
+                | Payment.updated_at.is_(None)
+                | (Payment.updated_at <= due)
+            ).limit(limit)
         async with self.sessionmaker() as session:
-            rows = list(await session.scalars(select(Payment).where(Payment.status.in_(OPEN))))
+            rows = list(await session.scalars(query.order_by(Payment.updated_at)))
         events: list[Event] = []
         for row in rows:
             if row.payout_id is None:
                 events += await self._send(row.id, gateway, beneficiaries)
                 continue
             try:
-                payout = await gateway.get_payout(row.payout_id)
+                payout: dict[str, Any] | None = await gateway.get_payout(row.payout_id)
             except (PayoutError, httpx.HTTPError):
-                continue
+                payout = None
             async with self.sessionmaker() as session:
                 p = await session.get(Payment, row.id)
                 assert p is not None
-                events += await self._apply(session, p, payout)
+                if payout is None:
+                    p.updated_at = self.clock()  # try again after CHECK_AFTER, not every tick
+                else:
+                    events += await self._apply(session, p, payout)
                 await session.commit()
         return events
 
