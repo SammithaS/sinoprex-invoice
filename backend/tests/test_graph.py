@@ -104,6 +104,7 @@ def make_service(
         explain=fake_explain,
         today=lambda: TODAY,
         policy_text={},
+        erp=overrides.get("erp"),
     )
     return RunService(build_graph(deps, InMemorySaver()), db, tmp_path / "uploads")
 

@@ -44,17 +44,24 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     if settings.app_env == "test" or not settings.database_url:
         yield  # tests install their own run service
         return
+    from app.apps.builtin.erpnext_connector import active_erpnext
     from app.db.session import get_sessionmaker
+    from app.erp import RoutingErp
     from app.graph.builder import build_graph
     from app.graph.deps import GraphDeps
     from app.graph.runner import RunService, open_checkpointer
     from app.integrations.notify import Notifier
+
+    async def external_erp() -> Any:
+        platform = getattr(app.state, "apps", None)
+        return await active_erpnext(platform) if platform is not None else None
 
     async with open_checkpointer(settings) as saver:
         sessionmaker = get_sessionmaker()
         deps = GraphDeps(
             sessionmaker=sessionmaker,
             evidence_dir=storage_dir(settings).parent / "evidence",
+            erp=RoutingErp(sessionmaker, external_erp),
         )
         graph = build_graph(deps, saver)
         notifier = Notifier(sessionmaker, settings)

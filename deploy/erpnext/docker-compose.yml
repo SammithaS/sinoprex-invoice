@@ -1,0 +1,139 @@
+# ERPNext (open source, Frappe) behind Caddy (automatic HTTPS), for the ERPNext Connector app.
+# Meant for its own Oracle Cloud Always Free ARM VM (2 OCPU / 12 GB is comfortable); it also
+# runs next to the API on one VM if memory allows. Based on frappe_docker's single-site setup.
+#
+#   cd deploy/erpnext && cp .env.example .env   # fill it in
+#   docker compose up -d                        # the first start creates the site (minutes)
+#   docker compose logs -f create-site          # wait until it exits with code 0
+
+name: erpnext
+
+x-erpnext-image: &erpnext_image
+  image: frappe/erpnext:${ERPNEXT_VERSION:?set ERPNEXT_VERSION in deploy/erpnext/.env}
+  restart: unless-stopped
+
+x-bench: &bench
+  <<: *erpnext_image
+  volumes:
+    - sites:/home/frappe/frappe-bench/sites
+  depends_on:
+    configurator:
+      condition: service_completed_successfully
+
+services:
+  configurator:
+    <<: *erpnext_image
+    restart: "no"
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        ls -1 apps > sites/apps.txt;
+        bench set-config -g db_host db;
+        bench set-config -gp db_port 3306;
+        bench set-config -g redis_cache "redis://redis-cache:6379";
+        bench set-config -g redis_queue "redis://redis-queue:6379";
+        bench set-config -g redis_socketio "redis://redis-queue:6379";
+        bench set-config -gp socketio_port 9000;
+    depends_on:
+      db:
+        condition: service_healthy
+
+  create-site:
+    <<: *bench
+    restart: "no"
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        wait-for-it -t 120 db:3306;
+        wait-for-it -t 120 redis-cache:6379;
+        wait-for-it -t 120 redis-queue:6379;
+        if [ -d "sites/$$SITE_NAME" ]; then echo "site exists"; exit 0; fi;
+        bench new-site "$$SITE_NAME"
+        --mariadb-user-host-login-scope='%'
+        --db-root-username=root --db-root-password="$$DB_ROOT_PASSWORD"
+        --admin-password="$$ADMIN_PASSWORD"
+        --install-app erpnext --set-default;
+    environment:
+      SITE_NAME: ${ERP_DOMAIN:?set ERP_DOMAIN}
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?set DB_ROOT_PASSWORD}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?set ADMIN_PASSWORD}
+
+  backend:
+    <<: *bench
+
+  frontend:
+    <<: *bench
+    command: ["nginx-entrypoint.sh"]
+    environment:
+      BACKEND: backend:8000
+      SOCKETIO: websocket:9000
+      FRAPPE_SITE_NAME_HEADER: ${ERP_DOMAIN}
+      UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
+      UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
+      UPSTREAM_REAL_IP_RECURSIVE: "off"
+      PROXY_READ_TIMEOUT: 120
+      CLIENT_MAX_BODY_SIZE: 50m
+    expose: ["8080"]
+
+  websocket:
+    <<: *bench
+    command: ["node", "/home/frappe/frappe-bench/apps/frappe/socketio.js"]
+
+  queue-short:
+    <<: *bench
+    command: ["bench", "worker", "--queue", "short,default"]
+
+  queue-long:
+    <<: *bench
+    command: ["bench", "worker", "--queue", "long,default,short"]
+
+  scheduler:
+    <<: *bench
+    command: ["bench", "schedule"]
+
+  db:
+    image: mariadb:10.6
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+      - --skip-innodb-read-only-compressed
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      retries: 30
+    volumes:
+      - db-data:/var/lib/mysql
+
+  redis-cache:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  redis-queue:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-queue-data:/data
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      ERP_DOMAIN: ${ERP_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    depends_on: [frontend]
+
+volumes:
+  sites:
+  db-data:
+  redis-queue-data:
+  caddy-data:

@@ -2,6 +2,7 @@
 
 from app.apps.builtin import (
     daily_summary,
+    erpnext_connector,
     gmail_intake,
     n8n_connector,
     payment_advice,
@@ -22,6 +23,7 @@ APPS: dict[str, AppManifest] = {
         slack_alerts,
         razorpayx_payouts,
         payment_advice,
+        erpnext_connector,
         n8n_connector,
     )
 }

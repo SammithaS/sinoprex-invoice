@@ -208,6 +208,7 @@ def test_every_builtin_app_has_handlers_for_its_triggers() -> None:
         "slack-alerts",
         "razorpayx-payouts",
         "payment-advice",
+        "erpnext-connector",
         "n8n-connector",
     }
     for m in APPS.values():
@@ -228,7 +229,7 @@ async def test_connection_secrets_are_write_only(
     db: async_sessionmaker[AsyncSession],
 ) -> None:
     types = (await apps_api.get("/connection-types")).json()
-    assert {t["id"] for t in types} == {"gmail", "slack", "n8n", "razorpayx"}
+    assert {t["id"] for t in types} == {"gmail", "slack", "n8n", "razorpayx", "erpnext"}
 
     res = await apps_api.post(
         "/connections",
@@ -318,7 +319,7 @@ async def test_without_a_secrets_key_connections_are_refused(
 
 async def test_lifecycle_over_the_api(apps_api: AsyncClient, rig: Rig) -> None:
     catalog = (await apps_api.get("/apps")).json()
-    assert len(catalog) == 8 and all(a["install"] is None for a in catalog)
+    assert len(catalog) == 9 and all(a["install"] is None for a in catalog)
     assert (await apps_api.get("/apps/nope")).status_code == 404
 
     res = await apps_api.post("/apps/slack-alerts/install", headers=ACTOR)

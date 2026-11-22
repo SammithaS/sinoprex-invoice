@@ -1,0 +1,7 @@
+# ERPNext (nginx inside the frontend container) with automatic HTTPS.
+{$ERP_DOMAIN} {
+	reverse_proxy frontend:8080
+	request_body {
+		max_size 50MB
+	}
+}

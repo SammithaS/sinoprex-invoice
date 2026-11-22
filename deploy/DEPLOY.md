@@ -117,6 +117,39 @@ stay fixed.
 4. Email a PDF to the n8n Gmail inbox: a case appears, and the reviewer email links to it.
 5. **Settings → Integrations** shows n8n configured and the API key set.
 
+## 7. Payments (RazorpayX, optional)
+
+1. Sign up at RazorpayX and stay in **test mode** (no KYC; a dummy balance; payouts are
+   simulated). Create API keys (Account & Settings → API keys).
+2. Add a webhook (Settings → Webhooks): URL `https://<API_DOMAIN>/webhooks/razorpayx`, events
+   `payout.processed`, `payout.failed`, `payout.reversed`, and a secret of your choice.
+3. In the app: **Apps → Connections → RazorpayX account** (account number, key id, key secret,
+   webhook secret) → **Save and test**; then install and activate **RazorpayX Payouts** (and
+   **Payment Advice** to email vendors). The webhook route is signed, so it needs no API key.
+
+## 8. ERPNext (optional, a second VM)
+
+ERPNext needs MariaDB, Redis and several workers: give it its own Always Free ARM VM
+(2 OCPU / 12 GB is comfortable; the Always Free allowance is 4 OCPU / 24 GB in total). Open
+ports 80 and 443 as for the API VM, install Docker, then:
+
+```bash
+git clone https://github.com/SammithaS/sinoprex-invoice.git invoiceiq && cd invoiceiq/deploy/erpnext
+cp .env.example .env   # ERP_DOMAIN=erp.<ip-with-dashes>.sslip.io, ERPNEXT_VERSION, passwords
+docker compose up -d
+docker compose logs -f create-site   # first start: creates the site, a few minutes
+```
+
+Open `https://<ERP_DOMAIN>`, sign in as Administrator (the `ADMIN_PASSWORD`), finish the setup
+wizard (company, India, INR, a chart of accounts). Then create a user with the **Accounts User**
+and **Purchase User** roles, and under that user's **API Access** generate a key and secret.
+
+In the app: **Apps → Connections → ERPNext site** (site URL, company exactly as named, the key
+and secret) → **Save and test**; install and activate **ERPNext Connector**, then **Run now**
+once: it creates the suppliers (by GSTIN), cost centres, expense accounts (by GL number), the
+input-GST account and the invoice item. From then on approved invoices post to ERPNext and paid
+ones get a Payment Entry with the UTR. Pause the app to go back to the mock ERP.
+
 ## Operating it
 
 - **Update:** `git pull && docker compose up -d --build` (migrations run on start).
@@ -133,5 +166,5 @@ stay fixed.
 
 ## Not done here (ask first)
 
-Creating the Oracle VM, the Vercel project, DNS records, and running the first build are
-deliberately left for you to approve and do. Each touches an account of yours.
+Creating the Oracle VMs, the Vercel project, the RazorpayX account, DNS records, and running the
+first build are deliberately left for you to approve and do. Each touches an account of yours.

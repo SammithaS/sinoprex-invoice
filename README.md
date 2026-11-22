@@ -29,7 +29,7 @@ question for a named owner, with the evidence attached.
 | **Retrieve** | Hybrid RAG (pgvector + Postgres full-text, reciprocal rank fusion) finds the vendor's contract clauses and the AP policy. Contract rates are only used when a cited clause states them. |
 | **Decide** | A deterministic rules engine (about 20 checks: GST, arithmetic, duplicates, PO/GRN/contract matching, tolerances, vendor status, bank changes, approval matrix). Every check cites its policy section or contract clause. |
 | **Pause for people** | LangGraph `interrupt()` stops for review or approval, survives restarts (Postgres checkpointer) and resumes exactly where it stopped. Overrides need a second approver (four-eyes). |
-| **Post & verify** | Posts to a mock ERP idempotently, reads the document back and compares it field by field. A one-paisa mismatch keeps the case open. |
+| **Post & verify** | Posts to the ERP idempotently (ERPNext through its connector app, or the built-in mock ERP), reads the document back and compares it field by field. A one-paisa mismatch keeps the case open. |
 | **Pay** | A payment run proposes what falls due before the next payment day (Tuesdays and Fridays), holds anything with a changed bank account or an open exception, and pays nothing until a named person releases the batch. Payouts go through RazorpayX (test mode works with no real money); a signed webhook marks the invoice PAID with the bank's UTR. |
 | **Explain** | An LLM writes a short summary that may only cite sources the rules used. Everything goes into an evidence bundle (JSON + PDF). |
 | **Ask AP** | A tool-calling agent answers "Why was the TechNova invoice flagged?" from the cases and the knowledge base, with citations. It says so when it doesn't know. |
@@ -205,6 +205,7 @@ scrubbed from run logs and error messages. Rotate by putting a new key first in 
 | Slack Alerts | Posts selected case events to a Slack channel. |
 | RazorpayX Payouts | On each payment day, proposes a payment run (see *Payments* below). Sends the payouts of a released batch through RazorpayX and checks every 30 minutes on any still in flight. |
 | Payment Advice | Emails the vendor (or a demo inbox) when a payment reaches the bank: invoice, amount, mode, account (last 4 digits) and UTR. |
+| ERPNext Connector | Posts approved invoices to ERPNext as submitted Purchase Invoices and reads them back from ERPNext; records each payout as a Payment Entry with the UTR. "Run now" creates the suppliers, cost centres and accounts the postings need. Paused, postings go to the mock ERP. |
 | n8n Connector | Keeps the original n8n workflows working (signed webhooks both ways). Existing `N8N_*` settings are moved into it on first start. |
 
 ## Payments
@@ -229,6 +230,20 @@ reason), *proposed*, *in flight*, *paid* (with the UTR) or *failed* (with Razorp
 To try it, create a RazorpayX account in test mode, add a **RazorpayX account** connection
 (account number, key id, key secret, webhook secret) and activate the app. Add a webhook in
 RazorpayX pointing at `<API URL>/webhooks/razorpayx` with the payout events.
+
+## ERPNext
+
+[ERPNext](https://erpnext.com) is a free, open-source ERP with Indian GST support and a REST API.
+With the **ERPNext Connector** app active, `post_erp` creates a submitted **Purchase Invoice**:
+the supplier found by GSTIN, one line for the net amount with the GL account (matched by account
+number) and cost centre we coded, GST as an "Actual" tax row, the case id in the remarks and
+the invoice file attached. `verify_post` then reads the document **from ERPNext** and maps it
+back (supplier → vendor, account → GL number), so the same field-by-field check catches anything
+ERPNext changed. A retry finds the existing document by case id or supplier + bill number.
+A local copy goes into the ledger, so payments and the dashboard work the same. When a payout
+is processed, a **Payment Entry** (reference = UTR) is submitted against the invoice and
+ERPNext marks it Paid. Self-hosting: [deploy/erpnext](deploy/erpnext) and
+[DEPLOY.md](deploy/DEPLOY.md) § 8.
 
 ## Run it locally
 
@@ -303,7 +318,9 @@ HTTPS) on an Oracle Cloud Always Free ARM VM; database on Neon. Total ₹0 on fr
 
 - Real users and roles. Today there is one optional shared password (`SITE_PASSWORD`),
   approvers are names, and four-eyes is checked by name.
-- A real ERP connector behind the `ErpProvider` interface (Tally / SAP B1 / Zoho Books).
+- More ERP connectors behind the `ErpProvider` interface (Tally / SAP B1 / Zoho Books), and
+  posting against ERPNext purchase orders and receipts instead of a single expense line.
+- TDS deduction on payouts, MSME 45-day payment tracking and early-payment discounts.
 - File storage on R2/S3 instead of local disk; a queue + worker split for scale.
 - Vendor portal: vendors answer follow-ups and upload corrected invoices directly.
 - More layouts and real-world scans in the evaluation set; per-vendor extraction accuracy over time.

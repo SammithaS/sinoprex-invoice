@@ -1,4 +1,5 @@
-"""Mock ERP behind an `ErpProvider` interface.
+"""The ERP behind an `ErpProvider` interface: the built-in mock ERP, or ERPNext (`app.erpnext`)
+while the ERPNext Connector app is active (`RoutingErp` picks per call).
 
 Posting is idempotent: the idempotency key is the run id, so a retried or resumed `post_erp`
 returns the document already posted. `read()` is what `verify_post` compares with the approved
@@ -8,6 +9,7 @@ Demo fault: when the posting request carries `fault="amount_minus_one_paisa"`
 the mock stores the amount one paisa short, so the read-back check fails as in edge case #8.
 """
 
+from collections.abc import Awaitable, Callable
 from datetime import UTC, date, datetime
 from decimal import Decimal
 from typing import Any, Protocol
@@ -83,7 +85,7 @@ class MockErp:
                     select(ErpDocument).where(
                         ErpDocument.vendor_id == doc.vendor_id,
                         ErpDocument.invoice_number == doc.invoice_number,
-                        ErpDocument.status == "POSTED",
+                        ErpDocument.status.in_(("POSTED", "PAID")),
                     )
                 )
             if existing is not None:
@@ -133,6 +135,40 @@ class MockErp:
             await session.commit()
             await session.refresh(row)
             return _out(row, created=False)
+
+
+class RoutingErp:
+    """Post to an external ERP while one is connected, else to the mock ERP. A document is read
+    back from the system it was posted to."""
+
+    def __init__(
+        self,
+        sessionmaker: async_sessionmaker[AsyncSession],
+        external: Callable[[], Awaitable[ErpProvider | None]],
+    ) -> None:
+        self.sessionmaker = sessionmaker
+        self.mock = MockErp(sessionmaker)
+        self.external = external
+
+    async def post(self, doc: ErpDocumentIn, fault: str | None = None) -> ErpDocumentOut:
+        erp = await self.external()
+        if erp is None:
+            return await self.mock.post(doc, fault=fault)
+        return await erp.post(doc)
+
+    async def read(self, doc_number: str) -> ErpDocumentOut | None:
+        async with self.sessionmaker() as session:
+            system = await session.scalar(
+                select(ErpDocument.system).where(ErpDocument.doc_number == doc_number)
+            )
+        if system in (None, "mock"):
+            return await self.mock.read(doc_number)
+        erp = await self.external()
+        if erp is None:
+            raise RuntimeError(
+                f"{doc_number} is in ERPNext, but the ERPNext Connector app is not active"
+            )
+        return await erp.read(doc_number)
 
 
 def compare(expected: ErpDocumentIn, actual: ErpDocumentOut | None, doc_number: str) -> list[str]:

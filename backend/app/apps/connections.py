@@ -55,6 +55,19 @@ async def _test_razorpayx(values: ConnectionValues, transports: Transports) -> s
     return await razorpayx(values, transports).check()
 
 
+async def _test_erpnext(values: ConnectionValues, transports: Transports) -> str:
+    from app.erpnext import ErpNextClient
+
+    client = ErpNextClient(
+        values["base_url"], values["api_key"], values["api_secret"], transports.client
+    )
+    user = await client.whoami()
+    company = await client.get("Company", values["company"])
+    if company is None:
+        raise ValueError(f"company '{values['company']}' not found in ERPNext")
+    return f"Signed in to {values['base_url']} as {user} · {values['company']}"
+
+
 GMAIL = ConnectionType(
     id="gmail",
     name="Gmail account",
@@ -144,4 +157,35 @@ RAZORPAYX = ConnectionType(
     "events and a secret of your choice.",
 )
 
-CONNECTION_TYPES: dict[str, ConnectionType] = {t.id: t for t in (GMAIL, SLACK, N8N, RAZORPAYX)}
+ERPNEXT = ConnectionType(
+    id="erpnext",
+    name="ERPNext site",
+    icon="server",
+    description="Post Purchase Invoices and Payment Entries to an ERPNext site (REST API).",
+    fields=(
+        Field("base_url", "Site URL", "url", required=True, help="e.g. https://erp.example.com"),
+        Field("company", "Company", required=True, help="Exactly as named in ERPNext"),
+        Field(
+            "tax_account",
+            "Input tax account",
+            default="Input GST",
+            help="Created under Duties and Taxes by 'Run now' in the ERPNext Connector if missing",
+        ),
+        Field("item_code", "Item for invoice lines", default="SINOPREX-AP"),
+    ),
+    secrets=(
+        SecretField(
+            "api_key",
+            "API key",
+            help="ERPNext → User (an Accounts User) → Settings → API Access → Generate Keys",
+        ),
+        SecretField("api_secret", "API secret"),
+    ),
+    test=_test_erpnext,
+    setup_help="Create an ERPNext user with the Accounts User and Purchase User roles, generate "
+    "an API key and secret for it, and paste them here.",
+)
+
+CONNECTION_TYPES: dict[str, ConnectionType] = {
+    t.id: t for t in (GMAIL, SLACK, N8N, RAZORPAYX, ERPNEXT)
+}
