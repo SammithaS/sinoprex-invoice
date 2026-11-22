@@ -33,52 +33,73 @@ question for a named owner, with the evidence attached.
 | **Pay** | A payment run proposes what falls due before the next payment day (Tuesdays and Fridays), holds anything with a changed bank account or an open exception, and pays nothing until a named person releases the batch. Payouts go through RazorpayX (test mode works with no real money); a signed webhook marks the invoice PAID with the bank's UTR. |
 | **Explain** | An LLM writes a short summary that may only cite sources the rules used. Everything goes into an evidence bundle (JSON + PDF). |
 | **Ask AP** | A tool-calling agent answers "Why was the TechNova invoice flagged?" from the cases and the knowledge base, with citations. It says so when it doesn't know. |
-| **Automate** | A built-in **Apps marketplace** (modelled on DevRev snap-ins): install Gmail Inbox Intake, Reviewer Alerts, Vendor Follow-up, Daily Summary, Slack Alerts or the n8n Connector, fill in a settings form, pick a connection and activate. Credentials are encrypted and write-only. |
+| **Automate** | A built-in **Apps marketplace** (modelled on DevRev snap-ins): install Gmail Inbox Intake, Reviewer Alerts, Vendor Follow-up, Daily Summary, Slack Alerts, RazorpayX Payouts, Payment Advice, the ERPNext Connector or the n8n Connector, fill in a settings form, pick a connection and activate. Credentials are encrypted and write-only. |
 
 ## Architecture
 
 ```mermaid
-flowchart LR
-  subgraph Browser
-    UI["Next.js 16 app<br/>run view · review queue · approvals<br/>dashboard · Ask AP · procedure"]
-  end
-  subgraph Vercel["Next.js server"]
-    BFF["/api/backend proxy<br/>(adds the API key, streams SSE)"]
-  end
-  subgraph API["FastAPI"]
-    Runs["Runs API + SSE"]
-    Graph["LangGraph<br/>invoice pipeline"]
-    Agent["LangGraph<br/>Ask AP agent"]
-    Rules["Rules engine<br/>(pure Python)"]
-    Intake["/intake/email<br/>HMAC-verified"]
-    Notify["Notifier<br/>HMAC-signed webhooks"]
-    ERP["Mock ERP<br/>post + read-back"]
-  end
-  subgraph Data["Neon Postgres"]
-    PG[("runs · cases · approvals<br/>ERP ledger · history")]
-    VEC[("pgvector<br/>knowledge chunks")]
-    CK[("LangGraph<br/>checkpoints")]
-  end
-  LLM["Gemini (text + vision)<br/>Groq fallback"]
-  EMB["FastEmbed<br/>bge-small (local)"]
-  N8N["n8n<br/>Gmail · schedules"]
+flowchart TB
+  UI["<b>Web app</b> (Next.js)<br/>cases · review · approvals · ERP ledger<br/>payments · dashboard · Ask AP · apps"]
+  BFF["<b>Next.js server</b><br/>API proxy · keeps the key server-side"]
 
-  UI --> BFF --> Runs
-  BFF --> Agent
-  Runs --> Graph
-  Graph --> Rules
-  Graph --> ERP
-  Graph --> LLM
+  subgraph Core["FastAPI backend"]
+    direction LR
+    Pipe["<b>Invoice pipeline</b> (LangGraph)<br/>read → match → rules → review → post"]
+    Agent["<b>Ask AP</b><br/>tool-calling agent"]
+    Pay["<b>Payments</b><br/>due dates · holds · release"]
+    Apps["<b>Apps platform</b><br/>events · timers · encrypted secrets"]
+  end
+
+  subgraph Data["Data and AI"]
+    direction LR
+    DB[("<b>Neon Postgres</b><br/>cases · ledger · payments<br/>pgvector · checkpoints")]
+    LLM["<b>Gemini</b> (Groq fallback)<br/>reading · explanations"]
+  end
+
+  subgraph Ext["Connected systems"]
+    direction LR
+    ERP["<b>ERPNext</b><br/>or built-in mock ERP"]
+    RZP["<b>RazorpayX</b><br/>bank payouts"]
+    MAIL["<b>Gmail · Slack · n8n</b>"]
+  end
+
+  UI --> BFF --> Core
+  Pipe --> DB
+  Pipe --> LLM
+  Agent --> DB
   Agent --> LLM
-  Graph --> VEC
-  Agent --> VEC
-  VEC --- EMB
-  Graph --> PG
-  Graph --> CK
-  Agent --> CK
-  N8N -- "signed POST (PDF)" --> Intake --> Runs
-  Graph --> Notify -- "signed webhook" --> N8N
+  Pipe -- "post + read back" --> ERP
+  Pay -- "payouts" --> RZP
+  RZP -- "signed status webhook" --> Pay
+  Pipe -. "case events" .-> Apps
+  Pay -. "payment events" .-> Apps
+  Apps <-- "invoice emails · alerts" --> MAIL
+  Apps -- "Payment Entry" --> ERP
 ```
+
+**How it fits together**
+
+- **Front end.** A Next.js app for the AP team. Every call goes through a small server-side proxy,
+  so the API key never reaches the browser; live progress of a case streams over SSE.
+- **Invoice pipeline.** Each invoice is one LangGraph run: read the PDF (Gemini), find the vendor,
+  retrieve the contract clauses and policy (hybrid RAG on pgvector), then a plain-Python rules
+  engine decides and cites. The graph pauses for a reviewer or approver when it must, and its
+  Postgres checkpoints let a paused case survive restarts.
+- **ERP.** Approved cases are posted through an ERP router: to **ERPNext** when its connector app
+  is active, otherwise to the built-in mock ERP. Either way the document is read back and compared
+  field by field before the case closes.
+- **Payments.** Posted invoices fall due by the vendor's terms. A payment run proposes what is due,
+  holds anything risky, and sends nothing until a named person releases the batch. Payouts go
+  through **RazorpayX**; its signed webhook (or a status check by payout id) marks the invoice
+  PAID with the bank's UTR.
+- **Apps platform.** Integrations are installable apps, not code changes: Gmail intake, reviewer
+  alerts, vendor follow-ups, daily summaries, Slack, payment advice, the ERPNext connector and n8n.
+  Apps react to pipeline and payment events or run on timers; their credentials are encrypted and
+  never returned by the API.
+- **Ask AP.** A second, small LangGraph agent answers questions about cases and policy using only
+  tool results, and cites them.
+- **Data.** One Neon Postgres database holds the business data, the vector index and the graph
+  checkpoints. Embeddings are computed locally, so retrieval has no API cost.
 
 ### The invoice pipeline (LangGraph)
 
@@ -203,7 +224,7 @@ scrubbed from run logs and error messages. Rotate by putting a new key first in 
 | Vendor Follow-up | When a reviewer requests information, emails the vendor (or a test inbox) the drafted, cited follow-up. |
 | Daily Summary | A morning digest of what came in, what was decided and what is waiting. |
 | Slack Alerts | Posts selected case events to a Slack channel. |
-| RazorpayX Payouts | On each payment day, proposes a payment run (see *Payments* below). Sends the payouts of a released batch through RazorpayX and checks every 30 minutes on any still in flight. |
+| RazorpayX Payouts | On each payment day, proposes a payment run (see *Payments* below). Sends the payouts of a released batch through RazorpayX and follows each one until it is paid or fails. |
 | Payment Advice | Emails the vendor (or a test inbox) when a payment reaches the bank: invoice, amount, mode, account (last 4 digits) and UTR. |
 | ERPNext Connector | Posts approved invoices to ERPNext as submitted Purchase Invoices and reads them back from ERPNext; records each payout as a Payment Entry with the UTR. "Run now" creates the suppliers, cost centres and accounts the postings need. Paused, postings go to the mock ERP. |
 | n8n Connector | Keeps the original n8n workflows working (signed webhooks both ways). Existing `N8N_*` settings are moved into it on first start. |
@@ -222,15 +243,10 @@ reason), *proposed*, *in flight*, *paid* (with the UTR) or *failed* (with Razorp
 2. Automation never releases money (ap-policy §1.3): a person releases the batch, in their name.
 3. Each payout is sent with an idempotency key (`<document>:<attempt>`), so a retried request
    can't pay twice. RazorpayX's `payout.processed` / `failed` / `reversed` webhooks
-   (`POST /webhooks/razorpayx`, HMAC-signed, no API key) update the payment; a half-hourly sync
-   catches a missed webhook: each payout is asked about (one GET by its payout id) 30 minutes
-   after its last update, or at once when someone clicks **Confirm received**.
+   (`POST /webhooks/razorpayx`, HMAC-signed, no API key) update the payment. Without a webhook, each payout is asked about (one GET by its payout id)
+   30 minutes after its last update, or at once when someone clicks **Confirm received**.
 4. Paid: the ERP document becomes PAID with the UTR and the vendor gets a payment advice. Failed:
    the invoice comes back with the reason and is retried only after someone says so.
-
-To try it, create a RazorpayX account in test mode, add a **RazorpayX account** connection
-(account number, key id, key secret, webhook secret) and activate the app. Add a webhook in
-RazorpayX pointing at `<API URL>/webhooks/razorpayx` with the payout events.
 
 ## ERPNext
 
@@ -243,8 +259,7 @@ back (supplier → vendor, account → GL number), so the same field-by-field ch
 ERPNext changed. A retry finds the existing document by case id or supplier + bill number.
 A local copy goes into the ledger, so payments and the dashboard work the same. When a payout
 is processed, a **Payment Entry** (reference = UTR) is submitted against the invoice and
-ERPNext marks it Paid. Self-hosting: [deploy/erpnext](deploy/erpnext) and
-[DEPLOY.md](deploy/DEPLOY.md) § 8.
+ERPNext marks it Paid.
 
 ## Run it locally
 
@@ -302,18 +317,13 @@ Other scripts (from `backend/`):
 ## Layout
 
 ```
-backend/   FastAPI app: app/{api,graph,rules,rag,extraction,llm,assistant,integrations}, alembic/, scripts/, tests/
+backend/   FastAPI app: app/{api,graph,rules,rag,extraction,llm,assistant,apps,integrations}, payments.py, erp.py, erpnext.py, alembic/, scripts/, tests/
 frontend/  Next.js App Router UI (app/), components/, lib/, e2e/ (Playwright)
 data/      seed/ reference data · knowledge/ RAG corpus · test-invoices/ PDFs + ground truth · eval/
 docs/      EVAL_RESULTS.md (live evaluation numbers)
 n8n/       workflow exports + setup
-deploy/    Docker Compose, Caddyfile and DEPLOY.md (Oracle VM + Vercel + Neon)
+deploy/    Docker Compose and Caddy configuration
 ```
-
-## Deploy
-
-[deploy/DEPLOY.md](deploy/DEPLOY.md): frontend on Vercel; FastAPI, n8n and Caddy (automatic
-HTTPS) on an Oracle Cloud Always Free ARM VM; database on Neon. Total ₹0 on free tiers.
 
 ## What's next
 
