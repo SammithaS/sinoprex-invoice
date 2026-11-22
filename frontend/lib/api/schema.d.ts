@@ -564,7 +564,7 @@ export interface paths {
         put?: never;
         /**
          * Reset Demo
-         * @description Start the demo over: remove every run (and its records and checkpoints), the ERP
+         * @description Start over: remove every run (and its records and checkpoints), the ERP
          *     ledger, payments and the invoice history, then reload the seed. Procedure versions are kept.
          */
         post: operations["reset_demo_admin_reset_demo_post"];

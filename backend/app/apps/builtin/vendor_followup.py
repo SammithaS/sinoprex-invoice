@@ -10,7 +10,7 @@ from app.apps.manifest import AppManifest, ConfigError, ConnectionRequirement, F
 
 async def _check(ctx: AppContext) -> None:
     if not ctx.inputs.get("send_to_vendor") and not ctx.inputs.get("demo_inbox"):
-        raise ConfigError("Demo inbox is required while 'Send to the vendor' is off")
+        raise ConfigError("Test inbox is required while 'Send to the vendor' is off")
     check = getattr(ctx.mailer("sender"), "check", None)
     if check is not None:
         await check()
@@ -27,7 +27,7 @@ async def follow_up(ctx: AppContext, payload: dict[str, Any]) -> str:
         return f"SKIP: {skip}"
     live = bool(ctx.inputs.get("send_to_vendor"))
     to = [details["vendor_email"]] if live else [ctx.inputs["demo_inbox"]]
-    note = "" if live else f"[Demo: this email would go to {details['vendor_email']}]\n\n"
+    note = "" if live else f"[Test send: this email would go to {details['vendor_email']}]\n\n"
     ref = f" · template {details['citation']}" if details.get("citation") else ""
     body = (
         f"{note}{details['message']}\n\nAccounts Payable\n"
@@ -38,7 +38,7 @@ async def follow_up(ctx: AppContext, payload: dict[str, Any]) -> str:
             to=to, cc=list(ctx.inputs.get("cc") or []), subject=details["subject"], body=body
         )
     )
-    return f"Follow-up sent to {to[0]}" + ("" if live else " (demo inbox)")
+    return f"Follow-up sent to {to[0]}" + ("" if live else " (test inbox)")
 
 
 APP = AppManifest(
@@ -48,7 +48,7 @@ APP = AppManifest(
     description=(
         "When a reviewer chooses 'Request info', emails the vendor contact on file the "
         "vendor-FAQ template for the problem (price, quantity, GST, bank details, …) with the "
-        "reviewer's note. While testing, everything goes to a demo inbox instead."
+        "reviewer's note. While testing, everything goes to a test inbox instead."
     ),
     icon="send",
     category="Notifications",
@@ -58,9 +58,9 @@ APP = AppManifest(
             "Send to the vendor",
             "boolean",
             default=False,
-            help="Off: send to the demo inbox (the seed vendors' addresses are fictional)",
+            help="Off: send to the test inbox (the sample vendors' addresses are fictional)",
         ),
-        Field("demo_inbox", "Demo inbox", "email"),
+        Field("demo_inbox", "Test inbox", "email"),
         Field("cc", "Cc", "emails", help="Optional, comma-separated"),
     ),
     connections=(ConnectionRequirement("sender", "gmail", "Send from"),),

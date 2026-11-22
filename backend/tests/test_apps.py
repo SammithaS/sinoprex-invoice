@@ -414,7 +414,7 @@ async def test_editing_a_live_app_revalidates_it(rig: Rig) -> None:
     await activate(p, "vendor-followup", {"demo_inbox": "demo@example.com"}, sender=await gmail(p))
     out = await p.configure("vendor-followup", {"demo_inbox": ""}, {}, "me")
     assert out["install"]["state"] == "ERROR"
-    assert "demo inbox" in out["install"]["error"].lower()
+    assert "test inbox" in out["install"]["error"].lower()
 
 
 # --- built-in apps end to end ------------------------------------------------------------------

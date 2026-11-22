@@ -1938,7 +1938,7 @@
           "admin"
         ],
         "summary": "Reset Demo",
-        "description": "Start the demo over: remove every run (and its records and checkpoints), the ERP\nledger, payments and the invoice history, then reload the seed. Procedure versions are kept.",
+        "description": "Start over: remove every run (and its records and checkpoints), the ERP\nledger, payments and the invoice history, then reload the seed. Procedure versions are kept.",
         "operationId": "reset_demo_admin_reset_demo_post",
         "parameters": [
           {

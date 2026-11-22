@@ -200,11 +200,11 @@ scrubbed from run logs and error messages. Rotate by putting a new key first in 
 |---|---|
 | Gmail Inbox Intake | Polls a Gmail inbox (IMAP; only unread mail sent *to* the chosen address with a PDF), creates cases, replies with references, marks the mail read. Redeliveries never duplicate. |
 | Reviewer Alerts | Emails reviewers (or approvers) when a case waits, with the question and a deep link; one reminder after N hours. |
-| Vendor Follow-up | When a reviewer requests information, emails the vendor (or a demo inbox) the drafted, cited follow-up. |
+| Vendor Follow-up | When a reviewer requests information, emails the vendor (or a test inbox) the drafted, cited follow-up. |
 | Daily Summary | A morning digest of what came in, what was decided and what is waiting. |
 | Slack Alerts | Posts selected case events to a Slack channel. |
 | RazorpayX Payouts | On each payment day, proposes a payment run (see *Payments* below). Sends the payouts of a released batch through RazorpayX and checks every 30 minutes on any still in flight. |
-| Payment Advice | Emails the vendor (or a demo inbox) when a payment reaches the bank: invoice, amount, mode, account (last 4 digits) and UTR. |
+| Payment Advice | Emails the vendor (or a test inbox) when a payment reaches the bank: invoice, amount, mode, account (last 4 digits) and UTR. |
 | ERPNext Connector | Posts approved invoices to ERPNext as submitted Purchase Invoices and reads them back from ERPNext; records each payout as a Payment Entry with the UTR. "Run now" creates the suppliers, cost centres and accounts the postings need. Paused, postings go to the mock ERP. |
 | n8n Connector | Keeps the original n8n workflows working (signed webhooks both ways). Existing `N8N_*` settings are moved into it on first start. |
 
@@ -271,7 +271,7 @@ pnpm dev                        # http://localhost:3000
 ```
 
 Try a sample from the **New run** page, then **Review queue**, **Approvals**, **ERP ledger** and
-**Ask AP**. **Settings → Reset demo** starts over (the samples depend on run order).
+**Ask AP**. **Settings → Start over** resets the data (the samples depend on run order).
 
 On Windows, the `--loop` flag is needed (psycopg can't use the Proactor event loop), and if
 compiled packages fail to import from a long path, point `UV_PROJECT_ENVIRONMENT` at a short

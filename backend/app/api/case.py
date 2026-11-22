@@ -1,4 +1,4 @@
-"""Case endpoints: approvals inbox, corrections, evidence bundle, mock ERP, demo reset."""
+"""Case endpoints: approvals inbox, corrections, evidence bundle, mock ERP, data reset."""
 
 import asyncio
 from datetime import date, datetime
@@ -356,7 +356,7 @@ async def correct_document(
     return doc
 
 
-# --- demo reset --------------------------------------------------------------------------------
+# --- data reset --------------------------------------------------------------------------------
 
 
 class ResetOut(BaseModel):
@@ -366,7 +366,7 @@ class ResetOut(BaseModel):
 
 @router.post("/admin/reset-demo", response_model=ResetOut, tags=["admin"])
 async def reset_demo(request: Request, session: SessionDep) -> ResetOut:
-    """Start the demo over: remove every run (and its records and checkpoints), the ERP
+    """Start over: remove every run (and its records and checkpoints), the ERP
     ledger, payments and the invoice history, then reload the seed. Procedure versions are kept."""
     run_ids = list(await session.scalars(select(Run.id)))
     erp_count = len(list(await session.scalars(select(ErpDocument.id))))

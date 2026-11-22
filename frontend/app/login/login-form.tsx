@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 export function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -20,11 +21,11 @@ export function LoginForm() {
     const res = await fetch("/api/login", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ email, password }),
     });
     setBusy(false);
     if (!res.ok) {
-      setError("That password isn't right.");
+      setError("That email or password isn't right.");
       return;
     }
     const next = params.get("next") ?? "/";
@@ -39,9 +40,22 @@ export function LoginForm() {
       </span>
       <div className="flex flex-col gap-1">
         <h1 className="text-xl font-semibold text-navy">Sign in to Sinoprex Invoice</h1>
-        <p className="text-muted">This demo is password-protected. Ask the owner for the password.</p>
+        <p className="text-muted">Sign in using your work email.</p>
       </div>
       <form onSubmit={submit} className="flex flex-col gap-3">
+        <label htmlFor="work-email" className="flex flex-col gap-1.5 text-[13px] font-medium text-navy">
+          Work email
+          <input
+            id="work-email"
+            type="email"
+            autoComplete="username"
+            inputMode="email"
+            placeholder="you@company.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="h-11 rounded-control border border-line bg-canvas px-3 text-sm text-ink focus:ring-2 focus:ring-brand-100 focus:outline-none"
+          />
+        </label>
         <label htmlFor="site-password" className="flex flex-col gap-1.5 text-[13px] font-medium text-navy">
           Password
           <input
@@ -58,7 +72,7 @@ export function LoginForm() {
             {error}
           </p>
         )}
-        <Button type="submit" disabled={busy || !password}>
+        <Button type="submit" disabled={busy || !password || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)}>
           {busy && <Loader2 aria-hidden className="animate-spin" />} Sign in
         </Button>
       </form>

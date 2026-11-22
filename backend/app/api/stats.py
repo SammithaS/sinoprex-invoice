@@ -1,7 +1,7 @@
 """Dashboard KPIs (`GET /stats`).
 
 Computed in Python from runs, exceptions, approvals, ERP postings and corrections — fine at
-demo scale (hundreds of runs).
+this scale (hundreds of runs).
 """
 
 import statistics

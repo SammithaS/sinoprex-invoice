@@ -21,15 +21,15 @@ export function ResetDemo() {
   });
   return (
     <Card className="flex max-w-2xl flex-col gap-3">
-      <CardTitle>Reset the demo</CardTitle>
+      <CardTitle>Start over</CardTitle>
       <p className="text-muted">
         Deletes every case (with its timeline, reviews, exceptions, approvals and corrections), empties the mock ERP
         ledger and reloads the seed invoice history. Operating-procedure versions are kept. The samples depend on run
-        order — split invoices and duplicates see the cases before them — so reset before a demo.
+        order — split invoices and duplicates see the cases before them — so reset before running them again.
       </p>
       {!confirming ? (
         <Button variant="danger" className="self-start" onClick={() => setConfirming(true)}>
-          <RotateCcw aria-hidden /> Reset demo data
+          <RotateCcw aria-hidden /> Reset data
         </Button>
       ) : (
         <div className="flex flex-wrap items-center gap-2.5" role="group" aria-label="Confirm reset">

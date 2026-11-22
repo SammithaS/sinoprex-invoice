@@ -5,7 +5,7 @@ Posting is idempotent: the idempotency key is the run id, so a retried or resume
 returns the document already posted. `read()` is what `verify_post` compares with the approved
 values. A real ERP adapter would implement the same two calls.
 
-Demo fault: when the posting request carries `fault="amount_minus_one_paisa"`
+Sample fault: when the posting request carries `fault="amount_minus_one_paisa"`
 the mock stores the amount one paisa short, so the read-back check fails as in edge case #8.
 """
 

@@ -89,7 +89,7 @@ What the stack does:
    - `API_URL` = `https://<API_DOMAIN>`
    - `API_KEY` = the same value as `API_KEY` in `deploy/api.env`
    - `SITE_PASSWORD` = a password for visitors (recommended: the app has no user
-     accounts yet, so without it anyone with the link can approve cases or reset the demo)
+     accounts yet, so without it anyone with the link can approve cases or reset the data)
 3. Deploy. Then set `FRONTEND_ORIGIN` and `APP_URL` in `deploy/api.env` to the Vercel URL and
    `docker compose up -d api` to apply them.
 
@@ -129,8 +129,8 @@ stay fixed.
 
 ## 8. ERPNext (optional)
 
-ERPNext needs MariaDB, Redis and several workers (about 3 GB of memory). For a demo it runs
-next to the API on the same VM, behind the same Caddy:
+ERPNext needs MariaDB, Redis and several workers (about 3 GB of memory). It runs next to the
+API on the same VM, behind the same Caddy:
 
 ```bash
 cd ~/invoiceiq/deploy/erpnext
@@ -161,7 +161,7 @@ ones get a Payment Entry with the UTR. Pause the app to go back to the mock ERP.
 - **Logs:** `docker compose logs -f api n8n caddy`.
 - **Backups:** Neon keeps point-in-time history. Back up the `n8n-data` and `invoiceiq-data`
   volumes (`docker run --rm -v invoiceiq_n8n-data:/d -v $PWD:/b alpine tar czf /b/n8n.tgz -C /d .`).
-- **Demo reset:** Settings → Reset demo (deletes runs and records; keeps procedure versions).
+- **Start over:** Settings → Reset data (deletes runs and records; keeps procedure versions).
 - **Costs:** all free tiers. Gemini and Groq free tiers are rate-limited. Under load, transient
   503/429 errors can end a case as `FAILED` (it can be re-run; automatic retries are on the
   "what's next" list).

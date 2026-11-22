@@ -6,7 +6,7 @@ Four workflows, exported in `workflows/`, for **n8n cloud** with **Gmail**:
 |---|---|---|
 | `1-email-intake.json` | Gmail: unread mail with a PDF (polls every minute) | Signs the email + PDFs and `POST`s them to `/intake/email` → one case per PDF; replies to the sender with the case reference (no internal links); marks the mail read. No PDF → polite reply. |
 | `2-review-notification.json` | Webhook `invoiceiq-review` (called by the backend) | Checks the signature; emails the reviewer (or approver) the question, exceptions and a deep link to the case; after 24 h asks the backend whether it's still waiting and sends a reminder. |
-| `3-vendor-follow-up.json` | Webhook `invoiceiq-vendor-followup` (on REQUEST_INFO) | Checks the signature; emails the `vendor-faq.md` template text to the vendor contact **on file**. The seed vendors' addresses are fictional, so by default it goes to a demo inbox with the real recipient noted (`send_to_vendor` = `true` to send for real). |
+| `3-vendor-follow-up.json` | Webhook `invoiceiq-vendor-followup` (on REQUEST_INFO) | Checks the signature; emails the `vendor-faq.md` template text to the vendor contact **on file**. The seed vendors' addresses are fictional, so by default it goes to a test inbox with the real recipient noted (`send_to_vendor` = `true` to send for real). |
 | `4-daily-summary.json` | Weekdays 09:00 IST | `GET /stats` → summary email (approved, straight-through rate, waiting value, top issues, ERP). |
 
 ## Security
@@ -67,4 +67,4 @@ import those instead of `workflows/`.
 - Email a PDF from `data/test-invoices/` (e.g. `technova-contract-rate.pdf`) to the Gmail account
   → within a minute a case appears under New run / Review queue, and you get a reply.
 - That case waits for review → the reviewer email arrives with the deep link.
-- On the case, choose **Request info** → the vendor follow-up arrives in the demo inbox.
+- On the case, choose **Request info** → the vendor follow-up arrives in the test inbox.
