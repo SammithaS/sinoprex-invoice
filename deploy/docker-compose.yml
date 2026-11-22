@@ -41,6 +41,7 @@ services:
       N8N_DOMAIN: ${N8N_DOMAIN:?set N8N_DOMAIN in deploy/.env}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./sites:/etc/caddy/sites:ro # extra sites on this VM, e.g. ERPNext
       - caddy-data:/data
       - caddy-config:/config
     depends_on: [api, n8n]

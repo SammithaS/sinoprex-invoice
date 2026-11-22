@@ -127,18 +127,23 @@ stay fixed.
    webhook secret) → **Save and test**; then install and activate **RazorpayX Payouts** (and
    **Payment Advice** to email vendors). The webhook route is signed, so it needs no API key.
 
-## 8. ERPNext (optional, a second VM)
+## 8. ERPNext (optional)
 
-ERPNext needs MariaDB, Redis and several workers: give it its own Always Free ARM VM
-(2 OCPU / 12 GB is comfortable; the Always Free allowance is 4 OCPU / 24 GB in total). Open
-ports 80 and 443 as for the API VM, install Docker, then:
+ERPNext needs MariaDB, Redis and several workers (about 3 GB of memory). For a demo it runs
+next to the API on the same VM, behind the same Caddy:
 
 ```bash
-git clone https://github.com/SammithaS/sinoprex-invoice.git invoiceiq && cd invoiceiq/deploy/erpnext
+cd ~/invoiceiq/deploy/erpnext
 cp .env.example .env   # ERP_DOMAIN=erp.<ip-with-dashes>.sslip.io, ERPNEXT_VERSION, passwords
+sed "s/erp.203-0-113-10.sslip.io/<ERP_DOMAIN>/" site.caddy.example > ../sites/erpnext.caddy
 docker compose up -d
 docker compose logs -f create-site   # first start: creates the site, a few minutes
+cd .. && docker compose up -d --no-deps caddy   # Caddy picks up the ERP site
 ```
+
+On a VM of its own (more room; 2 OCPU / 12 GB is comfortable): open ports 80 and 443, install
+Docker, clone the repository, and in `deploy/erpnext/.env` use `COMPOSE_PROFILES=standalone`
+instead of `COMPOSE_FILE`, so ERPNext starts its own Caddy.
 
 Open `https://<ERP_DOMAIN>`, sign in as Administrator (the `ADMIN_PASSWORD`), finish the setup
 wizard (company, India, INR, a chart of accounts). Then create a user with the **Accounts User**

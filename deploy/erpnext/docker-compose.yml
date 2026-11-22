@@ -1,6 +1,9 @@
-# ERPNext (open source, Frappe) behind Caddy (automatic HTTPS), for the ERPNext Connector app.
-# Meant for its own Oracle Cloud Always Free ARM VM (2 OCPU / 12 GB is comfortable); it also
-# runs next to the API on one VM if memory allows. Based on frappe_docker's single-site setup.
+# ERPNext (open source, Frappe) for the ERPNext Connector app. Based on frappe_docker's
+# single-site setup. Two ways to run it (see DEPLOY.md § 8):
+#
+# - On the API VM, behind its Caddy: COMPOSE_FILE=docker-compose.yml:compose.shared.yml in .env
+#   and a site file in deploy/sites/ (copy site.caddy.example).
+# - On a VM of its own, with its own Caddy: COMPOSE_PROFILES=standalone in .env.
 #
 #   cd deploy/erpnext && cp .env.example .env   # fill it in
 #   docker compose up -d                        # the first start creates the site (minutes)
@@ -121,8 +124,9 @@ services:
     volumes:
       - redis-queue-data:/data
 
-  caddy:
+  caddy: # only on a VM of its own (COMPOSE_PROFILES=standalone)
     image: caddy:2
+    profiles: [standalone]
     restart: unless-stopped
     ports: ["80:80", "443:443"]
     environment:

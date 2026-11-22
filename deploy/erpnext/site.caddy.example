@@ -1,0 +1,8 @@
+# Copy to deploy/sites/erpnext.caddy (with your ERP domain) when ERPNext runs on the API VM,
+# then reload Caddy: docker compose up -d --no-deps caddy (from deploy/).
+erp.203-0-113-10.sslip.io {
+	reverse_proxy erpnext-frontend:8080
+	request_body {
+		max_size 50MB
+	}
+}

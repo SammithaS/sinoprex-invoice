@@ -39,5 +39,6 @@ data/test-invoices/live/
 frontend/test-results/
 frontend/playwright-report/
 deploy/api.env
+deploy/sites/*.caddy
 data/eval/last-run.json
 deploy/vercel.env

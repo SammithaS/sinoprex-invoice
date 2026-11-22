@@ -1,0 +1,13 @@
+# ERPNext next to the API on one VM: the API stack's Caddy reaches the ERPNext frontend over
+# the API stack's network (invoiceiq_default) as "erpnext-frontend". No ports are published.
+services:
+  frontend:
+    networks:
+      default:
+      invoiceiq:
+        aliases: [erpnext-frontend]
+
+networks:
+  invoiceiq:
+    external: true
+    name: invoiceiq_default
