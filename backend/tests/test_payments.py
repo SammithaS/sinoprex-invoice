@@ -399,3 +399,31 @@ async def test_connection_test_checks_the_key_and_the_account(rig: Rig) -> None:
     out = await rig.platform.test_connection(int(conn["id"]), "me")
     assert out["status"] == "OK" and "test mode" in out["status_message"]
     assert "6905" in out["status_message"]
+
+
+async def test_a_second_erp_document_for_the_same_invoice_is_never_paid(
+    rig: Rig,
+    service: RunService,
+    db: async_sessionmaker[AsyncSession],
+) -> None:
+    run = await run_sample(service, "northwind-clean")
+    original = await doc_for(db, run.id)
+    async with db() as session:
+        copy = ErpDocument(
+            doc_number="AP-2026-999999",
+            idempotency_key="other-case",
+            vendor_id=original.vendor_id,
+            invoice_number=original.invoice_number.lower(),
+            invoice_date=original.invoice_date,
+            amount=original.amount,
+            tax_amount=original.tax_amount,
+            status="POSTED",
+        )
+        session.add(copy)
+        await session.commit()
+    items = {i.doc_number: i for i in (await rig.payments.queue(["tue", "fri"]))[0]}
+    assert items[original.doc_number].state == "DUE"
+    dup = items["AP-2026-999999"]
+    assert dup.state == "HELD" and not dup.releasable and original.doc_number in dup.holds[0]
+    _, rows = await rig.payments.propose(["tue", "fri"])
+    assert [r.doc_number for r in rows] == [original.doc_number]

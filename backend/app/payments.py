@@ -131,6 +131,12 @@ async def build_queue(session: AsyncSession, today: date, next_run: date) -> lis
     for p in await session.scalars(select(Payment).order_by(Payment.attempt)):
         payments.setdefault(p.doc_number, []).append(p)
 
+    # The first document for a vendor + invoice number is the one to pay; any later one is a
+    # duplicate posting and must never be paid as well.
+    first_doc: dict[tuple[str, str], str] = {}
+    for d in docs:  # ordered by id: oldest first
+        first_doc.setdefault((d.vendor_id, d.invoice_number.strip().upper()), d.doc_number)
+
     out: list[QueueItem] = []
     for d in docs:
         vendor = vendors.get(d.vendor_id)
@@ -177,6 +183,12 @@ async def build_queue(session: AsyncSession, today: date, next_run: date) -> lis
             item.holds.append(f"open exception: {category}")
         if pending.get(d.idempotency_key):
             item.holds.append("approvals still pending")
+        original = first_doc[(d.vendor_id, d.invoice_number.strip().upper())]
+        if original != d.doc_number:
+            item.holds.append(
+                f"duplicate: {original} is already in the ERP for this vendor and invoice "
+                "number (ap-policy §4); reverse this document instead of paying it"
+            )
         if d.idempotency_key in bank_change and not d.hold_released_by:
             item.holds.append(BANK_HOLD)
             item.releasable = len(item.holds) == 1
