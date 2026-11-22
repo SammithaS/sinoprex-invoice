@@ -220,6 +220,8 @@ export function Dashboard() {
         </Card>
       </div>
 
+      <PayablesCard s={s} />
+
       <EvalCard />
 
       <RecentRuns runs={s.recent} />
@@ -386,6 +388,53 @@ function DecisionBars({ decisions }: { decisions: Record<string, number> }) {
         );
       })}
     </ul>
+  );
+}
+
+function PayablesCard({ s }: { s: Stats }) {
+  const buckets = Object.entries(s.payables_ageing).map(([label, v]) => ({ label, value: Number(v) }));
+  const max = Math.max(1, ...buckets.map((b) => b.value));
+  const rate = s.payments_on_time_rate;
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Payables</CardTitle>
+        <Link href="/payments" className="text-[13px] font-medium text-brand-700 hover:underline dark:text-brand-500">
+          Payments
+        </Link>
+      </CardHeader>
+      <div className="grid gap-6 md:grid-cols-[1fr_1.4fr]">
+        <dl className="grid grid-cols-2 gap-3 text-center">
+          {[
+            ["Outstanding", formatINR(s.payables_outstanding)],
+            ["Overdue", formatINR(s.payables_overdue)],
+            ["Paid", String(s.payments_paid)],
+            ["Paid on time", rate === null || rate === undefined ? "—" : `${Math.round(rate * 100)}%`],
+          ].map(([label, n]) => (
+            <div key={label} className="rounded-control bg-canvas py-3">
+              <dd className="text-xl font-bold text-navy">{n}</dd>
+              <dt className="text-xs text-muted">{label}</dt>
+            </div>
+          ))}
+        </dl>
+        <div className="flex flex-col gap-2">
+          <span className="text-xs text-muted">Unpaid, by days past due</span>
+          <ul className="flex flex-col gap-3">
+            {buckets.map((b) => (
+              <li key={b.label} className="flex flex-col gap-1">
+                <div className="flex items-baseline justify-between gap-2 text-[13px]">
+                  <span>{b.label}</span>
+                  <span className="font-semibold text-navy">{formatINR(b.value)}</span>
+                </div>
+                <div className="h-2 rounded-full bg-canvas" aria-hidden>
+                  <div className="h-2 rounded-r-[4px] rounded-l-full bg-chart" style={{ width: `${(b.value / max) * 100}%` }} />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </Card>
   );
 }
 

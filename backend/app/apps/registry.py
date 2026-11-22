@@ -4,6 +4,8 @@ from app.apps.builtin import (
     daily_summary,
     gmail_intake,
     n8n_connector,
+    payment_advice,
+    razorpayx_payouts,
     reviewer_alerts,
     slack_alerts,
     vendor_followup,
@@ -18,6 +20,8 @@ APPS: dict[str, AppManifest] = {
         vendor_followup,
         daily_summary,
         slack_alerts,
+        razorpayx_payouts,
+        payment_advice,
         n8n_connector,
     )
 }

@@ -1938,7 +1938,7 @@
           "admin"
         ],
         "summary": "Reset Demo",
-        "description": "Start the demo over: remove every run (and its records and checkpoints), the mock ERP\nledger and the invoice history, then reload the seed. Procedure versions are kept.",
+        "description": "Start the demo over: remove every run (and its records and checkpoints), the ERP\nledger, payments and the invoice history, then reload the seed. Procedure versions are kept.",
         "operationId": "reset_demo_admin_reset_demo_post",
         "parameters": [
           {
@@ -3143,6 +3143,398 @@
         }
       }
     },
+    "/payments": {
+      "get": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Payments Overview",
+        "operationId": "payments_overview_payments_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentsOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments/propose": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Propose",
+        "description": "Propose a payment run now (the same as the app's \"Run now\").",
+        "operationId": "propose_payments_propose_post",
+        "parameters": [
+          {
+            "name": "x-actor",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Actor"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProposalOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments/batches/{batch_id}/release": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Release Batch",
+        "description": "A person releases a proposed batch; the payouts are sent now.",
+        "operationId": "release_batch_payments_batches__batch_id__release_post",
+        "parameters": [
+          {
+            "name": "batch_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Batch Id"
+            }
+          },
+          {
+            "name": "x-actor",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Actor"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProposalOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments/{payment_id}/cancel": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Cancel Payment",
+        "description": "Take one invoice out of a proposed batch (it is proposed again in the next run).",
+        "operationId": "cancel_payment_payments__payment_id__cancel_post",
+        "parameters": [
+          {
+            "name": "payment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Payment Id"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments/{payment_id}/retry": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Retry Payment",
+        "description": "After a failure is looked into: include the invoice in the next proposal again.",
+        "operationId": "retry_payment_payments__payment_id__retry_post",
+        "parameters": [
+          {
+            "name": "payment_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Payment Id"
+            }
+          },
+          {
+            "name": "x-actor",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Actor"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments/holds/{doc_number}/release": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Release Hold",
+        "description": "Release a bank-change hold after the vendor master was checked and updated.",
+        "operationId": "release_hold_payments_holds__doc_number__release_post",
+        "parameters": [
+          {
+            "name": "doc_number",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Doc Number"
+            }
+          },
+          {
+            "name": "x-actor",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Actor"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/intake/email": {
       "post": {
         "tags": [
@@ -3157,6 +3549,55 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/IntakeOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/razorpayx": {
+      "post": {
+        "tags": [
+          "payments"
+        ],
+        "summary": "Razorpayx Webhook",
+        "operationId": "razorpayx_webhook_webhooks_razorpayx_post",
+        "parameters": [
+          {
+            "name": "X-Razorpay-Signature",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Razorpay-Signature"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 }
               }
             }
@@ -3335,6 +3776,67 @@
         ],
         "title": "ApprovalOut"
       },
+      "BatchOut": {
+        "properties": {
+          "batch_id": {
+            "type": "string",
+            "title": "Batch Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "total": {
+            "type": "string",
+            "title": "Total"
+          },
+          "released_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Released By"
+          },
+          "released_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Released At"
+          },
+          "payments": {
+            "items": {
+              "$ref": "#/components/schemas/PaymentOut"
+            },
+            "type": "array",
+            "title": "Payments"
+          }
+        },
+        "type": "object",
+        "required": [
+          "batch_id",
+          "status",
+          "count",
+          "total",
+          "released_by",
+          "released_at",
+          "payments"
+        ],
+        "title": "BatchOut"
+      },
       "Body_create_run_runs_post": {
         "properties": {
           "file": {
@@ -3381,6 +3883,13 @@
             },
             "type": "array",
             "title": "Corrections"
+          },
+          "payments": {
+            "items": {
+              "$ref": "#/components/schemas/PaymentOut"
+            },
+            "type": "array",
+            "title": "Payments"
           }
         },
         "type": "object",
@@ -3388,7 +3897,8 @@
           "exceptions",
           "approvals",
           "erp",
-          "corrections"
+          "corrections",
+          "payments"
         ],
         "title": "CaseRecordsOut"
       },
@@ -3863,6 +4373,33 @@
             "type": "string",
             "title": "Status"
           },
+          "system": {
+            "type": "string",
+            "title": "System"
+          },
+          "paid_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paid At"
+          },
+          "utr": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utr"
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -3895,6 +4432,9 @@
           "cost_centre",
           "attachment_url",
           "status",
+          "system",
+          "paid_at",
+          "utr",
           "created_at",
           "updated_at"
         ],
@@ -4694,6 +5234,225 @@
         ],
         "title": "OwnerLoad"
       },
+      "PaymentOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "doc_number": {
+            "type": "string",
+            "title": "Doc Number"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "batch_id": {
+            "type": "string",
+            "title": "Batch Id"
+          },
+          "attempt": {
+            "type": "integer",
+            "title": "Attempt"
+          },
+          "vendor_id": {
+            "type": "string",
+            "title": "Vendor Id"
+          },
+          "amount": {
+            "type": "string",
+            "title": "Amount"
+          },
+          "due_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Due Date"
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "payout_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payout Id"
+          },
+          "provider_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider Status"
+          },
+          "utr": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utr"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "released_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Released By"
+          },
+          "released_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Released At"
+          },
+          "retry_approved_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retry Approved By"
+          },
+          "paid_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paid At"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "doc_number",
+          "run_id",
+          "batch_id",
+          "attempt",
+          "vendor_id",
+          "amount",
+          "due_date",
+          "mode",
+          "status",
+          "payout_id",
+          "provider_status",
+          "utr",
+          "error",
+          "released_by",
+          "released_at",
+          "retry_approved_by",
+          "paid_at",
+          "created_at"
+        ],
+        "title": "PaymentOut"
+      },
+      "PaymentsOut": {
+        "properties": {
+          "app_active": {
+            "type": "boolean",
+            "title": "App Active"
+          },
+          "payment_days": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Payment Days"
+          },
+          "next_payment_day": {
+            "type": "string",
+            "format": "date",
+            "title": "Next Payment Day"
+          },
+          "today": {
+            "type": "string",
+            "format": "date",
+            "title": "Today"
+          },
+          "queue": {
+            "items": {
+              "$ref": "#/components/schemas/QueueItemOut"
+            },
+            "type": "array",
+            "title": "Queue"
+          },
+          "batches": {
+            "items": {
+              "$ref": "#/components/schemas/BatchOut"
+            },
+            "type": "array",
+            "title": "Batches"
+          }
+        },
+        "type": "object",
+        "required": [
+          "app_active",
+          "payment_days",
+          "next_payment_day",
+          "today",
+          "queue",
+          "batches"
+        ],
+        "title": "PaymentsOut"
+      },
       "PoLineOut": {
         "properties": {
           "line_no": {
@@ -5151,6 +5910,43 @@
         ],
         "title": "ProcedureOut"
       },
+      "ProposalOut": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "message",
+          "error"
+        ],
+        "title": "ProposalOut"
+      },
       "PurchaseOrderOut": {
         "properties": {
           "po_number": {
@@ -5232,6 +6028,134 @@
           "lines"
         ],
         "title": "PurchaseOrderOut"
+      },
+      "QueueItemOut": {
+        "properties": {
+          "doc_number": {
+            "type": "string",
+            "title": "Doc Number"
+          },
+          "system": {
+            "type": "string",
+            "title": "System"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "vendor_id": {
+            "type": "string",
+            "title": "Vendor Id"
+          },
+          "vendor_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vendor Name"
+          },
+          "invoice_number": {
+            "type": "string",
+            "title": "Invoice Number"
+          },
+          "invoice_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Invoice Date"
+          },
+          "amount": {
+            "type": "string",
+            "title": "Amount"
+          },
+          "due_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Due Date"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "holds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Holds"
+          },
+          "releasable": {
+            "type": "boolean",
+            "title": "Releasable"
+          },
+          "attempts": {
+            "type": "integer",
+            "title": "Attempts"
+          },
+          "utr": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utr"
+          },
+          "paid_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paid At"
+          },
+          "payment": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PaymentOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "doc_number",
+          "system",
+          "run_id",
+          "vendor_id",
+          "vendor_name",
+          "invoice_number",
+          "invoice_date",
+          "amount",
+          "due_date",
+          "state",
+          "holds",
+          "releasable",
+          "attempts",
+          "utr",
+          "paid_at",
+          "payment"
+        ],
+        "title": "QueueItemOut"
       },
       "ReindexOut": {
         "properties": {
@@ -6134,6 +7058,36 @@
           "approvals_decided": {
             "type": "integer",
             "title": "Approvals Decided"
+          },
+          "payables_outstanding": {
+            "type": "string",
+            "title": "Payables Outstanding"
+          },
+          "payables_overdue": {
+            "type": "string",
+            "title": "Payables Overdue"
+          },
+          "payables_ageing": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Payables Ageing"
+          },
+          "payments_paid": {
+            "type": "integer",
+            "title": "Payments Paid"
+          },
+          "payments_on_time_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payments On Time Rate"
           }
         },
         "type": "object",
@@ -6161,7 +7115,12 @@
           "erp_mismatches",
           "exceptions_by_owner",
           "corrections_by_vendor",
-          "approvals_decided"
+          "approvals_decided",
+          "payables_outstanding",
+          "payables_overdue",
+          "payables_ageing",
+          "payments_paid",
+          "payments_on_time_rate"
         ],
         "title": "Stats"
       },
@@ -6294,6 +7253,19 @@
           "status"
         ],
         "title": "VendorOut"
+      },
+      "WebhookOut": {
+        "properties": {
+          "updated": {
+            "type": "integer",
+            "title": "Updated"
+          }
+        },
+        "type": "object",
+        "required": [
+          "updated"
+        ],
+        "title": "WebhookOut"
       }
     }
   }

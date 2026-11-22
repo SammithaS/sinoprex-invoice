@@ -4,6 +4,7 @@ import {
   Building2,
   ClipboardCheck,
   FilePen,
+  Landmark,
   LayoutDashboard,
   MessageSquare,
   NotebookTabs,
@@ -25,6 +26,7 @@ export const NAV: NavGroup[] = [
       { href: "/review", label: "Review queue", icon: ClipboardCheck },
       { href: "/approvals", label: "Approvals", icon: UserCheck },
       { href: "/erp", label: "ERP ledger", icon: NotebookTabs },
+      { href: "/payments", label: "Payments", icon: Landmark },
     ],
   },
   {

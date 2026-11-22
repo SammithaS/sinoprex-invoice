@@ -564,8 +564,8 @@ export interface paths {
         put?: never;
         /**
          * Reset Demo
-         * @description Start the demo over: remove every run (and its records and checkpoints), the mock ERP
-         *     ledger and the invoice history, then reload the seed. Procedure versions are kept.
+         * @description Start the demo over: remove every run (and its records and checkpoints), the ERP
+         *     ledger, payments and the invoice history, then reload the seed. Procedure versions are kept.
          */
         post: operations["reset_demo_admin_reset_demo_post"];
         delete?: never;
@@ -818,6 +818,123 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Payments Overview */
+        get: operations["payments_overview_payments_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payments/propose": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Propose
+         * @description Propose a payment run now (the same as the app's "Run now").
+         */
+        post: operations["propose_payments_propose_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payments/batches/{batch_id}/release": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Release Batch
+         * @description A person releases a proposed batch; the payouts are sent now.
+         */
+        post: operations["release_batch_payments_batches__batch_id__release_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payments/{payment_id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel Payment
+         * @description Take one invoice out of a proposed batch (it is proposed again in the next run).
+         */
+        post: operations["cancel_payment_payments__payment_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payments/{payment_id}/retry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Retry Payment
+         * @description After a failure is looked into: include the invoice in the next proposal again.
+         */
+        post: operations["retry_payment_payments__payment_id__retry_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/payments/holds/{doc_number}/release": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Release Hold
+         * @description Release a bank-change hold after the vendor master was checked and updated.
+         */
+        post: operations["release_hold_payments_holds__doc_number__release_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/intake/email": {
         parameters: {
             query?: never;
@@ -829,6 +946,23 @@ export interface paths {
         put?: never;
         /** Intake Email */
         post: operations["intake_email_intake_email_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/webhooks/razorpayx": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Razorpayx Webhook */
+        post: operations["razorpayx_webhook_webhooks_razorpayx_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -882,6 +1016,23 @@ export interface components {
             /** Decided At */
             decided_at: string | null;
         };
+        /** BatchOut */
+        BatchOut: {
+            /** Batch Id */
+            batch_id: string;
+            /** Status */
+            status: string;
+            /** Count */
+            count: number;
+            /** Total */
+            total: string;
+            /** Released By */
+            released_by: string | null;
+            /** Released At */
+            released_at: string | null;
+            /** Payments */
+            payments: components["schemas"]["PaymentOut"][];
+        };
         /** Body_create_run_runs_post */
         Body_create_run_runs_post: {
             /** File */
@@ -896,6 +1047,8 @@ export interface components {
             erp: components["schemas"]["ErpPostingOut"] | null;
             /** Corrections */
             corrections: components["schemas"]["CorrectionOut"][];
+            /** Payments */
+            payments: components["schemas"]["PaymentOut"][];
         };
         /** ChatHistoryOut */
         ChatHistoryOut: {
@@ -1074,6 +1227,12 @@ export interface components {
             attachment_url: string | null;
             /** Status */
             status: string;
+            /** System */
+            system: string;
+            /** Paid At */
+            paid_at: string | null;
+            /** Utr */
+            utr: string | null;
             /**
              * Created At
              * Format: date-time
@@ -1349,6 +1508,74 @@ export interface components {
             /** Median Resolution Ms */
             median_resolution_ms: number | null;
         };
+        /** PaymentOut */
+        PaymentOut: {
+            /** Id */
+            id: number;
+            /** Doc Number */
+            doc_number: string;
+            /** Run Id */
+            run_id: string | null;
+            /** Batch Id */
+            batch_id: string;
+            /** Attempt */
+            attempt: number;
+            /** Vendor Id */
+            vendor_id: string;
+            /** Amount */
+            amount: string;
+            /**
+             * Due Date
+             * Format: date
+             */
+            due_date: string;
+            /** Mode */
+            mode: string;
+            /** Status */
+            status: string;
+            /** Payout Id */
+            payout_id: string | null;
+            /** Provider Status */
+            provider_status: string | null;
+            /** Utr */
+            utr: string | null;
+            /** Error */
+            error: string | null;
+            /** Released By */
+            released_by: string | null;
+            /** Released At */
+            released_at: string | null;
+            /** Retry Approved By */
+            retry_approved_by: string | null;
+            /** Paid At */
+            paid_at: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** PaymentsOut */
+        PaymentsOut: {
+            /** App Active */
+            app_active: boolean;
+            /** Payment Days */
+            payment_days: string[];
+            /**
+             * Next Payment Day
+             * Format: date
+             */
+            next_payment_day: string;
+            /**
+             * Today
+             * Format: date
+             */
+            today: string;
+            /** Queue */
+            queue: components["schemas"]["QueueItemOut"][];
+            /** Batches */
+            batches: components["schemas"]["BatchOut"][];
+        };
         /** PoLineOut */
         PoLineOut: {
             /** Line No */
@@ -1586,6 +1813,15 @@ export interface components {
                 [key: string]: unknown;
             }[];
         };
+        /** ProposalOut */
+        ProposalOut: {
+            /** Status */
+            status: string;
+            /** Message */
+            message: string | null;
+            /** Error */
+            error: string | null;
+        };
         /** PurchaseOrderOut */
         PurchaseOrderOut: {
             /** Po Number */
@@ -1619,6 +1855,46 @@ export interface components {
             buyer: string;
             /** Lines */
             lines: components["schemas"]["PoLineOut"][];
+        };
+        /** QueueItemOut */
+        QueueItemOut: {
+            /** Doc Number */
+            doc_number: string;
+            /** System */
+            system: string;
+            /** Run Id */
+            run_id: string | null;
+            /** Vendor Id */
+            vendor_id: string;
+            /** Vendor Name */
+            vendor_name: string | null;
+            /** Invoice Number */
+            invoice_number: string;
+            /**
+             * Invoice Date
+             * Format: date
+             */
+            invoice_date: string;
+            /** Amount */
+            amount: string;
+            /**
+             * Due Date
+             * Format: date
+             */
+            due_date: string;
+            /** State */
+            state: string;
+            /** Holds */
+            holds: string[];
+            /** Releasable */
+            releasable: boolean;
+            /** Attempts */
+            attempts: number;
+            /** Utr */
+            utr: string | null;
+            /** Paid At */
+            paid_at: string | null;
+            payment: components["schemas"]["PaymentOut"] | null;
         };
         /** ReindexOut */
         ReindexOut: {
@@ -1876,6 +2152,18 @@ export interface components {
             };
             /** Approvals Decided */
             approvals_decided: number;
+            /** Payables Outstanding */
+            payables_outstanding: string;
+            /** Payables Overdue */
+            payables_overdue: string;
+            /** Payables Ageing */
+            payables_ageing: {
+                [key: string]: string;
+            };
+            /** Payments Paid */
+            payments_paid: number;
+            /** Payments On Time Rate */
+            payments_on_time_rate: number | null;
         };
         /** ToolUse */
         ToolUse: {
@@ -1928,6 +2216,11 @@ export interface components {
             category: string;
             /** Status */
             status: string;
+        };
+        /** WebhookOut */
+        WebhookOut: {
+            /** Updated */
+            updated: number;
         };
     };
     responses: never;
@@ -3647,6 +3940,202 @@ export interface operations {
             };
         };
     };
+    payments_overview_payments_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    propose_payments_propose_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-actor"?: string | null;
+                "x-api-key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProposalOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    release_batch_payments_batches__batch_id__release_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-actor"?: string | null;
+                "x-api-key"?: string | null;
+            };
+            path: {
+                batch_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProposalOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_payment_payments__payment_id__cancel_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-api-key"?: string | null;
+            };
+            path: {
+                payment_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    retry_payment_payments__payment_id__retry_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-actor"?: string | null;
+                "x-api-key"?: string | null;
+            };
+            path: {
+                payment_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    release_hold_payments_holds__doc_number__release_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-actor"?: string | null;
+                "x-api-key"?: string | null;
+            };
+            path: {
+                doc_number: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     intake_email_intake_email_post: {
         parameters: {
             query?: never;
@@ -3663,6 +4152,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["IntakeOut"];
+                };
+            };
+        };
+    };
+    razorpayx_webhook_webhooks_razorpayx_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Razorpay-Signature"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

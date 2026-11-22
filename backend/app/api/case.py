@@ -10,6 +10,7 @@ from fastapi.responses import Response
 from pydantic import BaseModel
 from sqlalchemy import delete, select
 
+from app.api.payments import PaymentOut
 from app.api.runs import ServiceDep
 from app.api.schemas import RunOut
 from app.db.models import (
@@ -19,6 +20,7 @@ from app.db.models import (
     ErpDocument,
     ErpPosting,
     Notification,
+    Payment,
     Review,
     Run,
     RunStep,
@@ -94,6 +96,7 @@ class CaseRecordsOut(BaseModel):
     approvals: list[ApprovalOut]
     erp: ErpPostingOut | None
     corrections: list[CorrectionOut]
+    payments: list[PaymentOut]
 
 
 @router.get("/runs/{run_id}/records", response_model=CaseRecordsOut, tags=["runs"])
@@ -125,6 +128,14 @@ async def case_records(session: SessionDep, run_id: str) -> CaseRecordsOut:
             CorrectionOut.model_validate(c)
             for c in await session.scalars(
                 select(Correction).where(Correction.run_id == run_id).order_by(Correction.id)
+            )
+        ],
+        payments=[
+            PaymentOut.model_validate(p)
+            for p in await session.scalars(
+                select(Payment)
+                .where(Payment.run_id == run_id, Payment.status != "CANCELLED")
+                .order_by(Payment.id)
             )
         ],
     )
@@ -257,7 +268,7 @@ async def evidence_pdf(session: SessionDep, run_id: str) -> Response:
     )
 
 
-# --- mock ERP ----------------------------------------------------------------------------------
+# --- ERP ledger ----------------------------------------------------------------------------------
 
 
 class ErpDocumentRow(_Orm):
@@ -273,6 +284,9 @@ class ErpDocumentRow(_Orm):
     cost_centre: str | None
     attachment_url: str | None
     status: str
+    system: str
+    paid_at: datetime | None
+    utr: str | None
     created_at: datetime
     updated_at: datetime | None
 
@@ -329,6 +343,11 @@ async def correct_document(
     erp: ErpDep, session: SessionDep, doc_number: str, body: CorrectIn
 ) -> ErpDocument:
     """What an AP clerk does in the ERP after a read-back mismatch; then re-check the case."""
+    existing = await session.scalar(select(ErpDocument).where(ErpDocument.doc_number == doc_number))
+    if existing is not None and existing.system != "mock":
+        raise HTTPException(
+            status_code=409, detail="correct this document in ERPNext, then re-check the case"
+        )
     if await erp.correct(doc_number, body.amount) is None:
         raise HTTPException(status_code=404, detail="document not found")
     doc = await session.scalar(select(ErpDocument).where(ErpDocument.doc_number == doc_number))
@@ -347,10 +366,11 @@ class ResetOut(BaseModel):
 
 @router.post("/admin/reset-demo", response_model=ResetOut, tags=["admin"])
 async def reset_demo(request: Request, session: SessionDep) -> ResetOut:
-    """Start the demo over: remove every run (and its records and checkpoints), the mock ERP
-    ledger and the invoice history, then reload the seed. Procedure versions are kept."""
+    """Start the demo over: remove every run (and its records and checkpoints), the ERP
+    ledger, payments and the invoice history, then reload the seed. Procedure versions are kept."""
     run_ids = list(await session.scalars(select(Run.id)))
     erp_count = len(list(await session.scalars(select(ErpDocument.id))))
+    await session.execute(delete(Payment))
     await session.execute(delete(ErpDocument))
     await seed_reference_data(session)  # also clears invoice history (incl. run rows)
     for model in (

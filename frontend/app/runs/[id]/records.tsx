@@ -94,6 +94,8 @@ export function ErpCard({ records }: { records: CaseRecords }) {
   const p = records.erp;
   if (!p) return null;
   const req = p.request as { amount?: string; gl_account?: string; cost_centre?: string; po_number?: string | null };
+  const paid = records.payments.find((x) => x.status === "PAID");
+  const latest = records.payments.at(-1);
   return (
     <Card>
       <CardHeader>
@@ -117,6 +119,25 @@ export function ErpCard({ records }: { records: CaseRecords }) {
         </dd>
         <dt className="text-muted">PO</dt>
         <dd className="font-mono">{req.po_number ?? "non-PO"}</dd>
+        {paid ? (
+          <>
+            <dt className="text-muted">Payment</dt>
+            <dd>
+              <Pill tone="approved">Paid</Pill>{" "}
+              <span className="font-mono">
+                {paid.mode} · UTR {paid.utr ?? "—"}
+              </span>
+            </dd>
+          </>
+        ) : latest ? (
+          <>
+            <dt className="text-muted">Payment</dt>
+            <dd className="font-mono">
+              {latest.status.toLowerCase()} · {latest.batch_id}
+              {latest.error ? <span className="block font-sans text-rejected">{latest.error}</span> : null}
+            </dd>
+          </>
+        ) : null}
       </dl>
       {(p.mismatches ?? []).length > 0 && (
         <ul className="mt-2 text-[13px] text-rejected">

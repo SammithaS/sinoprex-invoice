@@ -25,6 +25,10 @@ export type EvalLatest = Schemas["EvalLatest"];
 export type KnowledgeDoc = Schemas["KnowledgeDocOut"];
 export type KnowledgeHit = Schemas["KnowledgeHitOut"];
 export type ReindexOut = Schemas["ReindexOut"];
+export type PaymentsOverview = Schemas["PaymentsOut"];
+export type PayableItem = Schemas["QueueItemOut"];
+export type Payment = Schemas["PaymentOut"];
+export type PaymentBatch = Schemas["BatchOut"];
 
 export class ApiError extends Error {
   constructor(

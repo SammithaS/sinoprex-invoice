@@ -37,7 +37,7 @@ export function ErpLedger() {
         {ledger.data.filter((r) => r.verified === false).length} mismatch
       </div>
       <div className="overflow-x-auto px-2 py-2">
-        <table className="w-full min-w-[980px] text-sm">
+        <table className="w-full min-w-[1080px] text-sm">
           <thead>
             <tr className="text-left text-xs text-muted">
               <th className="px-4 py-3 font-medium">Document</th>
@@ -46,6 +46,7 @@ export function ErpLedger() {
               <th className="px-4 py-3 text-right font-medium">Amount</th>
               <th className="px-4 py-3 font-medium">GL / cost centre</th>
               <th className="px-4 py-3 font-medium">PO</th>
+              <th className="px-4 py-3 font-medium">Status</th>
               <th className="px-4 py-3 font-medium">Read-back</th>
             </tr>
           </thead>
@@ -70,7 +71,10 @@ function Row({ row }: { row: LedgerRow }) {
   });
   return (
     <tr className="border-t border-line align-top">
-      <td className="px-4 py-3 font-mono text-[13px] font-medium text-navy">{d.doc_number}</td>
+      <td className="px-4 py-3 font-mono text-[13px] font-medium text-navy">
+        {d.doc_number}
+        <div className="font-sans text-xs font-normal text-muted">{d.system === "erpnext" ? "ERPNext" : "Mock ERP"}</div>
+      </td>
       <td className="px-4 py-3">
         {row.run_id ? (
           <Link href={`/runs/${row.run_id}`} className="font-mono text-[13px] hover:underline">
@@ -91,6 +95,10 @@ function Row({ row }: { row: LedgerRow }) {
       </td>
       <td className="px-4 py-3 font-mono text-[13px]">{d.po_number ?? "non-PO"}</td>
       <td className="px-4 py-3">
+        {d.status === "PAID" ? <Pill tone="approved">Paid</Pill> : <Pill>Posted</Pill>}
+        {d.utr && <div className="mt-1 font-mono text-xs text-muted">UTR {d.utr}</div>}
+      </td>
+      <td className="px-4 py-3">
         {row.verified ? (
           <Pill tone="approved">
             <CheckCircle2 aria-hidden className="size-3.5" /> Verified
@@ -105,19 +113,23 @@ function Row({ row }: { row: LedgerRow }) {
                 <li key={m}>{m}</li>
               ))}
             </ul>
-            <div className="flex items-center gap-2">
-              <input
-                aria-label={`Corrected amount for ${d.doc_number}`}
-                inputMode="decimal"
-                placeholder="Correct amount"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="h-9 w-32 rounded-lg border border-line bg-canvas px-2 font-mono text-[13px]"
-              />
-              <Button size="sm" variant="soft" disabled={!amount || correct.isPending} onClick={() => correct.mutate()}>
-                {correct.isPending ? <Loader2 aria-hidden className="animate-spin" /> : <Wrench aria-hidden />} Fix in ERP
-              </Button>
-            </div>
+            {d.system === "mock" ? (
+              <div className="flex items-center gap-2">
+                <input
+                  aria-label={`Corrected amount for ${d.doc_number}`}
+                  inputMode="decimal"
+                  placeholder="Correct amount"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="h-9 w-32 rounded-lg border border-line bg-canvas px-2 font-mono text-[13px]"
+                />
+                <Button size="sm" variant="soft" disabled={!amount || correct.isPending} onClick={() => correct.mutate()}>
+                  {correct.isPending ? <Loader2 aria-hidden className="animate-spin" /> : <Wrench aria-hidden />} Fix in ERP
+                </Button>
+              </div>
+            ) : (
+              <span className="text-xs text-muted">Correct the document in ERPNext, then re-check the case.</span>
+            )}
             {correct.isSuccess && (
               <span className="text-xs text-muted">
                 Corrected. Re-check the posting on the{" "}

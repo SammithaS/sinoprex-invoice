@@ -54,6 +54,13 @@ test("dashboard counts the case", async ({ page }) => {
   await expect(page.getByText("TN/2026/1042").first()).toBeVisible();
 });
 
+test("payments: the posted invoice is in the payables queue", async ({ page }) => {
+  await page.goto("/payments");
+  await expect(page.getByRole("link", { name: "Set up RazorpayX" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "TN/2026/1042" })).toBeVisible();
+  await expect(page.getByText("Not due yet").last()).toBeVisible();
+});
+
 test("knowledge search returns cited sections", async ({ page }) => {
   await page.goto("/knowledge");
   await expect(page.getByText("contracts/technova").first()).toBeVisible();
@@ -93,7 +100,7 @@ test("unknown pages get the app's 404", async ({ page }) => {
 
 test.describe("phone layout", () => {
   test.use({ viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true });
-  for (const path of ["/", "/dashboard", "/review", "/approvals", "/erp", "/procedure", "/knowledge", "/settings", "/apps", "/apps/connections"]) {
+  for (const path of ["/", "/dashboard", "/review", "/approvals", "/erp", "/payments", "/procedure", "/knowledge", "/settings", "/apps", "/apps/connections"]) {
     test(`no sideways scroll on ${path}`, async ({ page }) => {
       await page.goto(path);
       await page.waitForLoadState("networkidle");

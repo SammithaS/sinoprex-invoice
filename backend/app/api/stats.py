@@ -19,6 +19,7 @@ from sqlalchemy.orm import selectinload
 from app.api.schemas import RunOut
 from app.db.models import Approval, CaseException, Correction, ErpPosting, Run
 from app.deps import SessionDep
+from app.payments import build_queue, now_utc, payables, today_ist
 
 router = APIRouter(tags=["stats"])
 
@@ -69,6 +70,11 @@ class Stats(BaseModel):
     exceptions_by_owner: list[OwnerLoad]
     corrections_by_vendor: dict[str, int]
     approvals_decided: int
+    payables_outstanding: Decimal
+    payables_overdue: Decimal
+    payables_ageing: dict[str, Decimal]
+    payments_paid: int
+    payments_on_time_rate: float | None
 
 
 def _decision(run: Run) -> str | None:
@@ -92,6 +98,8 @@ async def stats(session: SessionDep, days: int = 30) -> Stats:
     postings = list(await session.scalars(select(ErpPosting)))
     exceptions = list(await session.scalars(select(CaseException)))
     corrections = list(await session.scalars(select(Correction)))
+    pay_today = today_ist(now_utc())
+    owed = payables(await build_queue(session, pay_today, pay_today), pay_today)
     with_approvals = {a.run_id for a in approvals}
     verified = {p.run_id for p in postings if p.verified}
     # Touchless: approved with no reviewer, no approver, and the ERP write confirmed.
@@ -170,6 +178,11 @@ async def stats(session: SessionDep, days: int = 30) -> Stats:
             Counter(c.vendor_id or "unknown" for c in corrections).most_common()
         ),
         approvals_decided=sum(1 for a in approvals if a.decision != "PENDING"),
+        payables_outstanding=owed.outstanding,
+        payables_overdue=owed.overdue,
+        payables_ageing=owed.ageing,
+        payments_paid=owed.paid,
+        payments_on_time_rate=owed.on_time_rate,
     )
 
 

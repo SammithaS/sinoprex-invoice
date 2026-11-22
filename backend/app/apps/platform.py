@@ -565,6 +565,7 @@ class AppPlatform:
         started = time.perf_counter()
         status, message, error = "OK", "", None
         secrets: list[str] = []
+        ctx: AppContext | None = None
         async with self.sessionmaker() as session:
             inst = await self._install(session, app_id)
             try:
@@ -590,7 +591,10 @@ class AppPlatform:
             )
             session.add(row)
             await session.commit()
-            return _run_public(row)
+            result = _run_public(row)
+        for event, event_payload in ctx.events if ctx is not None else []:
+            self.emit(event, event_payload)
+        return result
 
     async def run_now(self, app_id: str, actor: str | None) -> dict[str, Any]:
         m = self.manifest(app_id)
@@ -603,6 +607,19 @@ class AppPlatform:
             await self._audit(session, "app.run_now", actor, app_id=app_id)
             await session.commit()
         return await self.execute(app_id, m.run_now, {"manual": True})
+
+    async def active_connection(self, app_id: str, requirement: str) -> ConnectionValues | None:
+        """Fields + secrets of the connection an ACTIVE app uses (None if not active)."""
+        async with self.sessionmaker() as session:
+            inst = await session.get(AppInstall, app_id)
+            if inst is None or inst.state != ACTIVE or requirement not in (inst.bindings or {}):
+                return None
+            return await self.connection_values(session, int(inst.bindings[requirement]))
+
+    async def is_active(self, app_id: str) -> bool:
+        async with self.sessionmaker() as session:
+            inst = await session.get(AppInstall, app_id)
+            return inst is not None and inst.state == ACTIVE
 
     # --- n8n: migration from environment settings, inbound secret ------------------------------
 

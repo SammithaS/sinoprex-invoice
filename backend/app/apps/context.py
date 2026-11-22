@@ -46,6 +46,7 @@ class AppContext:
     now: datetime
     secret_values: list[str] = field(default_factory=list)  # for scrubbing logs
     notes: list[str] = field(default_factory=list)
+    events: list[tuple[str, dict[str, Any]]] = field(default_factory=list)  # sent after the run
 
     @property
     def app_url(self) -> str:
@@ -59,3 +60,7 @@ class AppContext:
 
     def note(self, text: str) -> None:
         self.notes.append(text)
+
+    def emit(self, event: str, payload: dict[str, Any]) -> None:
+        """Tell other apps (e.g. payment.processed); delivered once this run is logged."""
+        self.events.append((event, payload))

@@ -146,7 +146,7 @@ def compare(expected: ErpDocumentIn, actual: ErpDocumentOut | None, doc_number: 
         problems.append(f"posted amount {actual.amount} ≠ approved {expected.amount}")
     if actual.tax_amount != expected.tax_amount:
         problems.append(f"posted tax {actual.tax_amount} ≠ approved {expected.tax_amount}")
-    if actual.status != "POSTED":
+    if actual.status not in ("POSTED", "PAID"):
         problems.append(f"status {actual.status}, expected POSTED")
     if not actual.attachment_url:
         problems.append("no attachment on the posted document")

@@ -10,6 +10,8 @@ is off (it needs a live model), so the chat page shows its error state.
 """
 
 import asyncio
+import hashlib
+import json
 import os
 import tempfile
 from collections.abc import AsyncIterator
@@ -21,6 +23,8 @@ from fastapi import FastAPI
 from sqlalchemy.ext.asyncio import AsyncSession
 
 if TYPE_CHECKING:
+    import httpx
+
     from app.apps.mail import IncomingEmail, OutgoingEmail
     from app.apps.platform import AppPlatform
     from app.graph.runner import RunService
@@ -59,6 +63,27 @@ class _FakeMail:
         return None
 
 
+def _fake_http(request: "httpx.Request") -> "httpx.Response":
+    """RazorpayX test mode in miniature (payouts are processed at once); anything else: ok."""
+    import httpx
+
+    if request.url.host != "api.razorpay.com":
+        return httpx.Response(200, text="ok")
+    path = request.url.path.removeprefix("/v1")
+    body = json.loads(request.content) if request.content else {}
+    if path == "/contacts":
+        return httpx.Response(200, json={"id": f"cont_{body['reference_id']}"})
+    if path == "/fund_accounts":
+        return httpx.Response(200, json={"id": f"fa_{body['contact_id'][5:]}"})
+    if path == "/payouts":
+        key = request.headers["X-Payout-Idempotency"]
+        ref = hashlib.sha1(key.encode()).hexdigest()[:10].upper()
+        return httpx.Response(
+            200, json={"id": f"pout_{ref}", "status": "processed", "utr": f"UTR{ref}"}
+        )
+    return httpx.Response(200, json={"items": []})
+
+
 def _apps_platform(service: "RunService") -> "AppPlatform":
     import httpx
 
@@ -69,7 +94,7 @@ def _apps_platform(service: "RunService") -> "AppPlatform":
     transports = Transports(
         mailer=lambda v: fake,
         mailbox=lambda v: fake,
-        http=httpx.MockTransport(lambda r: httpx.Response(200, text="ok")),
+        http=httpx.MockTransport(_fake_http),
     )
     platform = AppPlatform(
         service.sessionmaker, get_settings(), transports=transports, run_service=service

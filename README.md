@@ -30,6 +30,7 @@ question for a named owner, with the evidence attached.
 | **Decide** | A deterministic rules engine (about 20 checks: GST, arithmetic, duplicates, PO/GRN/contract matching, tolerances, vendor status, bank changes, approval matrix). Every check cites its policy section or contract clause. |
 | **Pause for people** | LangGraph `interrupt()` stops for review or approval, survives restarts (Postgres checkpointer) and resumes exactly where it stopped. Overrides need a second approver (four-eyes). |
 | **Post & verify** | Posts to a mock ERP idempotently, reads the document back and compares it field by field. A one-paisa mismatch keeps the case open. |
+| **Pay** | A payment run proposes what falls due before the next payment day (Tuesdays and Fridays), holds anything with a changed bank account or an open exception, and pays nothing until a named person releases the batch. Payouts go through RazorpayX (test mode works with no real money); a signed webhook marks the invoice PAID with the bank's UTR. |
 | **Explain** | An LLM writes a short summary that may only cite sources the rules used. Everything goes into an evidence bundle (JSON + PDF). |
 | **Ask AP** | A tool-calling agent answers "Why was the TechNova invoice flagged?" from the cases and the knowledge base, with citations. It says so when it doesn't know. |
 | **Automate** | A built-in **Apps marketplace** (modelled on DevRev snap-ins): install Gmail Inbox Intake, Reviewer Alerts, Vendor Follow-up, Daily Summary, Slack Alerts or the n8n Connector, fill in a settings form, pick a connection and activate. Credentials are encrypted and write-only. |
@@ -202,7 +203,32 @@ scrubbed from run logs and error messages. Rotate by putting a new key first in 
 | Vendor Follow-up | When a reviewer requests information, emails the vendor (or a demo inbox) the drafted, cited follow-up. |
 | Daily Summary | A morning digest of what came in, what was decided and what is waiting. |
 | Slack Alerts | Posts selected case events to a Slack channel. |
+| RazorpayX Payouts | On each payment day, proposes a payment run (see *Payments* below). Sends the payouts of a released batch through RazorpayX and checks every 30 minutes on any still in flight. |
+| Payment Advice | Emails the vendor (or a demo inbox) when a payment reaches the bank: invoice, amount, mode, account (last 4 digits) and UTR. |
 | n8n Connector | Keeps the original n8n workflows working (signed webhooks both ways). Existing `N8N_*` settings are moved into it on first start. |
+
+## Payments
+
+The **Payments** page lists every posted invoice with its due date (invoice date + the vendor's
+payment terms) and where it stands: *not due yet*, *due* in the next run, *on hold* (with the
+reason), *proposed*, *in flight*, *paid* (with the UTR) or *failed* (with RazorpayX's reason).
+
+1. On a payment day the RazorpayX Payouts app proposes a batch: everything due before the next
+   payment day, so nothing is paid late. Holds keep an invoice out: blocked vendor, no bank
+   account on file, ERP write not verified, open exceptions or approvals, or bank details on the
+   invoice that differ from the vendor master (released only after the master is checked,
+   ap-policy §6.2).
+2. Automation never releases money (ap-policy §1.3): a person releases the batch, in their name.
+3. Each payout is sent with an idempotency key (`<document>:<attempt>`), so a retried request
+   can't pay twice. RazorpayX's `payout.processed` / `failed` / `reversed` webhooks
+   (`POST /webhooks/razorpayx`, HMAC-signed, no API key) update the payment; a half-hourly sync
+   catches a missed webhook.
+4. Paid: the ERP document becomes PAID with the UTR and the vendor gets a payment advice. Failed:
+   the invoice comes back with the reason and is retried only after someone says so.
+
+To try it, create a RazorpayX account in test mode, add a **RazorpayX account** connection
+(account number, key id, key secret, webhook secret) and activate the app. Add a webhook in
+RazorpayX pointing at `<API URL>/webhooks/razorpayx` with the payout events.
 
 ## Run it locally
 

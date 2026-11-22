@@ -12,7 +12,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
-from app.api import apps, case, chat, intake, knowledge, procedures, reference, runs, stats
+from app.api import (
+    apps,
+    case,
+    chat,
+    intake,
+    knowledge,
+    payments,
+    procedures,
+    reference,
+    runs,
+    stats,
+)
 from app.api.schemas import HealthOut
 from app.config import Settings, get_settings
 from app.deps import SessionDep, require_api_key
@@ -106,9 +117,9 @@ def create_app() -> FastAPI:
         allow_headers=["Content-Type", "X-API-Key", "X-Actor"],
     )
 
-    # Paths that stay reachable through a tunnel without the API key: the signed intake
-    # webhook and the health check.
-    open_paths = {"/health", "/intake/email"}
+    # Paths that stay reachable through a tunnel without the API key: the signed webhooks
+    # (email intake, RazorpayX) and the health check.
+    open_paths = {"/health", "/intake/email", "/webhooks/razorpayx"}
 
     @app.middleware("http")
     async def tunnel_guard(request: Request, call_next: Any) -> Response:
@@ -145,7 +156,9 @@ def create_app() -> FastAPI:
     app.include_router(chat.router, dependencies=protected)
     app.include_router(intake.router, dependencies=protected)
     app.include_router(apps.router, dependencies=protected)
+    app.include_router(payments.router, dependencies=protected)
     app.include_router(intake.intake_router)  # HMAC-signed by n8n, no API key
+    app.include_router(payments.webhook_router)  # HMAC-signed by RazorpayX, no API key
     return app
 
 

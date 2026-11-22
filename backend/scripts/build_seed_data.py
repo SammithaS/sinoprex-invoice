@@ -11,6 +11,7 @@ from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
 from app.rules.gst import STATE_CODES, build_gstin, is_valid_gstin
+from scripts.invoice_specs import VENDORS as PROFILES
 
 SEED_DIR = Path(__file__).resolve().parents[2] / "data" / "seed"
 
@@ -442,6 +443,8 @@ def _money(value: Decimal) -> Decimal:
 
 
 def build() -> dict[str, object]:
+    # The full account number each vendor prints on its invoices (used for payouts).
+    accounts = {p.vendor_id: p.bank_account for p in PROFILES.values() if p.vendor_id}
     vendors = []
     for vid, name, legal, aliases, st, pan, last4, ifsc, terms, cat, status in _VENDORS:
         gstin = build_gstin(st, pan)
@@ -458,6 +461,7 @@ def build() -> dict[str, object]:
                 "state": STATE_CODES[st],
                 "pan": pan,
                 "bank_account_last4": last4,
+                "bank_account_number": accounts.get(vid),
                 "bank_ifsc": ifsc,
                 "payment_terms_days": terms,
                 "category": cat,

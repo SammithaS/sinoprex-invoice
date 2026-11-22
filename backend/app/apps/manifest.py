@@ -38,6 +38,8 @@ EVENTS: dict[str, str] = {
     "case.request_info": "A reviewer asks the vendor for information",
     "case.closed": "A case is closed (approved or rejected)",
     "case.failed": "A case fails (e.g. the AI provider is down)",
+    "payment.processed": "A vendor payment reaches the bank (UTR known)",
+    "payment.failed": "A vendor payment fails or is reversed",
 }
 
 _EMAIL = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")

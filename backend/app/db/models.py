@@ -2,7 +2,7 @@
 
 Reference data (vendors, purchase orders, goods receipts) and prior invoices; runs (one per
 case), run steps (the live timeline), reviews and invoice history rows written by runs; the
-operating procedure, exceptions, approvals, mock ERP postings and corrections; and the apps
+operating procedure, exceptions, approvals, ERP postings, payments and corrections; and the apps
 platform (connections with encrypted secrets, installs, run log, audit).
 """
 
@@ -35,6 +35,8 @@ class Vendor(Base):
     state: Mapped[str] = mapped_column(String(60))
     pan: Mapped[str] = mapped_column(String(10))
     bank_account_last4: Mapped[str] = mapped_column(String(4))
+    # Full account number for payouts; never returned by the API (only the last 4 digits are).
+    bank_account_number: Mapped[str | None] = mapped_column(String(34))
     bank_ifsc: Mapped[str] = mapped_column(String(11))
     payment_terms_days: Mapped[int]
     category: Mapped[str] = mapped_column(String(60))
@@ -279,12 +281,14 @@ class Approval(Base):
 
 
 class ErpDocument(Base):
-    """Mock ERP: a posted AP invoice document."""
+    """A posted AP invoice document: the mock ERP's own record, or the local copy of a document
+    posted to ERPNext (`system`)."""
 
     __tablename__ = "erp_documents"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    doc_number: Mapped[str] = mapped_column(String(20), unique=True)
+    doc_number: Mapped[str] = mapped_column(String(40), unique=True)
+    system: Mapped[str] = mapped_column(String(20), default="mock")  # mock | erpnext
     idempotency_key: Mapped[str] = mapped_column(String(64), unique=True)
     vendor_id: Mapped[str] = mapped_column(String(16))
     invoice_number: Mapped[str] = mapped_column(String(40))
@@ -296,10 +300,54 @@ class ErpDocument(Base):
     gl_account: Mapped[str | None] = mapped_column(String(10))
     cost_centre: Mapped[str | None] = mapped_column(String(20))
     attachment_url: Mapped[str | None] = mapped_column(String(500))
-    status: Mapped[str] = mapped_column(String(20), default="POSTED")
+    status: Mapped[str] = mapped_column(String(20), default="POSTED")  # POSTED | PAID
     payload: Mapped[dict[str, Any] | None] = mapped_column(JsonType)
+    paid_at: Mapped[datetime | None]
+    utr: Mapped[str | None] = mapped_column(String(40))
+    # A payment hold (bank change, …) released by a person after checking.
+    hold_released_by: Mapped[str | None] = mapped_column(String(100))
+    hold_released_at: Mapped[datetime | None]
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
     updated_at: Mapped[datetime | None]
+
+
+class Payment(Base):
+    """One payout attempt for a posted invoice (RazorpayX).
+
+    A payment run only proposes (PROPOSED); nothing is sent until a person releases the batch
+    (policy §1.3). A failed attempt stays as history; a retry is a new row with the next attempt
+    number and a new idempotency key."""
+
+    __tablename__ = "payments"
+    __table_args__ = (UniqueConstraint("doc_number", "attempt", name="uq_payments_doc_attempt"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    doc_number: Mapped[str] = mapped_column(String(40), index=True)
+    run_id: Mapped[str | None] = mapped_column(String(36), index=True)  # the case
+    batch_id: Mapped[str] = mapped_column(String(40), index=True)  # the payment run
+    attempt: Mapped[int] = mapped_column(default=1)
+    vendor_id: Mapped[str] = mapped_column(String(16))
+    amount: Mapped[Decimal] = mapped_column(Money)
+    currency: Mapped[str] = mapped_column(String(3), default="INR")
+    due_date: Mapped[date]
+    mode: Mapped[str] = mapped_column(String(10))  # IMPS | NEFT | RTGS
+    provider: Mapped[str] = mapped_column(String(20), default="razorpayx")
+    # PROPOSED | CANCELLED | QUEUED (released, not confirmed sent) | PROCESSING | PAID | FAILED
+    # | REVERSED
+    status: Mapped[str] = mapped_column(String(20), index=True)
+    released_by: Mapped[str | None] = mapped_column(String(100))
+    released_at: Mapped[datetime | None]
+    idempotency_key: Mapped[str] = mapped_column(String(64), unique=True)
+    contact_id: Mapped[str | None] = mapped_column(String(40))
+    fund_account_id: Mapped[str | None] = mapped_column(String(40))
+    payout_id: Mapped[str | None] = mapped_column(String(40), unique=True)
+    provider_status: Mapped[str | None] = mapped_column(String(20))
+    utr: Mapped[str | None] = mapped_column(String(40))
+    error: Mapped[str | None]
+    retry_approved_by: Mapped[str | None] = mapped_column(String(100))
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    updated_at: Mapped[datetime | None]
+    paid_at: Mapped[datetime | None]
 
 
 class ErpPosting(Base):
@@ -309,7 +357,7 @@ class ErpPosting(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     run_id: Mapped[str] = mapped_column(ForeignKey("runs.id", ondelete="CASCADE"), index=True)
-    doc_number: Mapped[str | None] = mapped_column(String(20))
+    doc_number: Mapped[str | None] = mapped_column(String(40))
     request: Mapped[dict[str, Any]] = mapped_column(JsonType)
     response: Mapped[dict[str, Any] | None] = mapped_column(JsonType)
     readback: Mapped[dict[str, Any] | None] = mapped_column(JsonType)
